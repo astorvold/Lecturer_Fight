@@ -1,31 +1,48 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.ScreenUtils;
 
-public class Lecturer_fight extends ApplicationAdapter {
+import sun.font.TextLabel;
+
+public class Lecturer_fight extends Game {
+
+	public BitmapFont font;
 	SpriteBatch batch;
-	Texture img;
+
+	ShapeRenderer startButton;
+	ShapeRenderer settingButton;
+	ShapeRenderer scoreButton;
+
 	
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
-		img = new Texture("badlogic.jpg");
+		font = new BitmapFont();
+
+
+		this.setScreen(new MainMenuScreen(this));
+		startButton = new ShapeRenderer();
+		settingButton = new ShapeRenderer();
+		scoreButton = new ShapeRenderer();
+
+
 	}
 
 	@Override
 	public void render () {
-		ScreenUtils.clear(1, 0, 0, 1);
-		batch.begin();
-		batch.draw(img, 0, 0);
-		batch.end();
+		super.render();
 	}
 	
 	@Override
 	public void dispose () {
 		batch.dispose();
-		img.dispose();
+		font.dispose();
 	}
 }
