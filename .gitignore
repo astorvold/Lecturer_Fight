@@ -29,7 +29,7 @@ www-test/
 *.iml
 /android/out/
 com_crashlytics_export_strings.xml
-
+android/google-services.json
 ## Eclipse
 
 .classpath

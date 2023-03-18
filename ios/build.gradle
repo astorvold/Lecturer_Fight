@@ -16,4 +16,8 @@ robovm {
 	archs = "thumbv7:arm64"
 }
 
+dependencies {
+    implementation project(path: ':html')
+}
+
 eclipse.project.name = appName + "-ios"
