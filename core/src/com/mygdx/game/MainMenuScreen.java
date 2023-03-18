@@ -23,6 +23,8 @@ public class MainMenuScreen implements Screen {
         startButton = new Texture(Gdx.files.internal("start.png"));
         settingsButton = new Texture(Gdx.files.internal("settings.png"));
         scoreButton = new Texture(Gdx.files.internal("score.png"));
+
+
     }
 
 
@@ -54,6 +56,10 @@ public class MainMenuScreen implements Screen {
             System.out.println(Gdx.input.getX() + " "+ Gdx.input.getY());
             if(Gdx.input.getX() > 130 && Gdx.input.getX() < 300 && Gdx.input.getY() > 70 && Gdx.input.getY() < 180){
                 game.setScreen(new GameScreen(game));
+                dispose();
+            }
+            if(Gdx.input.getX() > 130 && Gdx.input.getX() < 300 && Gdx.input.getY() > 70 && Gdx.input.getY() < 180){
+                game.setScreen(new HighScoreScreen(game));
                 dispose();
             }
 
