@@ -19,10 +19,6 @@ public class Lecturer_fight extends Game {
 	SpriteBatch batch;
 	API api;
 
-	ShapeRenderer startButton;
-	ShapeRenderer settingButton;
-	ShapeRenderer scoreButton;
-
 	public Lecturer_fight(API api){
 		this.api = api;
 	}
