@@ -7,4 +7,9 @@ public class FirebaseAPI implements API{
     public void getHighScores(ArrayList<Score> dataHolder) {
         System.out.println("pepepepep");
     }
+
+    @Override
+    public void addScore() {
+
+    }
 }
