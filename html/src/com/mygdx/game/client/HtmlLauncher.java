@@ -17,6 +17,6 @@ public class HtmlLauncher extends GwtApplication {
 
         @Override
         public ApplicationListener createApplicationListener () {
-                return new Lecturer_fight();
+                return new Lecturer_fight(new htmlAPI());
         }
 }
