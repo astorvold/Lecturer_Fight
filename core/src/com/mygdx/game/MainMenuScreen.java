@@ -55,14 +55,11 @@ public class MainMenuScreen implements Screen {
         //when startButton is touched -> go to gameScreen
         if (Gdx.input.isTouched()) {
             System.out.println(Gdx.input.getX() + " "+ Gdx.input.getY());
-            if(Gdx.input.getX() > 130 && Gdx.input.getX() < 300 && Gdx.input.getY() > 70 && Gdx.input.getY() < 180){
+            if(Gdx.input.getX() > 0 && Gdx.input.getX() < 300 && Gdx.input.getY() > 0 && Gdx.input.getY() < 300){
                 dispose();
                 game.setScreen(new GameScreen(game));
             }
-            if(Gdx.input.getX() > 130 && Gdx.input.getX() < 300 && Gdx.input.getY() > 70 && Gdx.input.getY() < 180){
-                dispose();
-                game.setScreen(new GameScreen(game));
-            }
+
 
         }
     }
