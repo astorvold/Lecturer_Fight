@@ -6,7 +6,14 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Event;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public class MainMenuScreen implements Screen {
 
@@ -18,21 +25,123 @@ public class MainMenuScreen implements Screen {
     SpriteBatch batch = new SpriteBatch();
     BitmapFont font = new BitmapFont();;
 
+    private Stage stage;
+    private Texture imageStart;
+    private TextureRegion regionStart;
+    private TextureRegionDrawable drawableRegionStart;
+    private ImageButton buttonStart;
+
+
+    private Texture imageSettings;
+    private TextureRegion regionSettings;
+    private TextureRegionDrawable drawableRegionSettings;
+    private ImageButton buttonSettings;
+
+
+    private Texture imageScore;
+    private TextureRegion regionScore;
+    private TextureRegionDrawable drawableRegionScore;
+    private ImageButton buttonScore;
+
+    private Texture imageTutorial;
+    private TextureRegion regionTutorial;
+    private TextureRegionDrawable drawableRegionTutorial;
+    private ImageButton buttonTutorial;
+
+
+    float viewportWidth = Gdx.graphics.getWidth();
+    float viewportHeight = Gdx.graphics.getHeight();
+
+
+
     public MainMenuScreen(final Lecturer_fight game) {
         this.game = game;
         this.camera = new OrthographicCamera();
         camera.setToOrtho(false,800,400);
 
-        startButton = new Texture(Gdx.files.internal("start.png"));
-        settingsButton = new Texture(Gdx.files.internal("settings.png"));
-        scoreButton = new Texture(Gdx.files.internal("score.png"));
+        imageStart = new Texture(Gdx.files.internal("start.png"));
+        regionStart = new TextureRegion(imageStart);
+        drawableRegionStart = new TextureRegionDrawable(regionStart);
+        buttonStart = new ImageButton(drawableRegionStart); //Set the button up
+        buttonStart.setPosition(viewportWidth*0.3f,viewportHeight*0.5f);
+        //buttonStart.setSize(viewportWidth*0.7f, viewportHeight*0.7f );
+        buttonStart.setSize(200,200);
 
+        imageSettings = new Texture(Gdx.files.internal("settings.png"));
+        regionSettings = new TextureRegion(imageSettings);
+        drawableRegionSettings = new TextureRegionDrawable(regionSettings);
+        buttonSettings = new ImageButton(drawableRegionSettings);
+        buttonSettings.setPosition(viewportWidth*0.8f,viewportHeight*0.8f);
+        buttonSettings.setSize(50,50);
+
+
+
+        imageScore = new Texture(Gdx.files.internal("score.png"));
+        regionScore = new TextureRegion(imageScore);
+        drawableRegionScore = new TextureRegionDrawable(regionScore);
+        buttonScore = new ImageButton(drawableRegionScore);
+        buttonScore.setPosition(viewportWidth*0.3f,viewportHeight*0.3f);
+        buttonScore.setSize(200,200);
+
+
+        imageTutorial = new Texture(Gdx.files.internal("tutorial.png"));
+        regionTutorial = new TextureRegion(imageTutorial);
+        drawableRegionTutorial = new TextureRegionDrawable(regionTutorial);
+        buttonTutorial = new ImageButton(drawableRegionTutorial);
+        buttonTutorial.setPosition(viewportWidth*0.3f,viewportHeight*0.1f);
+        buttonTutorial.setSize(200,200);
+
+
+
+
+        stage = new Stage(new ScreenViewport()); //Set up a stage for the ui
+        stage.addActor(buttonStart); //Add the button to the stage to perform rendering and take input.
+        stage.addActor(buttonSettings);
+        stage.addActor(buttonScore);
+        stage.addActor(buttonTutorial);
+        Gdx.input.setInputProcessor(stage); //Start taking input from the ui
     }
 
 
     @Override
     public void show() {
 
+        buttonStart.addListener(new ClickListener()
+        {
+            public boolean handle(Event event) {
+                if(event.toString() == "touchDown"){
+                    System.out.println(("clickeo start"));
+                }
+                return false;
+            }
+        });
+        buttonSettings.addListener(new ClickListener()
+        {
+            public boolean handle(Event event) {
+                if(event.toString() == "touchDown"){
+                    System.out.println(("clickeo settings"));
+                }
+                return false;
+            }
+        });
+        buttonScore.addListener(new ClickListener()
+        {
+            public boolean handle(Event event) {
+                if(event.toString() == "touchDown"){
+                    System.out.println(("clickeo score"));
+                }
+                return false;
+            }
+        });
+        buttonTutorial.addListener(new ClickListener()
+        {
+            public boolean handle(Event event) {
+                if(event.toString() == "touchDown"){
+                    System.out.println(("clickeo tutorial"));
+                }
+                return false;
+            }
+        });
     }
 
     @Override
@@ -45,20 +154,20 @@ public class MainMenuScreen implements Screen {
         batch.begin();
         font.draw(batch, "Welcome to Lecturer fight!!! ", 200, 380);
         font.draw(batch, "Click on start to begin!", 200, 370);
-        batch.draw(startButton, 150, 250);
-        batch.draw(settingsButton, 500, 250);
-        batch.draw(scoreButton, 150, 100);
         batch.end();
 
+
+        stage.act(Gdx.graphics.getDeltaTime()); //Perform ui logic
+        stage.draw(); //Draw the ui
 
         //&& Gdx.graphics.getHeight()
         //when startButton is touched -> go to gameScreen
         if (Gdx.input.isTouched()) {
-            System.out.println(Gdx.input.getX() + " "+ Gdx.input.getY());
-            if(Gdx.input.getX() > 0 && Gdx.input.getX() < 300 && Gdx.input.getY() > 0 && Gdx.input.getY() < 300){
-                dispose();
-                game.setScreen(new GameScreen(game));
-            }
+            //System.out.println(Gdx.input.getX() + " "+ Gdx.input.getY());
+            //if(Gdx.input.getX() > 0 && Gdx.input.getX() < 300 && Gdx.input.getY() > 0 && Gdx.input.getY() < 300){
+            //    dispose();
+            //    game.setScreen(new GameScreen(game));
+            //}
 
 
         }
