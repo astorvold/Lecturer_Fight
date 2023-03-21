@@ -20,7 +20,9 @@ public class MainMenuScreen implements Screen {
         this.camera = new OrthographicCamera();
         camera.setToOrtho(false,800,400);
 
-
+        startButton = new Texture(Gdx.files.internal("start.png"));
+        settingsButton = new Texture(Gdx.files.internal("settings.png"));
+        scoreButton = new Texture(Gdx.files.internal("score.png"));
     }
 
 
@@ -38,34 +40,19 @@ public class MainMenuScreen implements Screen {
         game.batch.setProjectionMatrix(camera.combined);
 
         game.batch.begin();
-        game.font.draw(game.batch, "Welcome to Drop!!! ", 100, 150);
-        game.font.draw(game.batch, "Tap anywhere to begin!", 100, 100);
-        game.batch.draw(startButton, 0, 0);
-
+        game.font.draw(game.batch, "Welcome to Lecturer fight!!! ", 200, 380);
+        game.font.draw(game.batch, "Click on start to begin!", 200, 370);
+        game.batch.draw(startButton, 150, 250);
+        game.batch.draw(settingsButton, 500, 250);
+        game.batch.draw(scoreButton, 150, 100);
         game.batch.end();
 
-        //must be changed for a "start button" image
-        game.startButton.begin(ShapeRenderer.ShapeType.Filled);
-        game.startButton.setColor(0, 1, 0, 1);
-        game.startButton.rect(300,400,200,50);
-        game.startButton.end();
 
-        //must be changed for a "start button" image
-        game.startButton.begin(ShapeRenderer.ShapeType.Filled);
-        game.startButton.setColor(0, 1, 0, 1);
-        game.startButton.rect(300,400,200,50);
-        game.startButton.end();
-
-        //must be changed for a "start button" image
-        game.startButton.begin(ShapeRenderer.ShapeType.Filled);
-        game.startButton.setColor(0, 1, 0, 1);
-        game.startButton.rect(300,400,200,50);
-        game.startButton.end();
-
-
+        //&& Gdx.graphics.getHeight()
         //when startButton is touched -> go to gameScreen
         if (Gdx.input.isTouched()) {
-            if(Gdx.input.getX() - 100 < 20 && Gdx.graphics.getHeight() - Gdx.input.getY() - 100 < 10){
+            System.out.println(Gdx.input.getX() + " "+ Gdx.input.getY());
+            if(Gdx.input.getX() > 130 && Gdx.input.getX() < 300 && Gdx.input.getY() > 70 && Gdx.input.getY() < 180){
                 game.setScreen(new GameScreen(game));
                 dispose();
             }
