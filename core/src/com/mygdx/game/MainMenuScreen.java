@@ -43,6 +43,9 @@ public class MainMenuScreen implements Screen {
     private TextureRegionDrawable drawableRegionScore;
     private ImageButton buttonScore;
 
+    float viewportWidth = Gdx.graphics.getWidth();
+    float viewportHeight = Gdx.graphics.getHeight();
+
 
 
     public MainMenuScreen(final Lecturer_fight game) {
@@ -54,21 +57,25 @@ public class MainMenuScreen implements Screen {
         regionStart = new TextureRegion(imageStart);
         drawableRegionStart = new TextureRegionDrawable(regionStart);
         buttonStart = new ImageButton(drawableRegionStart); //Set the button up
-        buttonStart.setPosition(200,100);
-        buttonStart.setSize(500, 500 );
+        buttonStart.setPosition(viewportWidth*0.3f,viewportHeight*0.8f);
+        //buttonStart.setSize(viewportWidth*0.7f, viewportHeight*0.7f );
+        buttonStart.setSize(200,200);
 
         imageSettings = new Texture(Gdx.files.internal("settings.png"));
         regionSettings = new TextureRegion(imageSettings);
         drawableRegionSettings = new TextureRegionDrawable(regionSettings);
         buttonSettings = new ImageButton(drawableRegionSettings);
-        buttonSettings.setPosition(300,800);
+        buttonSettings.setPosition(viewportWidth*0.4f,viewportHeight*0.5f);
+
 
 
         imageScore = new Texture(Gdx.files.internal("score.png"));
         regionScore = new TextureRegion(imageScore);
         drawableRegionScore = new TextureRegionDrawable(regionScore);
         buttonScore = new ImageButton(drawableRegionScore);
-        buttonScore.setPosition(400,500);
+        buttonScore.setPosition(viewportWidth*0.4f,viewportHeight*0.2f);
+        buttonScore.setSize(200,200);
+
 
 
 
@@ -82,14 +89,30 @@ public class MainMenuScreen implements Screen {
 
     @Override
     public void show() {
-        buttonStart.scaleBy(5);
-        buttonStart.setSize(200,300);
 
         buttonStart.addListener(new ClickListener()
         {
             public boolean handle(Event event) {
                 if(event.toString() == "touchDown"){
                     System.out.println(("clickeo start"));
+                }
+                return false;
+            }
+        });
+        buttonSettings.addListener(new ClickListener()
+        {
+            public boolean handle(Event event) {
+                if(event.toString() == "touchDown"){
+                    System.out.println(("clickeo settings"));
+                }
+                return false;
+            }
+        });
+        buttonScore.addListener(new ClickListener()
+        {
+            public boolean handle(Event event) {
+                if(event.toString() == "touchDown"){
+                    System.out.println(("clickeo score"));
                 }
                 return false;
             }
@@ -115,11 +138,11 @@ public class MainMenuScreen implements Screen {
         //&& Gdx.graphics.getHeight()
         //when startButton is touched -> go to gameScreen
         if (Gdx.input.isTouched()) {
-            System.out.println(Gdx.input.getX() + " "+ Gdx.input.getY());
-            if(Gdx.input.getX() > 0 && Gdx.input.getX() < 300 && Gdx.input.getY() > 0 && Gdx.input.getY() < 300){
-                dispose();
-                game.setScreen(new GameScreen(game));
-            }
+            //System.out.println(Gdx.input.getX() + " "+ Gdx.input.getY());
+            //if(Gdx.input.getX() > 0 && Gdx.input.getX() < 300 && Gdx.input.getY() > 0 && Gdx.input.getY() < 300){
+            //    dispose();
+            //    game.setScreen(new GameScreen(game));
+            //}
 
 
         }
