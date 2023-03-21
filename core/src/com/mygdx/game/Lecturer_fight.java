@@ -9,28 +9,31 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.ScreenUtils;
 
+import java.util.ArrayList;
+
 import sun.font.TextLabel;
 
 public class Lecturer_fight extends Game {
 
 	public BitmapFont font;
 	SpriteBatch batch;
+	API api;
 
 	ShapeRenderer startButton;
 	ShapeRenderer settingButton;
 	ShapeRenderer scoreButton;
 
-	
+	public Lecturer_fight(API api){
+		this.api = api;
+	}
+
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
 		font = new BitmapFont();
-
-
+		api.getHighScores(new ArrayList<Score>());
 		this.setScreen(new MainMenuScreen(this));
-		startButton = new ShapeRenderer();
-		settingButton = new ShapeRenderer();
-		scoreButton = new ShapeRenderer();
+
 
 
 	}
