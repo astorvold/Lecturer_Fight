@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
@@ -20,27 +21,20 @@ import com.badlogic.gdx.utils.TimeUtils;
 public class GameScreen implements Screen{
 
     final Lecturer_fight game;
-
     OrthographicCamera camera;
-
     Texture lossButton;
-
     SpriteBatch batch = new SpriteBatch();
-    BitmapFont font = new BitmapFont();;
+    BitmapFont font = new BitmapFont();
+    ShapeRenderer shapeRenderer = new ShapeRenderer();;
 
     public GameScreen(final Lecturer_fight game) {
         this.game = game;
         System.out.println("game screen");
-
-
         // create the camera and the SpriteBatch
         this.camera = new OrthographicCamera();
         camera.setToOrtho(false, 800, 480);
-
-
         //click on if you lost
         lossButton = new Texture(Gdx.files.internal("badlogic.jpg"));
-
     }
 
 
@@ -63,17 +57,20 @@ public class GameScreen implements Screen{
         // all drops
         batch.begin();
         font.draw(batch, "Playing ", 0, 480);
-
-        batch.draw(lossButton, 150, 100);
-
+        //batch.draw(lossButton, 150, 100);
         batch.end();
+
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.setColor(0, 1, 0, 1);
+        shapeRenderer.circle(200, 100, 75);
+        shapeRenderer.end();
 
         // If user touch, race is finished
 
         if (Gdx.input.isTouched()) {
             System.out.println(Gdx.input.getX() + " "+ Gdx.input.getY());
 
-            if(Gdx.input.getX() > 530 && Gdx.input.getX() < 700 && Gdx.input.getY() > 70 && Gdx.input.getY() < 180) {
+            if(Gdx.input.getX() > 500 && Gdx.input.getX() < 700 && Gdx.input.getY() > 300 && Gdx.input.getY() < 500) {
                 dispose();
                 game.setScreen(new FinishScreen(game));
 
