@@ -4,18 +4,13 @@ import com.badlogic.gdx.graphics.Texture;
 
 public abstract class Entity {
     protected float x,y;
-    protected final float height, width;
+    protected float height, width;
     Texture texture;
 
-    public Entity(String texture, float x, float y, float width, float height){
-        this.width = width+generateRandomNumber(128,512);
-        this.height = height;
-        if(x==0) this.x = 0;
-        else this.x = x-this.width;
-        this.y = y;
+    public Entity(String texture){
         this.texture = new Texture(texture);
     }
-    private float generateRandomNumber(int from, int to){
+    protected float generateRandomNumber(int from, int to){
         return (float)Math.floor(Math.random() * (to - from + 1) + from);
     }
 
@@ -36,9 +31,7 @@ public abstract class Entity {
     public float getHeight() { return height; }
 
     public float getWidth() { return width; }
-    public void changePos(int newPos){
-        y+=newPos;
-    }
+    public abstract void changePos(int newPos);
 
     public boolean checkColisions(Entity o){
         float x1 = this.getX();
