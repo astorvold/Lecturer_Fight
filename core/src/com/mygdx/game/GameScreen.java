@@ -74,8 +74,7 @@ public class GameScreen implements Screen{
         for(int i = 1; i <= COINS_PER_SCREEN; i++){
             float x = generateRandomNumber(100, (int)screenWidth-100);
             int random_int = (int)generateRandomNumber(1,7);
-            float y = generateRandomNumber((int)obstacles.get(random_int-1).getY()+50, (int) obstacles.get(random_int).getY()-50);
-            coins.add(new Coin("coin.png", x, y, 64,64));
+            float y = generateRandomNumber((int)(obstacles.get(random_int-1).getY() + obstacles.get(random_int-1).getWidth()) +70 , (int) obstacles.get(random_int).getY()-64-70);          coins.add(new Coin("coin.png", x, y, 64,64));
         }
     }
     public void movementControl(){
@@ -116,32 +115,34 @@ public class GameScreen implements Screen{
         checkColisions();
     }
 
+    /**
+     * CheckColisions Method
+     */
     public void checkColisions() {
+        //Checks if any obstacle is at the same position that the player
         for(int i = 0; i < OBSTACLES_PER_SCREEN; i++) {
             obstacles.get(i).changePos(-speed);
             if (player.checkColisions(obstacles.get(i))) {
                 game.setScreen(new MainMenuScreen(game));
             }
+            //If the obstacle is getting out the bounds it will be put again
             if(obstacles.get(i).getY()<0){
                 obstacles.get(i).setY(screenHeight*(float)1.5);
                 highestObstacle=i;
             }
         }
+        //Checks if any coin is at the same position that the player
         for(int i = 0; i < COINS_PER_SCREEN; i++){
             coins.get(i).changePos(-speed);
             if (player.checkColisions(coins.get(i))) {
                 player.increaseScore(100);
                 coins.get(i).setY(coins.get(i).getY() + screenHeight);
             }
+            //If the coin is getting out the bounds it will be put again.
+            //It will be put on top of the highest obstacle
             if(coins.get(i).getY()<0){
-                float y;
                 float x = generateRandomNumber(100, (int)screenWidth-100);
-                int pos = (int)(obstacles.get(highestObstacle).getY() + obstacles.get(highestObstacle).getHeight());
-                if(highestObstacle < 7){
-                    y = generateRandomNumber(pos+50, (int) obstacles.get(highestObstacle+1).getY()-50);
-                }
-                else
-                    y = obstacles.get(highestObstacle+1).getY()+ obstacles.get(highestObstacle+1).getHeight()+50;
+                float y = obstacles.get(highestObstacle).getY() + obstacles.get(highestObstacle).getHeight() +70;
                 coins.get(i).setX(x);
                 coins.get(i).setY(y);
             }
