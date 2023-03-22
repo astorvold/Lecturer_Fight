@@ -1,5 +1,6 @@
 package com.mygdx.game;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 
 import com.badlogic.gdx.Gdx;
@@ -26,16 +27,16 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import jdk.tools.jmod.Main;
 
 public class GameScreen implements Screen{
-
+    public static final int OBSTACLES_PER_SCREEN = 8;
     final Lecturer_fight game;
-    float screenHeight = Gdx.graphics.getHeight();
-    float screenWidth = Gdx.graphics.getWidth();
+    final float screenHeight = Gdx.graphics.getHeight();
+    final float screenWidth = Gdx.graphics.getWidth();
     OrthographicCamera camera;
     SpriteBatch batch = new SpriteBatch();
     BitmapFont font = new BitmapFont();
     ShapeRenderer shapeRenderer = new ShapeRenderer();
     public Player player;
-    public Obstacle obstacle;
+    public ArrayList<Obstacle> obstacles;
 
 
     private Sprite bird;
@@ -46,49 +47,60 @@ public class GameScreen implements Screen{
         // create the camera and the SpriteBatch
         this.camera = new OrthographicCamera();
         camera.setToOrtho(false, 800, 480);
-
         //Initializing objects
         player = new Player("bird.png");
-        obstacle = new Obstacle("obstacle.png");
+        obstacles = new ArrayList<>();
+        for(int i = 1; i <= OBSTACLES_PER_SCREEN; i++) {
+            float aux = screenWidth;
+            int random_int = (int)Math.floor(Math.random() * (1 + 1) + 0);
+            if(random_int == 0) aux = aux * random_int;
+            obstacles.add(new Obstacle("obstacle.png", aux, screenHeight + screenHeight * i/OBSTACLES_PER_SCREEN, 256, 96));
+        }
+
     }
 
+    public void movementControl(){
+        if (Gdx.input.isTouched()) {
+            if(Gdx.input.getX() > screenWidth/2)
+                if (player.getX() < screenWidth -player.getWidth()) player.changePos(10);
+                else player.changePos(-10);
+            else
+            if (player.getX() > 0) player.changePos(-10);
+            else player.changePos(10);
+        }
+    }
 
     @Override
     public void render(float delta) {
-        // clear the screen with a dark blue color. The
-        // arguments to clear are the red, green
-        // blue and alpha component in the range [0,1]
-        // of the color to be used to clear the screen.
+        // clear the screen with a white color
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         // tell the camera to update its matrices.
-        camera.update();
-
         // tell the SpriteBatch to render in the
         // coordinate system specified by the camera.
+        camera.update();
         game.batch.setProjectionMatrix(camera.combined);
 
-        // begin a new batch and draw the bucket and
-        // all drops
+        // begin a new batch and draw the bucket and all drops
         batch.begin();
         batch.draw(player.getTexture(), player.getX(), player.getY(), player.getWidth(), player.getHeight());
-        batch.draw(obstacle.getTexture(), obstacle.getX(), obstacle.getY(), obstacle.getWidth(), obstacle.getHeight());
+        for(int i = 0; i < OBSTACLES_PER_SCREEN; i++)
+            batch.draw(obstacles.get(i).getTexture(), obstacles.get(i).getX(), obstacles.get(i).getY(), obstacles.get(i).getWidth(), obstacles.get(i).getHeight());
         font.draw(batch, "Playing ", 0, 480);
         batch.end();
 
-        // If user touch, race is finished
-        if (Gdx.input.isTouched()) {
-            if(Gdx.input.getX() > screenWidth/2)
-                if (player.getX() < screenWidth -96) player.changePos(10);
-                else player.changePos(-10);
-            else
-                if (player.getX() > 0) player.changePos(-10);
-                else player.changePos(10);
-        }
-        obstacle.changePos(-1);
-        if(checkColisions(player, obstacle)){
-            game.setScreen(new MainMenuScreen(game));
+        // Controlling the player
+        movementControl();
+
+        for(int i = 0; i < OBSTACLES_PER_SCREEN; i++) {
+            obstacles.get(i).changePos(-5);
+            if (checkColisions(player, obstacles.get(i))) {
+                game.setScreen(new MainMenuScreen(game));
+            }
+            if(obstacles.get(i).getY()<0){
+                obstacles.get(i).setY(screenHeight);
+            }
         }
     }
 
@@ -132,5 +144,6 @@ public class GameScreen implements Screen{
     @Override
     public void dispose() {
         player.getTexture().dispose();
+        for(int i = 0; i < OBSTACLES_PER_SCREEN; i++) obstacles.get(i).getTexture().dispose();
     }
 }
