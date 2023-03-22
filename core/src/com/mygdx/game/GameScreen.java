@@ -28,6 +28,8 @@ import jdk.tools.jmod.Main;
 
 public class GameScreen implements Screen{
     public static final int OBSTACLES_PER_SCREEN = 8;
+
+    public static final int COINS_PER_SCREEN = 3;
     final Lecturer_fight game;
     final float screenHeight = Gdx.graphics.getHeight();
     final float screenWidth = Gdx.graphics.getWidth();
@@ -37,6 +39,8 @@ public class GameScreen implements Screen{
     ShapeRenderer shapeRenderer = new ShapeRenderer();
     public Player player;
     public ArrayList<Obstacle> obstacles;
+
+    public ArrayList<Coin> coins;
 
 
     private Sprite bird;
@@ -49,16 +53,31 @@ public class GameScreen implements Screen{
         camera.setToOrtho(false, 800, 480);
         //Initializing objects
         player = new Player("bird.png");
+        initializeObstacles();
+        initializeCoins();
+    }
+
+    private float generateRandomNumber(int from, int to){
+        return (float)Math.floor(Math.random() * (to - from + 1) + from);
+    }
+    private void initializeObstacles(){
         obstacles = new ArrayList<>();
         for(int i = 1; i <= OBSTACLES_PER_SCREEN; i++) {
             float aux = screenWidth;
             int random_int = (int)Math.floor(Math.random() * (1 + 1) + 0);
             if(random_int == 0) aux = aux * random_int;
-            obstacles.add(new Obstacle("obstacle.png", aux, screenHeight + screenHeight * i/OBSTACLES_PER_SCREEN, 256, 96));
+            obstacles.add(new Obstacle("obstacle.png", aux, screenHeight + screenHeight * (float)(i*1.5)/OBSTACLES_PER_SCREEN, 256, 96));
         }
-
     }
-
+    private void initializeCoins(){
+        coins = new ArrayList<>();
+        for(int i = 1; i <= COINS_PER_SCREEN; i++){
+            float x = generateRandomNumber(100, (int)screenWidth-100);
+            int random_int = (int)generateRandomNumber(1,7);
+            float y = generateRandomNumber((int)obstacles.get(random_int-1).getY()+50, (int) obstacles.get(random_int).getY()-50);
+            coins.add(new Coin("coin.png", x, y, 64,64));
+        }
+    }
     public void movementControl(){
         if (Gdx.input.isTouched()) {
             if(Gdx.input.getX() > screenWidth/2)
@@ -87,24 +106,54 @@ public class GameScreen implements Screen{
         batch.draw(player.getTexture(), player.getX(), player.getY(), player.getWidth(), player.getHeight());
         for(int i = 0; i < OBSTACLES_PER_SCREEN; i++)
             batch.draw(obstacles.get(i).getTexture(), obstacles.get(i).getX(), obstacles.get(i).getY(), obstacles.get(i).getWidth(), obstacles.get(i).getHeight());
+        for(int i = 0; i < COINS_PER_SCREEN; i++)
+            batch.draw(coins.get(i).getTexture(), coins.get(i).getX(), coins.get(i).getY(), coins.get(i).getWidth(), coins.get(i).getHeight());
         font.draw(batch, "Playing ", 0, 480);
         batch.end();
 
         // Controlling the player
         movementControl();
-
         for(int i = 0; i < OBSTACLES_PER_SCREEN; i++) {
             obstacles.get(i).changePos(-5);
             if (checkColisions(player, obstacles.get(i))) {
                 game.setScreen(new MainMenuScreen(game));
             }
             if(obstacles.get(i).getY()<0){
-                obstacles.get(i).setY(screenHeight);
+                obstacles.get(i).setY(screenHeight*(float)1.5);
+            }
+        }
+        for(int i = 0; i < COINS_PER_SCREEN; i++){
+            coins.get(i).changePos(-5);
+            if (checkColisions(player, coins.get(i))) {
+                player.increaseScore(100);
+                coins.get(i).setY(coins.get(i).getY() + screenHeight);
+            }
+            if(coins.get(i).getY()<0){
+                coins.get(i).setY(screenHeight);
             }
         }
     }
 
     public boolean checkColisions(Player p, Obstacle o){
+        float x1 = p.getX();
+        float y1 = p.getY();
+
+        float x2 = p.getX() + p.getWidth();
+        float y2 = p.getY() + p.getHeight();
+
+        float x3 = o.getX();
+        float y3 = o.getY();
+
+        float x4 = o.getX() + o.getWidth();
+        float y4 = o.getY() + o.getHeight();
+
+        return ((x1 >= x3 && x1 <= x4) && (y1 >= y3 && y1 <= y4))
+                || ((x2 >= x3 && x2 <= x4) && (y2 >= y3 && y2 <= y4))
+                || ((x2 >= x3 && x2 <= x4) && (y1 >= y3 && y1 <= y4))
+                || ((x1 >= x3 && x1 <= x4) && (y2 >= y3 && y2 <= y4));
+    }
+
+    public boolean checkColisions(Player p, Coin o){
         float x1 = p.getX();
         float y1 = p.getY();
 
@@ -145,5 +194,6 @@ public class GameScreen implements Screen{
     public void dispose() {
         player.getTexture().dispose();
         for(int i = 0; i < OBSTACLES_PER_SCREEN; i++) obstacles.get(i).getTexture().dispose();
+        for(int i = 0; i < COINS_PER_SCREEN; i++) coins.get(i).getTexture().dispose();
     }
 }

@@ -9,7 +9,10 @@ public class Player {
     float screenHeight = Gdx.graphics.getHeight();
     float screenWidth = Gdx.graphics.getWidth();
 
+    int score;
+
     public Player(String texture){
+        score = 0;
         width = 96;
         height = 96;
         x = screenWidth/2;
@@ -30,5 +33,9 @@ public class Player {
 
     public void changePos(int newPos){
         x+=newPos;
+    }
+
+    public void increaseScore(int add){
+        score+=add;
     }
 }
