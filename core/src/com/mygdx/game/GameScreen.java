@@ -84,8 +84,8 @@ public class GameScreen implements Screen{
                 if (player.getX() < screenWidth -player.getWidth()) player.changePos(10);
                 else player.changePos(-10);
             else
-            if (player.getX() > 0) player.changePos(-10);
-            else player.changePos(10);
+                if (player.getX() > 0) player.changePos(-10);
+                else player.changePos(10);
         }
     }
 
