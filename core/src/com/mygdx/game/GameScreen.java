@@ -28,22 +28,20 @@ import jdk.tools.jmod.Main;
 
 public class GameScreen implements Screen{
     public static final int OBSTACLES_PER_SCREEN = 8;
-
     public static final int COINS_PER_SCREEN = 3;
-    final Lecturer_fight game;
-    final float screenHeight = Gdx.graphics.getHeight();
-    final float screenWidth = Gdx.graphics.getWidth();
-    OrthographicCamera camera;
-    SpriteBatch batch = new SpriteBatch();
-    BitmapFont font = new BitmapFont();
-    ShapeRenderer shapeRenderer = new ShapeRenderer();
+    private final Lecturer_fight game;
+    private final float screenHeight = Gdx.graphics.getHeight();
+    private final float screenWidth = Gdx.graphics.getWidth();
+    private OrthographicCamera camera;
+    private SpriteBatch batch = new SpriteBatch();
+    private BitmapFont font = new BitmapFont();
+
+    private ShapeRenderer shapeRenderer = new ShapeRenderer();
     public Player player;
     public ArrayList<Obstacle> obstacles;
-
     public ArrayList<Coin> coins;
+    private int highestObstacle;
 
-
-    private Sprite bird;
 
     public GameScreen(final Lecturer_fight game) {
         this.game = game;
@@ -120,8 +118,10 @@ public class GameScreen implements Screen{
             }
             if(obstacles.get(i).getY()<0){
                 obstacles.get(i).setY(screenHeight*(float)1.5);
+                highestObstacle=i;
             }
         }
+
         for(int i = 0; i < COINS_PER_SCREEN; i++){
             coins.get(i).changePos(-5);
             if (checkColisions(player, coins.get(i))) {
@@ -129,7 +129,16 @@ public class GameScreen implements Screen{
                 coins.get(i).setY(coins.get(i).getY() + screenHeight);
             }
             if(coins.get(i).getY()<0){
-                coins.get(i).setY(screenHeight);
+                float y;
+                float x = generateRandomNumber(100, (int)screenWidth-100);
+                int pos = (int)(obstacles.get(highestObstacle).getY() + obstacles.get(highestObstacle).getHeight());
+                if(highestObstacle < 7){
+                    y = generateRandomNumber(pos+50, (int) obstacles.get(highestObstacle+1).getY()-50);
+                }
+                else
+                    y = obstacles.get(highestObstacle+1).getY()+ obstacles.get(highestObstacle+1).getHeight()+50;
+                coins.get(i).setX(x);
+                coins.get(i).setY(y);
             }
         }
     }

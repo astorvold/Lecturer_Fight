@@ -9,7 +9,7 @@ public class Obstacle {
     Texture texture;
 
     public Obstacle(String texture, float x, float y, float width, float height){
-        this.width = width+generateRandomNumber(256,512);
+        this.width = width+generateRandomNumber(128,512);
         this.height = height;
         if(x==0) this.x = 0;
         else this.x = x-this.width;
