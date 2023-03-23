@@ -79,6 +79,7 @@ public class GameScreen implements Screen{
         }
     }
     public void movementControl(){
+
         if (Gdx.input.isTouched()) {
             if(Gdx.input.getX() > screenWidth/2)
                 if (player.getX() < screenWidth -player.getWidth()) player.changePos(10);
