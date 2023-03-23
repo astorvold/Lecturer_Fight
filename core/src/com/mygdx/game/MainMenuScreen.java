@@ -10,11 +10,17 @@ import com.badlogic.gdx.utils.ScreenUtils;
 
 public class MainMenuScreen implements Screen {
 
+    //Distance between buttons
+    private final int distance = 200;
     final Lecturer_fight game;
     OrthographicCamera camera;
     Texture startButton;
     Texture settingsButton;
     Texture scoreButton;
+
+    private final float screenHeight = Gdx.graphics.getHeight();
+
+    private final float screenWidth = Gdx.graphics.getWidth();
     SpriteBatch batch = new SpriteBatch();
     BitmapFont font = new BitmapFont();;
 
@@ -38,16 +44,17 @@ public class MainMenuScreen implements Screen {
     @Override
     public void render(float delta) {
         ScreenUtils.clear(0, 0, 0.2f, 1);
-
+        float startButtonX = screenWidth/2;
+        float startButtonY = screenHeight/2;
         camera.update();
         game.batch.setProjectionMatrix(camera.combined);
 
         batch.begin();
         font.draw(batch, "Welcome to Lecturer fight!!! ", 200, 380);
         font.draw(batch, "Click on start to begin!", 200, 370);
-        batch.draw(startButton, 150, 250);
-        batch.draw(settingsButton, 500, 250);
-        batch.draw(scoreButton, 150, 100);
+        batch.draw(startButton, startButtonX - (float)startButton.getWidth()/2, startButtonY);
+        batch.draw(scoreButton, startButtonX-(float)scoreButton.getWidth()/2, (float) (startButtonY - startButtonY*0.25));
+        batch.draw(settingsButton, startButtonX -(float)settingsButton.getWidth()/2, (float) (startButtonY - startButtonY*0.40));
         batch.end();
 
 
@@ -59,8 +66,6 @@ public class MainMenuScreen implements Screen {
                 dispose();
                 game.setScreen(new GameScreen(game));
             }
-
-
         }
     }
 
