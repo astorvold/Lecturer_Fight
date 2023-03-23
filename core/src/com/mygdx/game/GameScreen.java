@@ -74,7 +74,8 @@ public class GameScreen implements Screen{
         for(int i = 1; i <= COINS_PER_SCREEN; i++){
             float x = generateRandomNumber(100, (int)screenWidth-100);
             int random_int = (int)generateRandomNumber(1,7);
-            float y = generateRandomNumber((int)(obstacles.get(random_int-1).getY() + obstacles.get(random_int-1).getWidth()) +70 , (int) obstacles.get(random_int).getY()-64-70);          coins.add(new Coin("coin.png", x, y, 64,64));
+            float y = generateRandomNumber((int)(obstacles.get(random_int-1).getY() + obstacles.get(random_int-1).getWidth()) +70 , (int) obstacles.get(random_int).getY()-(64+70));
+            coins.add(new Coin("coin.png", x, y, 64,64));
         }
     }
     public void movementControl(){
