@@ -55,6 +55,7 @@ public class GameScreen implements Screen{
         player = new Player("bird.png", screenWidth/2, screenHeight/2, 96,96);
         initializeObstacles();
         initializeCoins();
+        highestObstacle = 7;
     }
 
     private float generateRandomNumber(int from, int to){
@@ -138,7 +139,7 @@ public class GameScreen implements Screen{
             coins.get(i).changePos(-speed);
             if (player.checkColisions(coins.get(i))) {
                 player.increaseScore(100);
-                coins.get(i).setY(coins.get(i).getY() + screenHeight);
+                coins.get(i).setY(obstacles.get(highestObstacle).getY() + obstacles.get(highestObstacle).getHeight() +70);
             }
             //If the coin is getting out the bounds it will be put again.
             //It will be put on top of the highest obstacle
