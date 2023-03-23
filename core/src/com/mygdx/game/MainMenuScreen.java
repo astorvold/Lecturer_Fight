@@ -2,6 +2,7 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -16,7 +17,9 @@ public class MainMenuScreen implements Screen {
     Texture settingsButton;
     Texture scoreButton;
     SpriteBatch batch = new SpriteBatch();
-    BitmapFont font = new BitmapFont();;
+    BitmapFont font = new BitmapFont();
+    Music music = Gdx.audio.newMusic(Gdx.files.internal("point.mp3"));
+
 
     public MainMenuScreen(final Lecturer_fight game) {
         this.game = game;
@@ -26,7 +29,6 @@ public class MainMenuScreen implements Screen {
         startButton = new Texture(Gdx.files.internal("start.png"));
         settingsButton = new Texture(Gdx.files.internal("settings.png"));
         scoreButton = new Texture(Gdx.files.internal("score.png"));
-
     }
 
 
@@ -38,7 +40,6 @@ public class MainMenuScreen implements Screen {
     @Override
     public void render(float delta) {
         ScreenUtils.clear(0, 0, 0.2f, 1);
-
         camera.update();
         game.batch.setProjectionMatrix(camera.combined);
 
@@ -56,11 +57,11 @@ public class MainMenuScreen implements Screen {
         if (Gdx.input.isTouched()) {
             System.out.println(Gdx.input.getX() + " "+ Gdx.input.getY());
             if(Gdx.input.getX() > 0 && Gdx.input.getX() < 300 && Gdx.input.getY() > 0 && Gdx.input.getY() < 300){
+                music.setLooping(true);
+                music.play();
                 dispose();
                 game.setScreen(new GameScreen(game));
             }
-
-
         }
     }
 
