@@ -29,6 +29,8 @@ import jdk.tools.jmod.Main;
 public class GameScreen implements Screen{
     public static final int OBSTACLES_PER_SCREEN = 8;
     public static final int COINS_PER_SCREEN = 3;
+
+    private final int speed = 3;
     private final Lecturer_fight game;
     private final float screenHeight = Gdx.graphics.getHeight();
     private final float screenWidth = Gdx.graphics.getWidth();
@@ -38,8 +40,8 @@ public class GameScreen implements Screen{
 
     private ShapeRenderer shapeRenderer = new ShapeRenderer();
     public Player player;
-    public ArrayList<Obstacle> obstacles;
-    public ArrayList<Coin> coins;
+    public ArrayList<Entity> obstacles;
+    public ArrayList<Entity> coins;
     private int highestObstacle;
 
 
@@ -50,9 +52,10 @@ public class GameScreen implements Screen{
         this.camera = new OrthographicCamera();
         camera.setToOrtho(false, 800, 480);
         //Initializing objects
-        player = new Player("bird.png");
+        player = new Player("bird.png", screenWidth/2, screenHeight/2, 96,96);
         initializeObstacles();
         initializeCoins();
+        highestObstacle = 7;
     }
 
     private float generateRandomNumber(int from, int to){
@@ -72,18 +75,19 @@ public class GameScreen implements Screen{
         for(int i = 1; i <= COINS_PER_SCREEN; i++){
             float x = generateRandomNumber(100, (int)screenWidth-100);
             int random_int = (int)generateRandomNumber(1,7);
-            float y = generateRandomNumber((int)obstacles.get(random_int-1).getY()+50, (int) obstacles.get(random_int).getY()-50);
+            float y = generateRandomNumber((int)(obstacles.get(random_int-1).getY() + obstacles.get(random_int-1).getWidth()) +70 , (int) obstacles.get(random_int).getY()-(64+70));
             coins.add(new Coin("coin.png", x, y, 64,64));
         }
     }
     public void movementControl(){
+
         if (Gdx.input.isTouched()) {
             if(Gdx.input.getX() > screenWidth/2)
                 if (player.getX() < screenWidth -player.getWidth()) player.changePos(10);
                 else player.changePos(-10);
             else
-            if (player.getX() > 0) player.changePos(-10);
-            else player.changePos(10);
+                if (player.getX() > 0) player.changePos(-10);
+                else player.changePos(10);
         }
     }
 
@@ -111,76 +115,42 @@ public class GameScreen implements Screen{
 
         // Controlling the player
         movementControl();
+        checkColisions();
+    }
+
+    /**
+     * CheckColisions Method
+     */
+    public void checkColisions() {
+        //Checks if any obstacle is at the same position that the player
         for(int i = 0; i < OBSTACLES_PER_SCREEN; i++) {
-            obstacles.get(i).changePos(-5);
-            if (checkColisions(player, obstacles.get(i))) {
+            obstacles.get(i).changePos(-speed);
+            if (player.checkColisions(obstacles.get(i))) {
                 game.setScreen(new MainMenuScreen(game));
             }
+            //If the obstacle is getting out the bounds it will be put again
             if(obstacles.get(i).getY()<0){
                 obstacles.get(i).setY(screenHeight*(float)1.5);
                 highestObstacle=i;
             }
         }
-
+        //Checks if any coin is at the same position that the player
         for(int i = 0; i < COINS_PER_SCREEN; i++){
-            coins.get(i).changePos(-5);
-            if (checkColisions(player, coins.get(i))) {
+            coins.get(i).changePos(-speed);
+            if (player.checkColisions(coins.get(i))) {
                 player.increaseScore(100);
-                coins.get(i).setY(coins.get(i).getY() + screenHeight);
+                coins.get(i).setY(obstacles.get(highestObstacle).getY() + obstacles.get(highestObstacle).getHeight() +70);
             }
+            //If the coin is getting out the bounds it will be put again.
+            //It will be put on top of the highest obstacle
             if(coins.get(i).getY()<0){
-                float y;
                 float x = generateRandomNumber(100, (int)screenWidth-100);
-                int pos = (int)(obstacles.get(highestObstacle).getY() + obstacles.get(highestObstacle).getHeight());
-                if(highestObstacle < 7){
-                    y = generateRandomNumber(pos+50, (int) obstacles.get(highestObstacle+1).getY()-50);
-                }
-                else
-                    y = obstacles.get(highestObstacle+1).getY()+ obstacles.get(highestObstacle+1).getHeight()+50;
+                float y = obstacles.get(highestObstacle).getY() + obstacles.get(highestObstacle).getHeight() +70;
                 coins.get(i).setX(x);
                 coins.get(i).setY(y);
             }
         }
     }
-
-    public boolean checkColisions(Player p, Obstacle o){
-        float x1 = p.getX();
-        float y1 = p.getY();
-
-        float x2 = p.getX() + p.getWidth();
-        float y2 = p.getY() + p.getHeight();
-
-        float x3 = o.getX();
-        float y3 = o.getY();
-
-        float x4 = o.getX() + o.getWidth();
-        float y4 = o.getY() + o.getHeight();
-
-        return ((x1 >= x3 && x1 <= x4) && (y1 >= y3 && y1 <= y4))
-                || ((x2 >= x3 && x2 <= x4) && (y2 >= y3 && y2 <= y4))
-                || ((x2 >= x3 && x2 <= x4) && (y1 >= y3 && y1 <= y4))
-                || ((x1 >= x3 && x1 <= x4) && (y2 >= y3 && y2 <= y4));
-    }
-
-    public boolean checkColisions(Player p, Coin o){
-        float x1 = p.getX();
-        float y1 = p.getY();
-
-        float x2 = p.getX() + p.getWidth();
-        float y2 = p.getY() + p.getHeight();
-
-        float x3 = o.getX();
-        float y3 = o.getY();
-
-        float x4 = o.getX() + o.getWidth();
-        float y4 = o.getY() + o.getHeight();
-
-        return ((x1 >= x3 && x1 <= x4) && (y1 >= y3 && y1 <= y4))
-                || ((x2 >= x3 && x2 <= x4) && (y2 >= y3 && y2 <= y4))
-                || ((x2 >= x3 && x2 <= x4) && (y1 >= y3 && y1 <= y4))
-                || ((x1 >= x3 && x1 <= x4) && (y2 >= y3 && y2 <= y4));
-    }
-
     @Override
     public void resize(int width, int height) {
     }
