@@ -24,7 +24,6 @@ public class MainMenuScreen implements Screen {
     private final float screenWidth = Gdx.graphics.getWidth();
     SpriteBatch batch = new SpriteBatch();
     BitmapFont font = new BitmapFont();
-    Music music = Gdx.audio.newMusic(Gdx.files.internal("point.mp3"));
 
 
     public MainMenuScreen(final Lecturer_fight game) {
@@ -65,8 +64,6 @@ public class MainMenuScreen implements Screen {
         if (Gdx.input.isTouched()) {
             System.out.println(Gdx.input.getX() + " "+ Gdx.input.getY());
             if(Gdx.input.getX() > 0 && Gdx.input.getX() < 300 && Gdx.input.getY() > 0 && Gdx.input.getY() < 300){
-                music.setLooping(true);
-                music.play();
                 dispose();
                 game.setScreen(new GameScreen(game));
             }
