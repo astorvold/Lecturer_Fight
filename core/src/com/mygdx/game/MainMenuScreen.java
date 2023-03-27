@@ -3,25 +3,30 @@ package com.mygdx.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
 
+import org.w3c.dom.Text;
+
 public class MainMenuScreen implements Screen {
 
     //Distance between buttons
-    private final int distance = 200;
+    private final int distance = 250;
     final Lecturer_fight game;
     OrthographicCamera camera;
-    Texture startButton;
-    Texture settingsButton;
-    Texture scoreButton;
+    Texture playButton, settingsButton, scoreButton, avatarButton, toggleONButton, toggleOFFButton,tutorialButton,titleImage,backgroundImage;
+
 
     private final float screenHeight = Gdx.graphics.getHeight();
 
     private final float screenWidth = Gdx.graphics.getWidth();
+
+    private final float buttonWidth = screenWidth/2;
+    private float buttonHeight;
     SpriteBatch batch = new SpriteBatch();
     BitmapFont font = new BitmapFont();
     Music music = Gdx.audio.newMusic(Gdx.files.internal("point.mp3"));
@@ -32,9 +37,21 @@ public class MainMenuScreen implements Screen {
         this.camera = new OrthographicCamera();
         camera.setToOrtho(false,800,400);
 
-        startButton = new Texture(Gdx.files.internal("start.png"));
-        settingsButton = new Texture(Gdx.files.internal("settings.png"));
-        scoreButton = new Texture(Gdx.files.internal("score.png"));
+        playButton = new Texture(Gdx.files.internal("new_images/PLAY.png"));
+        settingsButton = new Texture(Gdx.files.internal("new_images/SETTINGS.png"));
+        scoreButton = new Texture(Gdx.files.internal("new_images/HIGHSCORE.png"));
+        toggleONButton = new Texture(Gdx.files.internal("new_images/TOGGLE_ON.png"));
+        toggleOFFButton = new Texture(Gdx.files.internal("new_images/TOGGLE_OFF.png"));
+        tutorialButton = new Texture(Gdx.files.internal("new_images/TUTORIAL.png"));
+
+        avatarButton = new Texture(Gdx.files.internal("alfinge_avatar.png"));
+        titleImage = new Texture(Gdx.files.internal("new_images/TITLE.png"));
+        backgroundImage = new Texture(Gdx.files.internal("new_images/BG.png"));
+
+        buttonHeight = playButton.getHeight()*buttonWidth/playButton.getWidth();
+        font.getData().setScale(5,5);
+        //font.setColor(2/255,61/255,139/255,1);
+        font.setColor(new Color(0x023D8Bff));
     }
 
 
@@ -46,22 +63,35 @@ public class MainMenuScreen implements Screen {
     @Override
     public void render(float delta) {
         ScreenUtils.clear(0, 0, 0.2f, 1);
-        float startButtonX = screenWidth/2;
-        float startButtonY = screenHeight/2;
+        float playButtonX = screenWidth/2;
+        float playButtonY = screenHeight/2;
         camera.update();
         game.batch.setProjectionMatrix(camera.combined);
 
         batch.begin();
-        font.draw(batch, "Welcome to Lecturer fight!!! ", 200, 380);
-        font.draw(batch, "Click on start to begin!", 200, 370);
-        batch.draw(startButton, startButtonX - (float)startButton.getWidth()/2, startButtonY);
-        batch.draw(scoreButton, startButtonX-(float)scoreButton.getWidth()/2, (float) (startButtonY - startButtonY*0.25));
-        batch.draw(settingsButton, startButtonX -(float)settingsButton.getWidth()/2, (float) (startButtonY - startButtonY*0.40));
+        //design
+        batch.draw(backgroundImage,0,0,screenWidth,backgroundImage.getHeight()*screenWidth/backgroundImage.getWidth());
+        batch.draw(titleImage,screenWidth/6,screenHeight-250,screenWidth*2/3,titleImage.getHeight()*(screenWidth*2/3)/titleImage.getWidth());
+
+        //text
+        font.draw(batch, "Made by Group 16", screenWidth/2-distance*7/6, 150);
+        font.draw(batch, "Multiplayer",(screenWidth-buttonWidth)/2+20,((screenHeight-buttonHeight)/2)+(buttonHeight-distance));
+
+        //square buttons
+        batch.draw(playButton, (screenWidth-buttonWidth)/2,(screenHeight-buttonHeight)/2, buttonWidth, buttonHeight);
+        batch.draw(scoreButton, (screenWidth-buttonWidth)/2,(screenHeight-buttonHeight)/2-distance*4/3, buttonWidth, buttonHeight);
+        batch.draw(tutorialButton,(screenWidth-buttonWidth)/2,(screenHeight-buttonHeight)/2-distance*7/3,buttonWidth, buttonHeight);
+
+        //other buttons
+        batch.draw(settingsButton, screenWidth-230, screenHeight-150,300,settingsButton.getHeight()*300/settingsButton.getWidth());
+        batch.draw(toggleONButton, screenWidth/2+35,((screenHeight-buttonHeight)/2)-distance*4/9,300,toggleONButton.getHeight()*300/toggleONButton.getWidth());
+        batch.draw(avatarButton, playButtonX-(float)avatarButton.getWidth()/2,playButtonY+(float)avatarButton.getWidth()/2);
+
         batch.end();
 
 
         //&& Gdx.graphics.getHeight()
-        //when startButton is touched -> go to gameScreen
+        //when playButton is touched -> go to gameScreen
         if (Gdx.input.isTouched()) {
             System.out.println(Gdx.input.getX() + " "+ Gdx.input.getY());
             if(Gdx.input.getX() > 0 && Gdx.input.getX() < 300 && Gdx.input.getY() > 0 && Gdx.input.getY() < 300){
