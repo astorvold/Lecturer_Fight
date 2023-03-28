@@ -22,7 +22,6 @@ public class MainMenuScreen implements Screen {
 
 
     private final float screenHeight = Gdx.graphics.getHeight();
-
     private final float screenWidth = Gdx.graphics.getWidth();
 
     private final float buttonWidth = screenWidth/2;

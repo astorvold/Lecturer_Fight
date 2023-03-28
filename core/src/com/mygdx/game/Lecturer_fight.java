@@ -30,7 +30,7 @@ public class Lecturer_fight extends Game {
 		batch = new SpriteBatch();
 		font = new BitmapFont();
 		api.getHighScores(new ArrayList<Score>());
-		this.setScreen(new SettingsScreen(this));
+		this.setScreen(new MainMenuScreen(this));
 	}
 
 	@Override
