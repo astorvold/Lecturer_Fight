@@ -12,7 +12,7 @@ public class AvatarScreen implements Screen {
     final Lecturer_fight game;
     OrthographicCamera camera;
     Texture alfIngeAvatar, schauAvatar, backButton, backgroundImage;
-    String alfinge_text, schau_text;
+    boolean alfinge_chosen = true, schau_chosen = !alfinge_chosen;
 
     SpriteBatch batch = new SpriteBatch();
     BitmapFont font = new BitmapFont();
@@ -26,15 +26,15 @@ public class AvatarScreen implements Screen {
         this.camera = new OrthographicCamera();
         camera.setToOrtho(false,800,400);
 
+        //create Textures
         alfIngeAvatar = new Texture(Gdx.files.internal("alfinge_avatar.png"));
         schauAvatar = new Texture(Gdx.files.internal("schau_avatar.png"));
         backButton = new Texture(Gdx.files.internal("new_images/ARROW_LEFT.png"));
-        backgroundImage = new Texture(Gdx.files.internal("new_images/BG.png"));
+        backgroundImage = new Texture(Gdx.files.internal("new_images/LIGHT_BG.png"));
 
+        //edit font
         font.setColor(new Color(0x023D8Bff));
         font.getData().setScale(6,6);
-        alfinge_text = "Chosen";
-        schau_text = "Bought";
     }
 
     @Override
@@ -54,8 +54,10 @@ public class AvatarScreen implements Screen {
         batch.draw(schauAvatar,screenWidth*4/7,screenHeight/2,alfIngeAvatar.getWidth(),schauAvatar.getHeight()*alfIngeAvatar.getWidth()/schauAvatar.getWidth()+10);
 
         //text
-        font.draw(batch, alfinge_text,screenWidth/8+30,screenHeight/2-20);
-        font.draw(batch, schau_text, screenWidth*4/7+30, screenHeight/2-20);
+        font.draw(batch, "Alf-Inge", screenWidth/8+40,screenHeight*7/8-40);
+        font.draw(batch, "Christian\n  Schau", screenWidth*7/12,screenHeight*7/8);
+        font.draw(batch, ((alfinge_chosen) ? "Chosen" : "Not chosen"),((alfinge_chosen) ? (screenWidth/8+30) : (screenWidth/8-40)),screenHeight/2-20);
+        font.draw(batch, ((schau_chosen) ? "Chosen" : "Not chosen"), ((schau_chosen) ? (screenWidth*4/7) : (screenWidth/2)), screenHeight/2-20);
 
         batch.end();
 

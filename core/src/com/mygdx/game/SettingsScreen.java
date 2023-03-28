@@ -3,6 +3,7 @@ package com.mygdx.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -20,6 +21,7 @@ public class SettingsScreen implements Screen {
     Texture noSound;
     Music music = Gdx.audio.newMusic(Gdx.files.internal("Dumb Ways To Die.mp3"));
     Music point = Gdx.audio.newMusic(Gdx.files.internal("point.mp3"));
+    Texture backButton, backgroundImage, toggleONButton, toggleOFFButton;
 
 
     private final float screenHeight = Gdx.graphics.getHeight();
@@ -27,6 +29,7 @@ public class SettingsScreen implements Screen {
     private final float screenWidth = Gdx.graphics.getWidth();
     SpriteBatch batch = new SpriteBatch();
     BitmapFont font = new BitmapFont();
+    boolean music_on = true, sound_on = true;
 
 
     public SettingsScreen(final Lecturer_fight game) {
@@ -38,6 +41,15 @@ public class SettingsScreen implements Screen {
         sound = new Texture(Gdx.files.internal("sound-icon.png"));
         noSound = new Texture(Gdx.files.internal("sound-off-icon.png"));
 
+        //create Textures
+        backButton = new Texture(Gdx.files.internal("new_images/ARROW_LEFT.png"));
+        backgroundImage = new Texture(Gdx.files.internal("new_images/LIGHT_BG.png"));
+        toggleONButton = new Texture(Gdx.files.internal("new_images/TOGGLE_ON.png"));
+        toggleOFFButton = new Texture(Gdx.files.internal("new_images/TOGGLE_OFF.png"));
+
+        //edit font
+        font.setColor(new Color(0x023D8Bff));
+        font.getData().setScale(6,6);
 
         //changing the sound settings on the android device
         //AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
@@ -56,7 +68,20 @@ public class SettingsScreen implements Screen {
     public void render(float delta) {
         //ScreenUtils.clear(0, 0, 0.2f, 1);
         batch.begin();
-        font.draw(batch,"Settings",screenWidth/4, screenHeight-10);
+        //page items
+        batch.draw(backgroundImage,0,0,screenWidth,backgroundImage.getHeight()*screenWidth/backgroundImage.getWidth());
+        batch.draw(backButton, -50, screenHeight-150,300,backButton.getHeight()*300/backButton.getWidth());
+
+        //texts
+        font.draw(batch,"Settings",screenWidth*1/3+20, screenHeight-50);
+        font.draw(batch,((music_on) ? "Turn music off:" : "Turn music on:"),100, screenHeight*3/4);
+        font.draw(batch,((sound_on) ? "Turn sound off:" : "Turn sound on:"),100, screenHeight*2/3);
+
+        //toggle-buttons
+        batch.draw(toggleONButton,screenWidth*2/3,screenHeight*3/4-110,350,toggleONButton.getHeight()*350/toggleONButton.getWidth());
+        batch.draw(toggleONButton,screenWidth*2/3,screenHeight*2/3-110,350,toggleONButton.getHeight()*350/toggleONButton.getWidth());
+
+        //sound
         batch.draw(sound, screenWidth-sound.getWidth()-20, screenHeight-sound.getHeight()-20);
         music.setLooping(true);
         music.play();
