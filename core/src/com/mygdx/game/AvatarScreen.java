@@ -1,6 +1,7 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -9,10 +10,12 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class AvatarScreen implements Screen {
+    Preferences prefs = Gdx.app.getPreferences("Lecturer-Fight");
     final Lecturer_fight game;
     OrthographicCamera camera;
     Texture alfIngeAvatar, schauAvatar, backButton, backgroundImage;
-    boolean alfinge_chosen = true, schau_chosen = !alfinge_chosen;
+    boolean alfinge_chosen = ((prefs.getString("Avatar") == "alfinge_avatar.png" && prefs.getString("Avatar") == null) ? true : false);
+    boolean schau_chosen = ((prefs.getString("Avatar") == "schau_avatar.png") ? true : false);
 
     SpriteBatch batch = new SpriteBatch();
     BitmapFont font = new BitmapFont();
@@ -35,7 +38,20 @@ public class AvatarScreen implements Screen {
         //edit font
         font.setColor(new Color(0x023D8Bff));
         font.getData().setScale(6,6);
+
+        check_Avatar();
     }
+
+    private void check_Avatar() {
+        if(prefs.getString("Avatar") == "alfinge_avatar.png") {
+            alfinge_chosen = true;
+            schau_chosen = !alfinge_chosen;
+        } else if (prefs.getString("Avatar") == "schau_avatar.png") {
+            schau_chosen = true;
+            alfinge_chosen = !schau_chosen;
+        }
+    }
+
 
     @Override
     public void show() {
@@ -61,6 +77,32 @@ public class AvatarScreen implements Screen {
 
         batch.end();
 
+        if (Gdx.input.isTouched()) {
+            System.out.println("x"+Gdx.input.getX());
+            System.out.println("y"+Gdx.input.getY());
+            //update avatar
+            if (Gdx.input.getX() < screenWidth/2 && Gdx.input.getY()>screenHeight/2) {
+                prefs.putString("Avatar", "alfinge_avatar.png");
+            } else if(Gdx.input.getX() > screenWidth/2 && Gdx.input.getY()>screenHeight/2) {
+                prefs.putString("Avatar", "schau_avatar.png");
+            }
+            prefs.flush();
+            check_Avatar();
+
+            //Return to main-menu
+            if(Gdx.input.getX()<150 && Gdx.input.getY()<150){
+                dispose();
+                game.setScreen(new MainMenuScreen(game));
+            }
+
+        }
+    }
+
+    public void setSkin() {
+        if(alfinge_chosen){
+
+        }
+        String avatar = prefs.getString("Avatar","alfinge_avatar.png");
     }
 
     @Override

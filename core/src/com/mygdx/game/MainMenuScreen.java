@@ -1,6 +1,7 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
@@ -20,7 +21,7 @@ public class MainMenuScreen implements Screen {
     OrthographicCamera camera;
     Texture playButton, settingsButton, scoreButton, avatarButton, toggleONButton, toggleOFFButton,tutorialButton,titleImage,backgroundImage;
 
-
+    Preferences prefs = Gdx.app.getPreferences("Lecturer-Fight");
     private final float screenHeight = Gdx.graphics.getHeight();
     private final float screenWidth = Gdx.graphics.getWidth();
 
@@ -35,6 +36,11 @@ public class MainMenuScreen implements Screen {
         this.camera = new OrthographicCamera();
         camera.setToOrtho(false,800,400);
 
+        /*
+        prefs.putString("Avatar", "alfinge_avatar.png");
+        prefs.flush();*/
+
+
         playButton = new Texture(Gdx.files.internal("new_images/PLAY.png"));
         settingsButton = new Texture(Gdx.files.internal("new_images/SETTINGS.png"));
         scoreButton = new Texture(Gdx.files.internal("new_images/HIGHSCORE.png"));
@@ -42,14 +48,19 @@ public class MainMenuScreen implements Screen {
         toggleOFFButton = new Texture(Gdx.files.internal("new_images/TOGGLE_OFF.png"));
         tutorialButton = new Texture(Gdx.files.internal("new_images/TUTORIAL.png"));
 
-        avatarButton = new Texture(Gdx.files.internal("alfinge_avatar.png"));
+        avatarButton = new Texture(Gdx.files.internal(prefs.getString("Avatar")));
         titleImage = new Texture(Gdx.files.internal("new_images/TITLE.png"));
         backgroundImage = new Texture(Gdx.files.internal("new_images/BG.png"));
 
         buttonHeight = playButton.getHeight()*buttonWidth/playButton.getWidth();
+
         font.getData().setScale(5,5);
-        //font.setColor(2/255,61/255,139/255,1);
         font.setColor(new Color(0x023D8Bff));
+
+        prefs.putInteger("AvatarHeight", 522);
+        prefs.putInteger("AvatarWidth", avatarButton.getWidth()*prefs.getInteger("AvatarHeight")/avatarButton.getHeight());
+        prefs.flush();
+
     }
 
 
@@ -83,7 +94,7 @@ public class MainMenuScreen implements Screen {
         //other buttons
         batch.draw(settingsButton, screenWidth-230, screenHeight-150,300,settingsButton.getHeight()*300/settingsButton.getWidth());
         batch.draw(toggleONButton, screenWidth/2+35,((screenHeight-buttonHeight)/2)-distance*4/9,300,toggleONButton.getHeight()*300/toggleONButton.getWidth());
-        batch.draw(avatarButton, playButtonX-(float)avatarButton.getWidth()/2,playButtonY+(float)avatarButton.getWidth()/2);
+        batch.draw(avatarButton, (screenWidth-prefs.getInteger("AvatarWidth"))/2, playButtonY+(float)avatarButton.getWidth()/2, prefs.getInteger("AvatarWidth"), prefs.getInteger("AvatarHeight"));
 
         batch.end();
 
@@ -95,6 +106,12 @@ public class MainMenuScreen implements Screen {
             if(Gdx.input.getX() > 0 && Gdx.input.getX() < 300 && Gdx.input.getY() > 0 && Gdx.input.getY() < 300){
                 dispose();
                 game.setScreen(new GameScreen(game));
+            }
+
+            //used to return to avatarscreen to check if selection is saved
+            else if(Gdx.input.getX()>screenWidth/2){
+                dispose();
+                game.setScreen(new AvatarScreen(game));
             }
         }
     }
