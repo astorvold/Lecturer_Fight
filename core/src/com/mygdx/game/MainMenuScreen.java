@@ -102,16 +102,33 @@ public class MainMenuScreen implements Screen {
         //&& Gdx.graphics.getHeight()
         //when playButton is touched -> go to gameScreen
         if (Gdx.input.isTouched()) {
-            System.out.println(Gdx.input.getX() + " "+ Gdx.input.getY());
-            if(Gdx.input.getX() > 0 && Gdx.input.getX() < 300 && Gdx.input.getY() > 0 && Gdx.input.getY() < 300){
+            System.out.println("x"+Gdx.input.getX());
+            System.out.println("y"+Gdx.input.getY());
+            //settings
+            if(Gdx.input.getX() > 940 && Gdx.input.getY() < 150){
+                dispose();
+                game.setScreen(new SettingsScreen(game));
+            }
+            //avatarselection
+            else if((Gdx.input.getX() > 360 && Gdx.input.getX() < 700) && (Gdx.input.getY() > 240 && Gdx.input.getY() < 750)){
+                dispose();
+                game.setScreen(new AvatarScreen(game));
+            }
+
+            //play
+            else if((Gdx.input.getX() > 270 && Gdx.input.getX() < 800) && (Gdx.input.getY() > 820 && Gdx.input.getY() < 1030)){
                 dispose();
                 game.setScreen(new GameScreen(game));
             }
-
-            //used to return to avatarscreen to check if selection is saved
-            else if(Gdx.input.getX()>screenWidth/2){
+            /*highscore
+            else if((Gdx.input.getX() > 270 && Gdx.input.getX() < 800) && (Gdx.input.getY() > 1160 && Gdx.input.getY() < 1360)){
                 dispose();
-                game.setScreen(new AvatarScreen(game));
+                game.setScreen(new HighScoreScreen(game));
+            }*/
+            //tutorial
+            else if((Gdx.input.getX() > 270 && Gdx.input.getX() < 800) && (Gdx.input.getY() > 1420 && Gdx.input.getY() < 1610)){
+                dispose();
+                game.setScreen(new TutorialScreen(game));
             }
         }
     }
