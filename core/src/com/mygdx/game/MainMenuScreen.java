@@ -121,6 +121,9 @@ public class MainMenuScreen implements Screen {
                 boolean current_multiplayer = prefs.getBoolean("Multiplayer");
                 prefs.putBoolean("Multiplayer", ((current_multiplayer) ? false : true));
                 prefs.flush();
+
+                //legge til en sjekk hvor det må være min 0.7sek siden sist kanskje?
+                //gjøre dette ved å legge til en float? i prefs som sjekkes mot. eller kanskje bare en variabel siden den ikke skal brukes noen andre steder
             }
 
             //play
