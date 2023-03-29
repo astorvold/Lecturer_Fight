@@ -22,7 +22,7 @@ public class SettingsScreen implements Screen {
     Texture noSound;
     Music music = Gdx.audio.newMusic(Gdx.files.internal("Dumb Ways To Die.mp3"));
     Music point = Gdx.audio.newMusic(Gdx.files.internal("point.mp3"));
-    Texture backButton, backgroundImage, toggleONButton, toggleOFFButton, toggleMusicButton, toggleSoundButton;
+    Texture backButton, backgroundImage, toggleONButton, toggleOFFButton;
 
 
     private final float screenHeight = Gdx.graphics.getHeight();
@@ -46,13 +46,14 @@ public class SettingsScreen implements Screen {
         //create Textures
         backButton = new Texture(Gdx.files.internal("new_images/ARROW_LEFT.png"));
         backgroundImage = new Texture(Gdx.files.internal("new_images/LIGHT_BG.png"));
-        toggleMusicButton = new Texture(Gdx.files.internal("new_images/TOGGLE_" + ((prefs.getInteger("Music") == 1) ? "ON" : "OFF") + ".png"));
-        toggleSoundButton = new Texture(Gdx.files.internal("new_images/TOGGLE_" + ((prefs.getInteger("Sound") == 1) ? "ON" : "OFF") + ".png"));
+        toggleONButton = new Texture(Gdx.files.internal("new_images/TOGGLE_ON.png"));
+        toggleOFFButton = new Texture(Gdx.files.internal("new_images/TOGGLE_OFF.png"));
 
         //handle on/off logic and be able to use it elsewhere
+        /*
         prefs.putInteger("Music",1);
         prefs.putInteger("Sound",1);
-        prefs.flush();
+        prefs.flush();*/
 
 
         //edit font
@@ -86,8 +87,8 @@ public class SettingsScreen implements Screen {
         font.draw(batch,((sound_on) ? "Turn sound off:" : "Turn sound on:"),100, screenHeight*2/3);
 
         //toggle-buttons
-        batch.draw(toggleMusicButton,screenWidth*2/3,screenHeight*3/4-110,350,toggleMusicButton.getHeight()*350/toggleMusicButton.getWidth());
-        batch.draw(toggleSoundButton,screenWidth*2/3,screenHeight*2/3-110,350,toggleSoundButton.getHeight()*350/toggleSoundButton.getWidth());
+        batch.draw(((prefs.getInteger("Music") == 1) ? toggleONButton : toggleOFFButton),screenWidth*2/3,screenHeight*3/4-110,350,toggleONButton.getHeight()*350/toggleONButton.getWidth());
+        batch.draw(((prefs.getInteger("Sound") == 1) ? toggleONButton : toggleOFFButton),screenWidth*2/3,screenHeight*2/3-110,350,toggleONButton.getHeight()*350/toggleONButton.getWidth());
 
         //sound
         batch.draw(sound, screenWidth-sound.getWidth()-20, screenHeight-sound.getHeight()-20);
@@ -109,14 +110,17 @@ public class SettingsScreen implements Screen {
                 prefs.putInteger("Music", ((current_state == 1) ? 0 : 1));
                 if(current_state == 1){
                     //mekk å skru av music
+                    //music.pause(); kanskje?
                 }else{
                     //mekk å skru på music
+                    music.play();
                 }
             }
             //turn sound on/off
             else if((Gdx.input.getX()<970 && Gdx.input.getX()>810) && (Gdx.input.getY()<700 && Gdx.input.getY()>620)){
                 int current_state = prefs.getInteger("Sound");
                 prefs.putInteger("Sound", ((current_state == 1) ? 0 : 1));
+                // trenger kanskje ikke å gjøre noe under her siden play-koden kan sjekke om prefs("sound")==1 og så lager lyd
                 if(current_state == 1){
                     //mekk å skru av sound
                 }else{

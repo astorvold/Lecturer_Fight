@@ -59,6 +59,7 @@ public class MainMenuScreen implements Screen {
 
         prefs.putInteger("AvatarHeight", 522);
         prefs.putInteger("AvatarWidth", avatarButton.getWidth()*prefs.getInteger("AvatarHeight")/avatarButton.getHeight());
+        prefs.putBoolean("Multiplayer", true);
         prefs.flush();
 
     }
@@ -93,7 +94,7 @@ public class MainMenuScreen implements Screen {
 
         //other buttons
         batch.draw(settingsButton, screenWidth-230, screenHeight-150,300,settingsButton.getHeight()*300/settingsButton.getWidth());
-        batch.draw(toggleONButton, screenWidth/2+35,((screenHeight-buttonHeight)/2)-distance*4/9,300,toggleONButton.getHeight()*300/toggleONButton.getWidth());
+        batch.draw(((prefs.getBoolean("Multiplayer")) ? toggleONButton : toggleOFFButton), screenWidth/2+35,((screenHeight-buttonHeight)/2)-distance*4/9,300,toggleONButton.getHeight()*300/toggleONButton.getWidth());
         batch.draw(avatarButton, (screenWidth-prefs.getInteger("AvatarWidth"))/2, playButtonY+(float)avatarButton.getWidth()/2, prefs.getInteger("AvatarWidth"), prefs.getInteger("AvatarHeight"));
 
         batch.end();
@@ -113,6 +114,13 @@ public class MainMenuScreen implements Screen {
             else if((Gdx.input.getX() > 360 && Gdx.input.getX() < 700) && (Gdx.input.getY() > 240 && Gdx.input.getY() < 750)){
                 dispose();
                 game.setScreen(new AvatarScreen(game));
+            }
+            //multiplpayer toggle
+            //toggles experience glitching when we click on them because the click is registered many times if pressed longer than like 0.1secs
+            else if((Gdx.input.getX() > 650 && Gdx.input.getX() < 800) && (Gdx.input.getY() > 1040 && Gdx.input.getY() < 1130)) {
+                boolean current_multiplayer = prefs.getBoolean("Multiplayer");
+                prefs.putBoolean("Multiplayer", ((current_multiplayer) ? false : true));
+                prefs.flush();
             }
 
             //play
