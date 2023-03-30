@@ -30,15 +30,17 @@ public class MainMenuScreen implements Screen {
     SpriteBatch batch = new SpriteBatch();
     BitmapFont font = new BitmapFont();
 
+    SettingsScreen settings;
+
 
     public MainMenuScreen(final Lecturer_fight game) {
         this.game = game;
         this.camera = new OrthographicCamera();
+        this.settings = new SettingsScreen(game);
         camera.setToOrtho(false,800,400);
 
-        /*
         prefs.putString("Avatar", "alfinge_avatar.png");
-        prefs.flush();*/
+        prefs.flush();
 
 
         playButton = new Texture(Gdx.files.internal("new_images/PLAY.png"));
@@ -62,6 +64,9 @@ public class MainMenuScreen implements Screen {
         prefs.putBoolean("Multiplayer", true);
         prefs.flush();
 
+        //play music
+        settings.playMusic();
+
     }
 
 
@@ -77,6 +82,13 @@ public class MainMenuScreen implements Screen {
         float playButtonY = screenHeight/2;
         camera.update();
         game.batch.setProjectionMatrix(camera.combined);
+
+        //music
+        if (settings.isMusic_on()){
+            settings.playMusic();
+        } else{
+            settings.stopMusic();
+        }
 
         batch.begin();
         //design

@@ -16,10 +16,6 @@ import com.badlogic.gdx.utils.ScreenUtils;
 public class SettingsScreen implements Screen {
     final Lecturer_fight game;
     OrthographicCamera camera;
-    TextButton musicButton;
-    Texture soundButton;
-    Texture sound;
-    Texture noSound;
     Music music = Gdx.audio.newMusic(Gdx.files.internal("Dumb Ways To Die.mp3"));
     Music point = Gdx.audio.newMusic(Gdx.files.internal("point.mp3"));
     Texture backButton, backgroundImage, toggleONButton, toggleOFFButton;
@@ -40,8 +36,8 @@ public class SettingsScreen implements Screen {
         camera.setToOrtho(false,800,400);
         font.getData().setScale(10,10);
 
-        sound = new Texture(Gdx.files.internal("sound-icon.png"));
-        noSound = new Texture(Gdx.files.internal("sound-off-icon.png"));
+        //sound = new Texture(Gdx.files.internal("sound-icon.png"));
+        //noSound = new Texture(Gdx.files.internal("sound-off-icon.png"));
 
         //create Textures
         backButton = new Texture(Gdx.files.internal("new_images/ARROW_LEFT.png"));
@@ -64,7 +60,7 @@ public class SettingsScreen implements Screen {
         //AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         //audioManager.setStreamVolume(AudioManager.STREAM_MUSIC);
 
-        music.setVolume(1.0f);
+        music.setVolume(0.5f);
 
     }
 
@@ -91,9 +87,7 @@ public class SettingsScreen implements Screen {
         batch.draw(((prefs.getInteger("Sound") == 1) ? toggleONButton : toggleOFFButton),screenWidth*2/3,screenHeight*2/3-110,350,toggleONButton.getHeight()*350/toggleONButton.getWidth());
 
         //sound
-        batch.draw(sound, screenWidth-sound.getWidth()-20, screenHeight-sound.getHeight()-20);
-        music.setLooping(true);
-        music.play();
+        //batch.draw(sound, screenWidth-sound.getWidth()-20, screenHeight-sound.getHeight()-20);
         batch.end();
 
 
@@ -111,9 +105,12 @@ public class SettingsScreen implements Screen {
                 if(current_state == 1){
                     //mekk å skru av music
                     //music.pause(); kanskje?
+                    stopMusic();
+                    music_on = false;
                 }else{
                     //mekk å skru på music
-                    music.play();
+                    playMusic();
+                    music_on = true;
                 }
             }
             //turn sound on/off
@@ -123,8 +120,11 @@ public class SettingsScreen implements Screen {
                 // trenger kanskje ikke å gjøre noe under her siden play-koden kan sjekke om prefs("sound")==1 og så lager lyd
                 if(current_state == 1){
                     //mekk å skru av sound
+                    sound_on = false;
                 }else{
                     //mekk å skru på sound
+                    sound_on = true;
+
                 }
             }
             prefs.flush();
@@ -154,6 +154,27 @@ public class SettingsScreen implements Screen {
     @Override
     public void hide() {
 
+    }
+
+    public boolean isMusic_on(){
+        return music_on;
+    }
+
+    public boolean isSound_on(){
+        return sound_on;
+    }
+
+    public void playMusic(){
+        if(!music_on){
+            music.setLooping(true);
+            music.play();
+        }
+    }
+
+    public void stopMusic(){
+        if(music_on){
+            music.pause();
+        }
     }
 
     @Override
