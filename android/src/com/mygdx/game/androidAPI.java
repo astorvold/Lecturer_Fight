@@ -22,11 +22,23 @@ public class androidAPI implements API{
     }
 
     @Override
-    public void addScore() {
+    public void addScore(int score) {
         scoresRef = database.getReference("scores");
 
         if(this.scoresRef != null){
-            scoresRef.child("pepe").setValue("1500");
+            scoresRef.child("pepe").setValue(score);
         }
     }
+
+    @Override
+    public void setCoor(String coor) {
+
+    }
+
+    @Override
+    public void getCoor() {
+
+    }
+
+
 }

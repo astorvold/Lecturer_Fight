@@ -2,14 +2,17 @@ package com.mygdx.game;
 
 import java.util.ArrayList;
 
-public class FirebaseAPI implements API{
+public class DesktopAPI implements API {
+
     @Override
     public void getHighScores(ArrayList<Score> dataHolder) {
-        System.out.println("pepepepep");
+        System.out.println("Desktop API");
+
     }
 
     @Override
     public void addScore(int score) {
+        System.out.println("Desktop API");
 
     }
 
@@ -22,6 +25,4 @@ public class FirebaseAPI implements API{
     public void getCoor() {
 
     }
-
-
 }

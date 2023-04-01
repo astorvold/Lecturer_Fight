@@ -23,4 +23,5 @@ public class Player extends Entity {
     public void changePos(int newPos) {
         x+=newPos;
     }
+
 }

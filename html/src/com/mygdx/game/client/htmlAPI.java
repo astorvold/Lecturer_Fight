@@ -12,7 +12,19 @@ public class htmlAPI implements API {
     }
 
     @Override
-    public void addScore() {
+    public void addScore(int score) {
 
     }
+
+    @Override
+    public void setCoor(String coor) {
+
+    }
+
+    @Override
+    public void getCoor() {
+
+    }
+
+
 }

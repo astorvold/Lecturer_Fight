@@ -1,30 +1,14 @@
 package com.mygdx.game;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.TimeUtils;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
-
-import jdk.tools.jmod.Main;
 
 public class GameScreen implements Screen{
     public static final int OBSTACLES_PER_SCREEN = 8;
@@ -38,11 +22,13 @@ public class GameScreen implements Screen{
     private SpriteBatch batch = new SpriteBatch();
     private BitmapFont font = new BitmapFont();
 
-    private ShapeRenderer shapeRenderer = new ShapeRenderer();
     public Player player;
     public ArrayList<Entity> obstacles;
     public ArrayList<Entity> coins;
     private int highestObstacle;
+
+    long startTime;
+
 
 
     public GameScreen(final Lecturer_fight game) {
@@ -110,22 +96,41 @@ public class GameScreen implements Screen{
             batch.draw(obstacles.get(i).getTexture(), obstacles.get(i).getX(), obstacles.get(i).getY(), obstacles.get(i).getWidth(), obstacles.get(i).getHeight());
         for(int i = 0; i < COINS_PER_SCREEN; i++)
             batch.draw(coins.get(i).getTexture(), coins.get(i).getX(), coins.get(i).getY(), coins.get(i).getWidth(), coins.get(i).getHeight());
+        font.draw(batch, Integer.toString(player.getScore()), 500, 500);
+
+
+        // player gets 1 point every second
+        long elapsedTime = TimeUtils.timeSinceMillis(startTime);
+        if (elapsedTime > 1){
+            startTime = 0;
+            elapsedTime = 0;
+            player.increaseScore(1);
+        }
+
         font.draw(batch, "Playing ", 0, 480);
         batch.end();
 
+
         // Controlling the player
         movementControl();
-        checkColisions();
+        checkCollisions();
+
+
     }
 
     /**
-     * CheckColisions Method
+     * CheckCollisions Method
      */
-    public void checkColisions() {
+    public void checkCollisions() {
         //Checks if any obstacle is at the same position that the player
         for(int i = 0; i < OBSTACLES_PER_SCREEN; i++) {
             obstacles.get(i).changePos(-speed);
             if (player.checkColisions(obstacles.get(i))) {
+
+                // send score to DB
+                game.api.addScore(player.getScore());
+                System.out.println("Score sent to db -> " + player.getScore() + " point");
+
                 game.setScreen(new MainMenuScreen(game));
             }
             //If the obstacle is getting out the bounds it will be put again
@@ -158,6 +163,7 @@ public class GameScreen implements Screen{
     public void show() {
         // start the playback of the background music
         // when the screen is shown
+        startTime = TimeUtils.millis();
     }
     @Override
     public void hide() {
