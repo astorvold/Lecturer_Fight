@@ -23,12 +23,6 @@ public class Player extends Entity {
     public void changePos(int newPos) {
         x+=newPos;
     }
-    public float getCoord(){
-        return x;
-    }
-    public void setCoord(float x){
-        this.x = x;
-    }
     public void setScore(int score){
         this.score = score;
     }
