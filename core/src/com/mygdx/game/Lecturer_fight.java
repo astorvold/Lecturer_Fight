@@ -27,7 +27,6 @@ public class Lecturer_fight extends Game {
 	public void create () {
 		batch = new SpriteBatch();
 		font = new BitmapFont();
-		api.getHighScores(new ArrayList<Score>());
 		this.setScreen(new MainMenuScreen(this));
 	}
 

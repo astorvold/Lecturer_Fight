@@ -23,5 +23,8 @@ public class Player extends Entity {
     public void changePos(int newPos) {
         x+=newPos;
     }
+    public String getCoord(){
+        return Float.toString(x) + Float.toString(y);
+    }
 
 }

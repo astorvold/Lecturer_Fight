@@ -1,8 +1,9 @@
 package com.mygdx.game;
 
 public class Score {
-    public int score;
-    public String name;
+    private int score;
+    private String name;
+
 
 
     public Score(int score, String name) {

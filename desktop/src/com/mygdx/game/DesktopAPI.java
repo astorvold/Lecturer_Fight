@@ -4,25 +4,24 @@ import java.util.ArrayList;
 
 public class DesktopAPI implements API {
 
+
     @Override
-    public void getHighScores(ArrayList<Score> dataHolder) {
-        System.out.println("Desktop API");
+    public void getScores(ArrayList<Score> dataHolder) {
 
     }
 
     @Override
-    public void addScore(int score) {
-        System.out.println("Desktop API");
+    public void setScore(int score) {
 
     }
 
     @Override
-    public void setCoor(String coor) {
+    public void setCoors(String coor) {
 
     }
 
     @Override
-    public void getCoor() {
+    public void getCoors() {
 
     }
 }

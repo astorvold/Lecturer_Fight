@@ -3,13 +3,14 @@ package com.mygdx.game;
 import java.util.ArrayList;
 
 public interface API {
-    void getHighScores(ArrayList<Score> dataHolder);
+    void getScores(ArrayList<Score> dataHolder);
 
-    void addScore(int score);
+    void setScore(int score);
 
-    void setCoor(String coor);
+    void setCoors(String coor);
 
-    void getCoor();
+    void getCoors();
+
 
 
 

@@ -99,11 +99,14 @@ public class GameScreen implements Screen{
         font.draw(batch, Integer.toString(player.getScore()), 500, 500);
 
 
+        // send position to DB
+
+        game.api.setCoors(player.getCoord());
+
         // player gets 1 point every second
         long elapsedTime = TimeUtils.timeSinceMillis(startTime);
-        if (elapsedTime > 1){
+        if (elapsedTime > 1000){
             startTime = 0;
-            elapsedTime = 0;
             player.increaseScore(1);
         }
 
@@ -128,7 +131,7 @@ public class GameScreen implements Screen{
             if (player.checkColisions(obstacles.get(i))) {
 
                 // send score to DB
-                game.api.addScore(player.getScore());
+                game.api.setScore(player.getScore());
                 System.out.println("Score sent to db -> " + player.getScore() + " point");
 
                 game.setScreen(new MainMenuScreen(game));

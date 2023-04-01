@@ -6,25 +6,26 @@ import com.mygdx.game.Score;
 import java.util.ArrayList;
 
 public class htmlAPI implements API {
+
+
+
     @Override
-    public void getHighScores(ArrayList<Score> dataHolder) {
+    public void getScores(ArrayList<Score> dataHolder) {
 
     }
 
     @Override
-    public void addScore(int score) {
+    public void setScore(int score) {
 
     }
 
     @Override
-    public void setCoor(String coor) {
+    public void setCoors(String coor) {
 
     }
 
     @Override
-    public void getCoor() {
+    public void getCoors() {
 
     }
-
-
 }
