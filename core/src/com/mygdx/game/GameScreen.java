@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -23,11 +24,14 @@ public class GameScreen implements Screen{
     private BitmapFont font = new BitmapFont();
 
     public Player player;
+    public Player player2;
     public ArrayList<Entity> obstacles;
     public ArrayList<Entity> coins;
     private int highestObstacle;
 
     long startTime;
+
+    private boolean multiplayer = true;
 
 
 
@@ -96,12 +100,12 @@ public class GameScreen implements Screen{
             batch.draw(obstacles.get(i).getTexture(), obstacles.get(i).getX(), obstacles.get(i).getY(), obstacles.get(i).getWidth(), obstacles.get(i).getHeight());
         for(int i = 0; i < COINS_PER_SCREEN; i++)
             batch.draw(coins.get(i).getTexture(), coins.get(i).getX(), coins.get(i).getY(), coins.get(i).getWidth(), coins.get(i).getHeight());
-        font.draw(batch, Integer.toString(player.getScore()), 500, 500);
-
+        font.getData().setScale(3);
+        font.setColor(Color.BLACK);
 
         // send position to DB
 
-        game.api.setCoors(player.getCoord());
+        game.api.setCoors(player.getScore());
 
         // player gets 1 point every second
         long elapsedTime = TimeUtils.timeSinceMillis(startTime);
@@ -109,8 +113,9 @@ public class GameScreen implements Screen{
             startTime = 0;
             player.increaseScore(1);
         }
-
-        font.draw(batch, "Playing ", 0, 480);
+        if (multiplayer == true){
+            showRivalScore();
+        }
         batch.end();
 
 
@@ -119,7 +124,15 @@ public class GameScreen implements Screen{
         checkCollisions();
 
 
+
     }
+
+    private void showRivalScore(){
+        batch.draw(player2.getTexture(), player.getX(), player.getY()-100, player2.getWidth(), player2.getHeight());
+        font.draw(batch, "Player 1: " + player.getScore() + " - Player2: " + player2.getScore(), screenWidth/2, screenHeight);
+        game.api.getCoors(player2);
+    }
+
 
     /**
      * CheckCollisions Method
@@ -167,6 +180,11 @@ public class GameScreen implements Screen{
         // start the playback of the background music
         // when the screen is shown
         startTime = TimeUtils.millis();
+
+        if (multiplayer == true){
+            player2 = new Player("bird2.png", 500, screenHeight/3, 96,96);
+
+        }
     }
     @Override
     public void hide() {

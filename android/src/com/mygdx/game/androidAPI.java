@@ -39,11 +39,7 @@ public class androidAPI implements API{
                         dataHolder.add(new Score(Integer.parseInt(entry.getKey()),entry.getValue().toString()));
                         }
                     }
-
-
                 }
-
-
 
 
             @Override
@@ -63,7 +59,7 @@ public class androidAPI implements API{
     }
 
     @Override
-    public void setCoors(String coor) {
+    public void setCoors(int coor) {
         coorRef = database.getReference("coorsPlayer1");
         coorRef.child("player1").setValue(coor);
 
@@ -71,13 +67,12 @@ public class androidAPI implements API{
 
 
     @Override
-    public void getCoors() {
+    public void getCoors(Player player) {
         coorRef = database.getReference("coorsPlayer2");
         coorRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                System.out.println(snapshot);
-
+                player.setScore(Integer.parseInt(snapshot.child("player2").getValue().toString()));
             }
 
             @Override

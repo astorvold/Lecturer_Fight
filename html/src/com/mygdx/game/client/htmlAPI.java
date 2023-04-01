@@ -1,6 +1,7 @@
 package com.mygdx.game.client;
 
 import com.mygdx.game.API;
+import com.mygdx.game.Player;
 import com.mygdx.game.Score;
 
 import java.util.ArrayList;
@@ -20,12 +21,12 @@ public class htmlAPI implements API {
     }
 
     @Override
-    public void setCoors(String coor) {
+    public void setCoors(int coor) {
 
     }
 
     @Override
-    public void getCoors() {
+    public void getCoors(Player player) {
 
     }
 }

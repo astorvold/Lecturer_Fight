@@ -15,7 +15,8 @@ public class HighScoreScreen implements Screen {
     final Lecturer_fight game;
     OrthographicCamera camera;
     ArrayList<Score> scoreList;
-    boolean scoreUpdated;
+    boolean backButton;
+    boolean playAgainButton;
     private SpriteBatch batch;
     public BitmapFont font;
     public BitmapFont font2;
@@ -23,14 +24,16 @@ public class HighScoreScreen implements Screen {
     private int screenHeight = Gdx.graphics.getHeight();
     private int screenWidth = Gdx.graphics.getWidth();
 
-    public HighScoreScreen(final Lecturer_fight game) {
+    public HighScoreScreen(final Lecturer_fight game, boolean backButton, boolean playAgainButton) {
         this.game = game;
         this.camera = new OrthographicCamera();
-        camera.setToOrtho(false,800,400);
-        batch = new SpriteBatch();
-        font = new BitmapFont();
-        font2 = new BitmapFont();
-        scoreUpdated = false;
+        this.camera.setToOrtho(false,800,400);
+        this.batch = new SpriteBatch();
+        this.font = new BitmapFont();
+        this.font2 = new BitmapFont();
+        this.backButton = backButton;
+        this.playAgainButton = playAgainButton;
+
     }
 
     @Override

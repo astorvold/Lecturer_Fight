@@ -7,9 +7,9 @@ public interface API {
 
     void setScore(int score);
 
-    void setCoors(String coor);
+    void setCoors(int coor);
 
-    void getCoors();
+    void getCoors(Player player);
 
 
 

@@ -131,7 +131,7 @@ public class MainMenuScreen implements Screen {
             public boolean handle(Event event) {
                 if(event.toString() == "touchDown"){
                     System.out.println(("clickeo score"));
-                    game.setScreen(new HighScoreScreen(game));
+                    game.setScreen(new HighScoreScreen(game,true,false));
                 }
                 return false;
             }

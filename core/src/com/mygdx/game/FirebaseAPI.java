@@ -16,12 +16,12 @@ public class FirebaseAPI implements API{
     }
 
     @Override
-    public void setCoors(String coor) {
+    public void setCoors(int coor) {
 
     }
 
     @Override
-    public void getCoors() {
+    public void getCoors(Player player) {
 
     }
 }
