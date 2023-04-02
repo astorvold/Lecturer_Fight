@@ -2,6 +2,7 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -11,7 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -51,7 +52,7 @@ public class MainMenuScreen implements Screen {
     private TextureRegionDrawable drawableRegionTutorial;
     private ImageButton buttonTutorial;
 
-    private float ScreenWidth = Gdx.graphics.getWidth();
+    private float screenWidth = Gdx.graphics.getWidth();
     private float screenHeight = Gdx.graphics.getHeight();
 
     private Texture imageCheckboxOff;
@@ -61,6 +62,7 @@ public class MainMenuScreen implements Screen {
     private TextureRegion regionCheckboxOff;
 
     private CheckBox checkBox;
+    private boolean multiplayer;
 
 
 
@@ -74,16 +76,16 @@ public class MainMenuScreen implements Screen {
         regionStart = new TextureRegion(imageStart);
         drawableRegionStart = new TextureRegionDrawable(regionStart);
         buttonStart = new ImageButton(drawableRegionStart); //Set the button up
-        buttonStart.setPosition(ScreenWidth*0.3f, screenHeight *0.5f);
-        buttonStart.setSize(ScreenWidth*0.5f, screenHeight*0.5f );
+        buttonStart.setPosition(screenWidth *0.3f, screenHeight *0.5f);
+        buttonStart.setSize(screenWidth *0.5f, screenHeight*0.5f );
         //buttonStart.setSize(200,200);
 
         imageSettings = new Texture(Gdx.files.internal("settings.png"));
         regionSettings = new TextureRegion(imageSettings);
         drawableRegionSettings = new TextureRegionDrawable(regionSettings);
         buttonSettings = new ImageButton(drawableRegionSettings);
-        buttonSettings.setPosition(ScreenWidth*0.8f, screenHeight *0.9f);
-        buttonSettings.setSize(ScreenWidth*0.1f, screenHeight*0.1f );
+        buttonSettings.setPosition(screenWidth *0.8f, screenHeight *0.9f);
+        buttonSettings.setSize(screenWidth *0.1f, screenHeight*0.1f );
 
 
 
@@ -91,16 +93,22 @@ public class MainMenuScreen implements Screen {
         regionScore = new TextureRegion(imageScore);
         drawableRegionScore = new TextureRegionDrawable(regionScore);
         buttonScore = new ImageButton(drawableRegionScore);
-        buttonScore.setPosition(ScreenWidth*0.3f, screenHeight *0.3f);
-        buttonScore.setSize(ScreenWidth*0.5f, screenHeight*0.5f );
+        buttonScore.setPosition(screenWidth *0.3f, screenHeight *0.3f);
+        buttonScore.setSize(screenWidth *0.5f, screenHeight*0.5f );
+        buttonScore.setBounds(screenWidth*0.3f,screenHeight*0.3f,screenWidth*0.3f,screenHeight*0.3f);
+
 
         imageTutorial = new Texture(Gdx.files.internal("tutorial.png"));
         regionTutorial = new TextureRegion(imageTutorial);
         drawableRegionTutorial = new TextureRegionDrawable(regionTutorial);
         buttonTutorial = new ImageButton(drawableRegionTutorial);
-        buttonTutorial.setPosition(ScreenWidth*0.3f, screenHeight *0.1f);
-        buttonTutorial.setSize(ScreenWidth*0.5f, screenHeight*0.5f );
+        buttonTutorial.setPosition(screenWidth *0.3f, screenHeight *0.1f);
+        buttonTutorial.setSize(screenWidth *0.5f, screenHeight*0.5f );
+        buttonTutorial.setBounds(screenWidth*0.3f,screenHeight*0.1f,screenWidth*0.3f,screenHeight*0.3f);
 
+
+        Table table = new Table();
+        table.setBounds(screenHeight*0.2f,screenHeight*0.5f,screenWidth*0.3f,screenHeight*0.3f);
 
         imageCheckboxOn = new Texture(Gdx.files.internal("checkboxOn.png"));
         imageCheckboxOff = new Texture(Gdx.files.internal("checkboxOff.png"));
@@ -108,20 +116,21 @@ public class MainMenuScreen implements Screen {
         regionCheckboxOn = new TextureRegion(imageCheckboxOn);
         CheckBox.CheckBoxStyle checkboxStyle = new CheckBox.CheckBoxStyle();
         checkboxStyle.font = font;
+
         checkboxStyle.checkboxOff = new TextureRegionDrawable(regionCheckboxOff);
         checkboxStyle.checkboxOn = new TextureRegionDrawable(regionCheckboxOn);
 
-        checkBox = new CheckBox("Label text", checkboxStyle);
-        checkBox.setPosition(ScreenWidth*0.3f, screenHeight *0.4f);
-        checkBox.setSize(ScreenWidth*0.5f, screenHeight*0.5f );
-
+        checkBox = new CheckBox(" ", checkboxStyle);
+        checkBox.setPosition(screenWidth *0.5f, screenHeight *0.3f);
+        checkBox.setSize(screenWidth *0.5f, screenHeight*0.5f );
+        table.add(checkBox);
 
         stage = new Stage(new ScreenViewport()); //Set up a stage for the ui
         stage.addActor(buttonStart); //Add the button to the stage to perform rendering and take input.
         stage.addActor(buttonSettings);
         stage.addActor(buttonScore);
         stage.addActor(buttonTutorial);
-        stage.addActor(checkBox);
+        stage.addActor(table);
 
         Gdx.input.setInputProcessor(stage); //Start taking input from the ui
 
@@ -135,7 +144,7 @@ public class MainMenuScreen implements Screen {
             public boolean handle(Event event) {
                 if(event.toString() == "touchDown"){
                     System.out.println(("clickeo start"));
-                    game.setScreen(new GameScreen(game));
+                    //game.setScreen(new GameScreen(game,multiplayer));
                     return true;
                 }
                 return false;
@@ -146,7 +155,7 @@ public class MainMenuScreen implements Screen {
             public boolean handle(Event event) {
                 if(event.toString() == "touchDown"){
                     System.out.println(("clickeo settings"));
-                    game.setScreen(new SettingsScreen(game));
+                    //game.setScreen(new SettingsScreen(game));
                     return true;
                 }
                 return false;
@@ -157,7 +166,7 @@ public class MainMenuScreen implements Screen {
             public boolean handle(Event event) {
                 if(event.toString() == "touchDown"){
                     System.out.println(("clickeo score"));
-                    game.setScreen(new HighScoreScreen(game,true,false));
+                    //game.setScreen(new HighScoreScreen(game,true,false));
                     return true;
                 }
                 return false;
@@ -168,7 +177,7 @@ public class MainMenuScreen implements Screen {
             public boolean handle(Event event) {
                 if(event.toString() == "touchDown"){
                     System.out.println(("clickeo tutorial"));
-                    game.setScreen(new TutorialScreen(game));
+                    //game.setScreen(new TutorialScreen(game));
                     return true;
                 }
                 return false;
@@ -180,6 +189,7 @@ public class MainMenuScreen implements Screen {
                 if(event.toString() == "touchDown"){
                     System.out.println(("clickeo multiplayer"));
                     boolean isChecked = checkBox.isChecked();
+                    multiplayer = !isChecked;
 
                     return true;
 
@@ -196,26 +206,9 @@ public class MainMenuScreen implements Screen {
         camera.update();
         game.batch.setProjectionMatrix(camera.combined);
 
-        //batch.begin();
-        //font.draw(batch, "Welcome to Lecturer fight!!! ", 200, 380);
-        //font.draw(batch, "Click on start to begin!", 200, 370);
-        //batch.end();
-
-
         stage.act(Gdx.graphics.getDeltaTime()); //Perform ui logic
         stage.draw(); //Draw the ui
 
-        //&& Gdx.graphics.getHeight()
-        //when startButton is touched -> go to gameScreen
-        if (Gdx.input.isTouched()) {
-            //System.out.println(Gdx.input.getX() + " "+ Gdx.input.getY());
-            //if(Gdx.input.getX() > 0 && Gdx.input.getX() < 300 && Gdx.input.getY() > 0 && Gdx.input.getY() < 300){
-            //    dispose();
-            //    game.setScreen(new GameScreen(game));
-            //}
-
-
-        }
     }
 
     @Override

@@ -31,11 +31,11 @@ public class GameScreen implements Screen{
 
     long startTime;
 
-    private boolean multiplayer = true;
+    private boolean multiplayer;
 
 
 
-    public GameScreen(final Lecturer_fight game) {
+    public GameScreen(final Lecturer_fight game,boolean multiplayer) {
         this.game = game;
         System.out.println("game screen");
         // create the camera and the SpriteBatch
@@ -46,6 +46,7 @@ public class GameScreen implements Screen{
         initializeObstacles();
         initializeCoins();
         highestObstacle = 7;
+        this.multiplayer = multiplayer;
     }
 
     private float generateRandomNumber(int from, int to){
