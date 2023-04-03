@@ -140,7 +140,7 @@ public class GameScreen implements Screen{
                 // send score to DB
                 game.api.setScore(player.getScore());
                 System.out.println("Score sent to db -> " + player.getScore() + " point");
-                game.setScreen(new MainMenuScreen(game));
+                game.setScreen(new FinishScreen(game));
             }
             //If the obstacle is getting out the bounds it will be put again
             if(obstacles.get(i).getY()<0){
