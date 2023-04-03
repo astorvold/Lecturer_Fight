@@ -31,31 +31,15 @@ public class MainMenuScreen implements Screen {
 
     // all the buttons
 
-    private Stage stage;
+    private final Stage stage;
     private Texture imageStart;
-    private TextureRegion regionStart;
-    private TextureRegionDrawable drawableRegionStart;
-    private ImageButton buttonStart;
-
-
+    private final ImageButton buttonStart;
     private Texture imageSettings;
-    private TextureRegion regionSettings;
-    private TextureRegionDrawable drawableRegionSettings;
-    private ImageButton buttonSettings;
-
-
+    private final ImageButton buttonSettings;
     private Texture imageScore;
-    private TextureRegion regionScore;
-    private TextureRegionDrawable drawableRegionScore;
-    private ImageButton buttonScore;
-
+    private final ImageButton buttonScore;
     private Texture imageTutorial;
-    private TextureRegion regionTutorial;
-    private TextureRegionDrawable drawableRegionTutorial;
-    private ImageButton buttonTutorial;
-
-    private float screenWidth = Gdx.graphics.getWidth();
-    private float screenHeight = Gdx.graphics.getHeight();
+    private final ImageButton buttonTutorial;
 
     private Texture imageCheckboxOff;
     private Texture imageCheckboxOn;
@@ -63,37 +47,34 @@ public class MainMenuScreen implements Screen {
     private TextureRegion regionCheckboxOn;
     private TextureRegion regionCheckboxOff;
 
-    private CheckBox checkBox;
+    private final CheckBox checkBox;
     private boolean multiplayer;
-
-
-
 
     public MainMenuScreen(final Lecturer_fight game) {
 
-        float aux1, aux2;
         this.game = game;
         this.camera = new OrthographicCamera();
         camera.setToOrtho(false,800,400);
 
-
         imageSettings = new Texture(Gdx.files.internal("settings.png"));
         buttonSettings = new ImageButton( new TextureRegionDrawable( new TextureRegion( imageSettings)));
         buttonSettings.setBounds(buttonSettings.getX(),buttonSettings.getY(),buttonSettings.getWidth(),buttonSettings.getHeight());
-        buttonSettings.setBounds(screenWidth/2 - 0.7f*imageSettings.getWidth()/2, screenHeight *0.9f,imageSettings.getWidth()*0.7f,imageSettings.getHeight()*0.7f);
+        float screenWidth = Gdx.graphics.getWidth();
+        float screenHeight = Gdx.graphics.getHeight();
+        buttonSettings.setBounds(screenWidth /2 - 0.7f*imageSettings.getWidth()/2, screenHeight *0.9f,imageSettings.getWidth()*0.7f,imageSettings.getHeight()*0.7f);
 
         imageStart = new Texture(Gdx.files.internal("start.png"));
         buttonStart = new ImageButton(new TextureRegionDrawable(new TextureRegion(imageStart))); //Set the button up
-        buttonStart.setBounds(screenWidth/2 - 1f*imageStart.getWidth()/2, screenHeight *0.7f,imageStart.getWidth(),imageStart.getHeight());
+        buttonStart.setBounds(screenWidth /2 - 1f*imageStart.getWidth()/2, screenHeight *0.7f,imageStart.getWidth(),imageStart.getHeight());
 
         imageScore = new Texture(Gdx.files.internal("score.png"));
         buttonScore = new ImageButton(new TextureRegionDrawable( new TextureRegion(imageScore)));
-        buttonScore.setBounds(screenWidth/2 - 0.7f*imageScore.getWidth()/2, screenHeight *0.3f,imageScore.getWidth()*0.7f,imageScore.getHeight()*0.7f);
+        buttonScore.setBounds(screenWidth /2 - 0.7f*imageScore.getWidth()/2, screenHeight *0.3f,imageScore.getWidth()*0.7f,imageScore.getHeight()*0.7f);
 
 
         imageTutorial = new Texture(Gdx.files.internal("tutorial.png"));
         buttonTutorial = new ImageButton(new TextureRegionDrawable(new TextureRegion(imageTutorial)));
-        buttonTutorial.setBounds(screenWidth/2 - 0.7f*imageTutorial.getWidth()/2, screenHeight *0.1f,imageTutorial.getWidth()*0.7f,imageTutorial.getHeight()*0.7f);
+        buttonTutorial.setBounds(screenWidth /2 - 0.7f* imageTutorial.getWidth()/2, screenHeight *0.1f, imageTutorial.getWidth()*0.7f, imageTutorial.getHeight()*0.7f);
 
 
         imageCheckboxOn = new Texture(Gdx.files.internal("checkboxOn.png"));
@@ -101,13 +82,15 @@ public class MainMenuScreen implements Screen {
         regionCheckboxOff = new TextureRegion(imageCheckboxOff);
         regionCheckboxOn = new TextureRegion(imageCheckboxOn);
         CheckBox.CheckBoxStyle checkboxStyle = new CheckBox.CheckBoxStyle();
+        font.setColor(Color.WHITE);
+        font.getData().setScale(10);
         checkboxStyle.font = font;
 
         checkboxStyle.checkboxOff = new TextureRegionDrawable(regionCheckboxOff);
         checkboxStyle.checkboxOn = new TextureRegionDrawable(regionCheckboxOn);
 
-        checkBox = new CheckBox(" ", checkboxStyle);
-        checkBox.setBounds(screenWidth/2 - 1f*imageCheckboxOn.getWidth()/2, screenHeight *0.5f,imageCheckboxOn.getWidth(),imageCheckboxOn.getHeight());
+        checkBox = new CheckBox("Multiplayer? ", checkboxStyle);
+        checkBox.setBounds(screenWidth /2 - 1f*imageCheckboxOn.getWidth()/2, screenHeight *0.5f,imageCheckboxOn.getWidth(),imageCheckboxOn.getHeight());
 
         stage = new Stage(new ScreenViewport()); //Set up a stage for the ui
         stage.addActor(buttonStart); //Add the button to the stage to perform rendering and take input.
@@ -120,9 +103,9 @@ public class MainMenuScreen implements Screen {
     }
 
 
-    @Override
+    @Override  // Add listeners to check when user clicks on buttons
     public void show() {
-        buttonStart.addListener(new ClickListener(){
+       buttonStart.addListener(new ClickListener(){
             public void clicked(InputEvent event, float x, float y){
                 game.setScreen(new GameScreen(game, multiplayer));
                 System.out.println("Start Button");
@@ -146,26 +129,19 @@ public class MainMenuScreen implements Screen {
                 System.out.println("Tutorial Button");
             }
         });
-        checkBox.addListener(new ClickListener()
-        {
-            public boolean handle(Event event) {
-                if(event.toString() == "touchDown"){
+        checkBox.addListener(new ClickListener(){
+            public void clicked(InputEvent event, float x, float y){
                     System.out.println(("clickeo multiplayer"));
                     boolean isChecked = checkBox.isChecked();
-                    multiplayer = !isChecked;
-
-                    return true;
-
+                    multiplayer = isChecked;
+                    System.out.println(multiplayer);
                 }
-                return false;
-            }
         });
     }
 
     @Override
     public void render(float delta) {
         ScreenUtils.clear(0, 0, 0.2f, 1);
-
         camera.update();
         game.batch.setProjectionMatrix(camera.combined);
 

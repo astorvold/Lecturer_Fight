@@ -50,8 +50,6 @@ public class HighScoreScreen implements Screen {
         this.backButton = backButton;
         this.playAgainButton = playAgainButton;
 
-
-
         stage = new Stage(new ScreenViewport()); //Set up a stage for the ui
 
         imageStart = new Texture(Gdx.files.internal("back.png"));
@@ -109,8 +107,6 @@ public class HighScoreScreen implements Screen {
         font2.getData().setScale(5);
         font2.setColor(Color.WHITE);
 
-        //System.out.println(scoreList);
-
         stage.act(Gdx.graphics.getDeltaTime()); //Perform ui logic
         stage.draw(); //Draw the ui
 
@@ -121,7 +117,6 @@ public class HighScoreScreen implements Screen {
         }
         screenHeight = Gdx.graphics.getHeight();
         batch.end();
-
     }
 
     @Override

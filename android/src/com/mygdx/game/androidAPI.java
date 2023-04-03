@@ -68,7 +68,6 @@ public class androidAPI implements API{
         coorRef.child("ready").setValue(player.isReady());
     }
 
-
     @Override
     public void getInfoRival(Player player) {
         coorRef = database.getReference("Player1");

@@ -106,6 +106,13 @@ public class GameScreen implements Screen{
             movementControl();
             checkCollisions();
         }
+        else{
+            batch.begin();
+            font.getData().setScale(6);
+            font.setColor(Color.BLACK);
+            font.draw(batch, "Waiting for you opponent!!", Gdx.graphics.getWidth()*0.1f, Gdx.graphics.getHeight()/2);
+            batch.end();
+        }
         // Controlling the player
 
     }
@@ -154,9 +161,12 @@ public class GameScreen implements Screen{
         for(int i = 0; i < OBSTACLES_PER_SCREEN; i++) {
             obstacles.get(i).changePos(-speed);
             if (player.checkColisions(obstacles.get(i))) {
-                // send score to DB
+
+                // send score to DB and set player as non-ready
                 game.api.setScore(player.getScore());
                 System.out.println("Score sent to db -> " + player.getScore() + " point");
+                player.setReady(false);
+                game.api.setInfoPlayer(player);
                 game.setScreen(new HighScoreScreen(this.game,true,true));
             }
             //If the obstacle is getting out the bounds it will be put again
