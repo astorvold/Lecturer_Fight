@@ -73,7 +73,7 @@ public class GameScreen implements Screen{
     public void movementControl(){
 
         if (Gdx.input.isTouched()) {
-            if(Gdx.input.getX() > screenWidth/2)
+            if(Gdx.input.getX() >= screenWidth/2)
                 if (player.getX() < screenWidth -player.getWidth()) player.changePos(10);
                 else player.changePos(-10);
             else
@@ -140,7 +140,7 @@ public class GameScreen implements Screen{
                 // send score to DB
                 game.api.setScore(player.getScore());
                 System.out.println("Score sent to db -> " + player.getScore() + " point");
-                game.setScreen(new FinishScreen(game));
+                game.setScreen(new MainMenuScreen(game));
             }
             //If the obstacle is getting out the bounds it will be put again
             if(obstacles.get(i).getY()<0){
