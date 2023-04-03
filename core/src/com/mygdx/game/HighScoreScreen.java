@@ -5,8 +5,16 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import java.util.ArrayList;
 
@@ -21,6 +29,11 @@ public class HighScoreScreen implements Screen {
     public BitmapFont font;
     public BitmapFont font2;
 
+    private Stage stage;
+    private Texture imageStart;
+    private ImageButton buttonStart;
+
+
     private int screenHeight = Gdx.graphics.getHeight();
     private int screenWidth = Gdx.graphics.getWidth();
 
@@ -34,6 +47,15 @@ public class HighScoreScreen implements Screen {
         this.backButton = backButton;
         this.playAgainButton = playAgainButton;
 
+        imageStart = new Texture(Gdx.files.internal("back.png"));
+        buttonStart = new ImageButton(new TextureRegionDrawable(new TextureRegion(imageStart))); //Set the button up
+        buttonStart.setBounds(screenWidth/5 - 1f*imageStart.getWidth()/2, screenHeight *0.9f,imageStart.getWidth(),imageStart.getHeight());
+
+
+        stage = new Stage(new ScreenViewport()); //Set up a stage for the ui
+        stage.addActor(buttonStart);
+        Gdx.input.setInputProcessor(stage);
+
     }
 
     @Override
@@ -41,6 +63,12 @@ public class HighScoreScreen implements Screen {
         scoreList = new ArrayList<Score>();
         game.api.getScores(scoreList);    // retrieves the scores from the DB and saves them in scoreList
 
+        buttonStart.addListener(new ClickListener(){
+            public void clicked(InputEvent event, float x, float y){
+                game.setScreen(new MainMenuScreen(game));
+                System.out.println("Back Button");
+            }
+        });
     }
 
     @Override
@@ -61,6 +89,8 @@ public class HighScoreScreen implements Screen {
 
         //System.out.println(scoreList);
 
+        stage.act(Gdx.graphics.getDeltaTime()); //Perform ui logic
+        stage.draw(); //Draw the ui
 
         batch.begin();
         for(Score score: scoreList){
