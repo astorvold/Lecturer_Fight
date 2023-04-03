@@ -7,9 +7,9 @@ public interface API {
 
     void setScore(int score);
 
-    void setCoors(int coor);
+    void setInfoPlayer(Player player);
 
-    void getCoors(Player player);
+    void getInfoRival(Player player);
 
 
 

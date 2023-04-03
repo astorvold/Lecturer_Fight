@@ -22,12 +22,14 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public class MainMenuScreen implements Screen {
 
-    //Distance between buttons
-    private final int distance = 200;
+
     final Lecturer_fight game;
     OrthographicCamera camera;
 
+
     BitmapFont font = new BitmapFont();
+
+    // all the buttons
 
     private Stage stage;
     private Texture imageStart;
@@ -100,8 +102,10 @@ public class MainMenuScreen implements Screen {
         regionCheckboxOn = new TextureRegion(imageCheckboxOn);
         CheckBox.CheckBoxStyle checkboxStyle = new CheckBox.CheckBoxStyle();
         checkboxStyle.font = font;
+
         checkboxStyle.checkboxOff = new TextureRegionDrawable(regionCheckboxOff);
         checkboxStyle.checkboxOn = new TextureRegionDrawable(regionCheckboxOn);
+
         checkBox = new CheckBox(" ", checkboxStyle);
         checkBox.setBounds(screenWidth/2 - 1f*imageCheckboxOn.getWidth()/2, screenHeight *0.5f,imageCheckboxOn.getWidth(),imageCheckboxOn.getHeight());
 
@@ -188,7 +192,6 @@ public class MainMenuScreen implements Screen {
     @Override
     public void hide() {
         stage.dispose();
-
     }
 
     @Override
