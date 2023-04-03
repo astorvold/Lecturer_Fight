@@ -30,8 +30,11 @@ public class HighScoreScreen implements Screen {
     public BitmapFont font2;
 
     private Stage stage;
+
     private Texture imageStart;
     private ImageButton buttonStart;
+    private Texture imagePlayAgain;
+    private ImageButton buttonPlayAgain;
 
 
     private int screenHeight = Gdx.graphics.getHeight();
@@ -47,13 +50,23 @@ public class HighScoreScreen implements Screen {
         this.backButton = backButton;
         this.playAgainButton = playAgainButton;
 
+
+
+        stage = new Stage(new ScreenViewport()); //Set up a stage for the ui
+
         imageStart = new Texture(Gdx.files.internal("back.png"));
         buttonStart = new ImageButton(new TextureRegionDrawable(new TextureRegion(imageStart))); //Set the button up
         buttonStart.setBounds(screenWidth/5 - 1f*imageStart.getWidth()/2, screenHeight *0.9f,imageStart.getWidth(),imageStart.getHeight());
 
-
-        stage = new Stage(new ScreenViewport()); //Set up a stage for the ui
         stage.addActor(buttonStart);
+
+        if (playAgainButton){
+            imagePlayAgain= new Texture(Gdx.files.internal("start.png"));
+            buttonPlayAgain = new ImageButton(new TextureRegionDrawable(new TextureRegion(imagePlayAgain))); //Set the button up
+            buttonPlayAgain.setBounds(screenWidth/5 - 1f*imagePlayAgain.getWidth()/2, screenHeight *0.4f,imagePlayAgain.getWidth(),imagePlayAgain.getHeight());
+
+            stage.addActor(buttonPlayAgain);
+        }
         Gdx.input.setInputProcessor(stage);
 
     }
@@ -69,6 +82,15 @@ public class HighScoreScreen implements Screen {
                 System.out.println("Back Button");
             }
         });
+        if (playAgainButton){
+            buttonPlayAgain.addListener(new ClickListener(){
+                public void clicked(InputEvent event, float x, float y){
+                    game.setScreen(new GameScreen(game,false));
+                    System.out.println("Back Button");
+                }
+            });
+        }
+
     }
 
     @Override
@@ -119,6 +141,7 @@ public class HighScoreScreen implements Screen {
 
     @Override
     public void hide() {
+        stage.dispose();
 
     }
 

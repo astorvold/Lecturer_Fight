@@ -95,13 +95,13 @@ public class GameScreen implements Screen{
         game.batch.setProjectionMatrix(camera.combined);
 
         // checks coordinates and isReady of players
-        if(multiplayer == true){
+        if(multiplayer){
             game.api.getInfoRival(player2);
             game.api.setInfoPlayer(player);
         }
 
         // starts creating obstacles
-        if(multiplayer == false || (multiplayer == true && player2.isReady())){
+        if(multiplayer == false || (multiplayer && player2.isReady())){
             createObstacles();
             movementControl();
             checkCollisions();
@@ -157,7 +157,7 @@ public class GameScreen implements Screen{
                 // send score to DB
                 game.api.setScore(player.getScore());
                 System.out.println("Score sent to db -> " + player.getScore() + " point");
-                game.setScreen(new MainMenuScreen(this.game));
+                game.setScreen(new HighScoreScreen(this.game,true,true));
             }
             //If the obstacle is getting out the bounds it will be put again
             if(obstacles.get(i).getY()<0){
