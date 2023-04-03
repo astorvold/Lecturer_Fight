@@ -66,7 +66,7 @@ public class GameScreen implements Screen{
         for(int i = 1; i <= COINS_PER_SCREEN; i++){
             float x = generateRandomNumber(100, (int)screenWidth-100);
             int random_int = (int)generateRandomNumber(1,7);
-            float y = generateRandomNumber((int)(obstacles.get(random_int-1).getY() + obstacles.get(random_int-1).getWidth()) +70 , (int) obstacles.get(random_int).getY()-(64+70));
+            float y = generateRandomNumber((int)(obstacles.get(random_int-1).getY() + obstacles.get(random_int-1).getHeight()) +70 , (int) obstacles.get(random_int).getY()-(64+70));
             coins.add(new Coin("coin.png", x, y, 64,64));
         }
     }
@@ -105,7 +105,6 @@ public class GameScreen implements Screen{
         font.setColor(Color.BLACK);
 
         // send position to DB
-
         game.api.setCoors(player.getScore());
 
         // player gets 1 point every second
@@ -119,13 +118,9 @@ public class GameScreen implements Screen{
         }
         batch.end();
 
-
         // Controlling the player
         movementControl();
         checkCollisions();
-
-
-
     }
 
     private void showRivalScore(){
@@ -133,7 +128,6 @@ public class GameScreen implements Screen{
         font.draw(batch, "Player 1: " + player.getScore() + " - Player2: " + player2.getScore(), screenWidth/2, screenHeight);
         game.api.getCoors(player2);
     }
-
 
     /**
      * CheckCollisions Method
@@ -143,11 +137,9 @@ public class GameScreen implements Screen{
         for(int i = 0; i < OBSTACLES_PER_SCREEN; i++) {
             obstacles.get(i).changePos(-speed);
             if (player.checkColisions(obstacles.get(i))) {
-
                 // send score to DB
                 game.api.setScore(player.getScore());
                 System.out.println("Score sent to db -> " + player.getScore() + " point");
-
                 game.setScreen(new MainMenuScreen(game));
             }
             //If the obstacle is getting out the bounds it will be put again
