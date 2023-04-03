@@ -143,6 +143,7 @@ public class MainMenuScreen implements Screen {
             public boolean handle(Event event) {
                 if(event.toString() == "touchDown"){
                     System.out.println(("clickeo start"));
+
                     game.setScreen(new GameScreen(game,multiplayer));
                     return true;
                 }
@@ -153,8 +154,8 @@ public class MainMenuScreen implements Screen {
         {
             public boolean handle(Event event) {
                 if(event.toString() == "touchDown"){
-                    System.out.println(("clickeo settings"));
-                    //game.setScreen(new SettingsScreen(game));
+                    //System.out.println(("clickeo settings"));
+                    game.setScreen(new SettingsScreen(game));
                     return true;
                 }
                 return false;
@@ -164,8 +165,8 @@ public class MainMenuScreen implements Screen {
         {
             public boolean handle(Event event) {
                 if(event.toString() == "touchDown"){
-                    System.out.println(("clickeo score"));
-                    //game.setScreen(new HighScoreScreen(game,true,false));
+                    //System.out.println(("clickeo score"));
+                    game.setScreen(new HighScoreScreen(game,true,false));
                     return true;
                 }
                 return false;
@@ -175,8 +176,8 @@ public class MainMenuScreen implements Screen {
         {
             public boolean handle(Event event) {
                 if(event.toString() == "touchDown"){
-                    System.out.println(("clickeo tutorial"));
-                    //game.setScreen(new TutorialScreen(game));
+                    //System.out.println(("clickeo tutorial"));
+                    game.setScreen(new TutorialScreen(game));
                     return true;
                 }
                 return false;
