@@ -94,6 +94,26 @@ public class GameScreen implements Screen{
         camera.update();
         game.batch.setProjectionMatrix(camera.combined);
 
+        // checks coordinates and isReady of players
+        if(multiplayer == true){
+            game.api.getInfoRival(player2);
+            game.api.setInfoPlayer(player);
+        }
+
+        // starts creating obstacles
+        if(multiplayer == false || (multiplayer == true && player2.isReady())){
+            createObstacles();
+            movementControl();
+            checkCollisions();
+        }
+        // Controlling the player
+
+    }
+
+
+
+
+    private void createObstacles(){
         // begin a new batch and draw the bucket and all drops
         batch.begin();
         batch.draw(player.getTexture(), player.getX(), player.getY(), player.getWidth(), player.getHeight());
@@ -105,7 +125,7 @@ public class GameScreen implements Screen{
         font.setColor(Color.BLACK);
 
         // send position to DB
-        game.api.setCoors(player.getScore());
+        game.api.setInfoPlayer(player);
 
         // player gets 1 point every second
         long elapsedTime = TimeUtils.timeSinceMillis(startTime);
@@ -114,19 +134,16 @@ public class GameScreen implements Screen{
             player.increaseScore(1);
         }
         if (multiplayer == true){
+            //my game gets ready to multiplayer
             showRivalScore();
         }
         batch.end();
-
-        // Controlling the player
-        movementControl();
-        checkCollisions();
     }
 
     private void showRivalScore(){
         batch.draw(player2.getTexture(), screenWidth*0.8f, screenHeight*0.95f, player2.getWidth(), player2.getHeight());
         font.draw(batch, "Player 1: " + player.getScore() + " - Player2: " + player2.getScore(), screenWidth/3, screenHeight*0.97f);
-        game.api.getCoors(player2);
+        game.api.getInfoRival(player2);
     }
 
     /**
@@ -140,7 +157,7 @@ public class GameScreen implements Screen{
                 // send score to DB
                 game.api.setScore(player.getScore());
                 System.out.println("Score sent to db -> " + player.getScore() + " point");
-                game.setScreen(new FinishScreen(game));
+                game.setScreen(new MainMenuScreen(this.game));
             }
             //If the obstacle is getting out the bounds it will be put again
             if(obstacles.get(i).getY()<0){
@@ -172,15 +189,18 @@ public class GameScreen implements Screen{
     public void show() {
         // start the playback of the background music
         // when the screen is shown
+
         startTime = TimeUtils.millis();
 
         if (multiplayer == true){
+            player.setReady(true);
             player2 = new Player("bird2.png", 500, screenHeight/3, 96,96);
-
         }
     }
     @Override
     public void hide() {
+        player.setReady(false);
+
     }
     @Override
     public void pause() {

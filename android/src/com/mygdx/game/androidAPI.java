@@ -59,20 +59,24 @@ public class androidAPI implements API{
     }
 
     @Override
-    public void setCoors(int coor) {
-        coorRef = database.getReference("coorsPlayer1");
-        coorRef.child("player1").setValue(coor);
+    public void setInfoPlayer(Player player) {
 
+        coorRef = database.getReference("Player2");
+        coorRef.child("score").setValue(player.getScore());
+
+        coorRef = database.getReference("Player2");
+        coorRef.child("ready").setValue(player.isReady());
     }
 
 
     @Override
-    public void getCoors(Player player) {
-        coorRef = database.getReference("coorsPlayer2");
+    public void getInfoRival(Player player) {
+        coorRef = database.getReference("Player1");
         coorRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                player.setScore(Integer.parseInt(snapshot.child("player2").getValue().toString()));
+                player.setScore(Integer.parseInt(snapshot.child("score").getValue().toString()));
+                player.setReady(Boolean.parseBoolean(snapshot.child("ready").getValue().toString()));
             }
 
             @Override

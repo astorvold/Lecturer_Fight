@@ -143,7 +143,6 @@ public class MainMenuScreen implements Screen {
             public boolean handle(Event event) {
                 if(event.toString() == "touchDown"){
                     System.out.println(("clickeo start"));
-
                     game.setScreen(new GameScreen(game,multiplayer));
                     return true;
                 }
@@ -154,7 +153,7 @@ public class MainMenuScreen implements Screen {
         {
             public boolean handle(Event event) {
                 if(event.toString() == "touchDown"){
-                    //System.out.println(("clickeo settings"));
+                    System.out.println(("clickeo settings"));
                     game.setScreen(new SettingsScreen(game));
                     return true;
                 }
@@ -165,7 +164,7 @@ public class MainMenuScreen implements Screen {
         {
             public boolean handle(Event event) {
                 if(event.toString() == "touchDown"){
-                    //System.out.println(("clickeo score"));
+                    System.out.println(("clickeo score"));
                     game.setScreen(new HighScoreScreen(game,true,false));
                     return true;
                 }
@@ -176,7 +175,7 @@ public class MainMenuScreen implements Screen {
         {
             public boolean handle(Event event) {
                 if(event.toString() == "touchDown"){
-                    //System.out.println(("clickeo tutorial"));
+                    System.out.println(("clickeo tutorial"));
                     game.setScreen(new TutorialScreen(game));
                     return true;
                 }
@@ -228,12 +227,13 @@ public class MainMenuScreen implements Screen {
 
     @Override
     public void hide() {
-
+        stage.dispose();
     }
 
     @Override
     public void dispose() {
         camera = null;
+        stage.dispose();
     }
 
 
