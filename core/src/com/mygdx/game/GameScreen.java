@@ -73,7 +73,7 @@ public class GameScreen implements Screen{
     public void movementControl(){
 
         if (Gdx.input.isTouched()) {
-            if(Gdx.input.getX() > screenWidth/2)
+            if(Gdx.input.getX() >= screenWidth/2)
                 if (player.getX() < screenWidth -player.getWidth()) player.changePos(10);
                 else player.changePos(-10);
             else
@@ -195,6 +195,7 @@ public class GameScreen implements Screen{
         if (multiplayer == true){
             player.setReady(true);
             player2 = new Player("bird2.png", 500, screenHeight/3, 96,96);
+
         }
     }
     @Override

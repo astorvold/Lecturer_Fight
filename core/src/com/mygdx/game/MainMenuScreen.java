@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Event;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
@@ -18,12 +19,14 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
+
 public class MainMenuScreen implements Screen {
 
 
     final Lecturer_fight game;
     OrthographicCamera camera;
-    
+
+
     BitmapFont font = new BitmapFont();
 
     // all the buttons
@@ -67,47 +70,31 @@ public class MainMenuScreen implements Screen {
 
 
     public MainMenuScreen(final Lecturer_fight game) {
+
+        float aux1, aux2;
         this.game = game;
         this.camera = new OrthographicCamera();
         camera.setToOrtho(false,800,400);
 
-        imageStart = new Texture(Gdx.files.internal("start.png"));
-        regionStart = new TextureRegion(imageStart);
-        drawableRegionStart = new TextureRegionDrawable(regionStart);
-        buttonStart = new ImageButton(drawableRegionStart); //Set the button up
-        buttonStart.setPosition(screenWidth *0.3f, screenHeight *0.5f);
-        buttonStart.setSize(screenWidth *0.5f, screenHeight*0.5f );
-        //buttonStart.setSize(200,200);
 
         imageSettings = new Texture(Gdx.files.internal("settings.png"));
-        regionSettings = new TextureRegion(imageSettings);
-        drawableRegionSettings = new TextureRegionDrawable(regionSettings);
-        buttonSettings = new ImageButton(drawableRegionSettings);
-        buttonSettings.setPosition(screenWidth *0.8f, screenHeight *0.9f);
-        buttonSettings.setSize(screenWidth *0.1f, screenHeight*0.1f );
+        buttonSettings = new ImageButton( new TextureRegionDrawable( new TextureRegion( imageSettings)));
+        buttonSettings.setBounds(buttonSettings.getX(),buttonSettings.getY(),buttonSettings.getWidth(),buttonSettings.getHeight());
+        buttonSettings.setBounds(screenWidth/2 - 0.7f*imageSettings.getWidth()/2, screenHeight *0.9f,imageSettings.getWidth()*0.7f,imageSettings.getHeight()*0.7f);
 
-
+        imageStart = new Texture(Gdx.files.internal("start.png"));
+        buttonStart = new ImageButton(new TextureRegionDrawable(new TextureRegion(imageStart))); //Set the button up
+        buttonStart.setBounds(screenWidth/2 - 1f*imageStart.getWidth()/2, screenHeight *0.7f,imageStart.getWidth(),imageStart.getHeight());
 
         imageScore = new Texture(Gdx.files.internal("score.png"));
-        regionScore = new TextureRegion(imageScore);
-        drawableRegionScore = new TextureRegionDrawable(regionScore);
-        buttonScore = new ImageButton(drawableRegionScore);
-        buttonScore.setPosition(screenWidth *0.3f, screenHeight *0.3f);
-        buttonScore.setSize(screenWidth *0.5f, screenHeight*0.5f );
-        buttonScore.setBounds(screenWidth*0.3f,screenHeight*0.3f,screenWidth*0.3f,screenHeight*0.3f);
+        buttonScore = new ImageButton(new TextureRegionDrawable( new TextureRegion(imageScore)));
+        buttonScore.setBounds(screenWidth/2 - 0.7f*imageScore.getWidth()/2, screenHeight *0.3f,imageScore.getWidth()*0.7f,imageScore.getHeight()*0.7f);
 
 
         imageTutorial = new Texture(Gdx.files.internal("tutorial.png"));
-        regionTutorial = new TextureRegion(imageTutorial);
-        drawableRegionTutorial = new TextureRegionDrawable(regionTutorial);
-        buttonTutorial = new ImageButton(drawableRegionTutorial);
-        buttonTutorial.setPosition(screenWidth *0.3f, screenHeight *0.1f);
-        buttonTutorial.setSize(screenWidth *0.5f, screenHeight*0.5f );
-        buttonTutorial.setBounds(screenWidth*0.3f,screenHeight*0.1f,screenWidth*0.3f,screenHeight*0.3f);
+        buttonTutorial = new ImageButton(new TextureRegionDrawable(new TextureRegion(imageTutorial)));
+        buttonTutorial.setBounds(screenWidth/2 - 0.7f*imageTutorial.getWidth()/2, screenHeight *0.1f,imageTutorial.getWidth()*0.7f,imageTutorial.getHeight()*0.7f);
 
-
-        Table table = new Table();
-        table.setBounds(screenHeight*0.2f,screenHeight*0.5f,screenWidth*0.3f,screenHeight*0.3f);
 
         imageCheckboxOn = new Texture(Gdx.files.internal("checkboxOn.png"));
         imageCheckboxOff = new Texture(Gdx.files.internal("checkboxOff.png"));
@@ -120,17 +107,14 @@ public class MainMenuScreen implements Screen {
         checkboxStyle.checkboxOn = new TextureRegionDrawable(regionCheckboxOn);
 
         checkBox = new CheckBox(" ", checkboxStyle);
-        checkBox.setPosition(screenWidth *0.5f, screenHeight *0.3f);
-        checkBox.setSize(screenWidth *0.5f, screenHeight*0.5f );
-        table.add(checkBox);
+        checkBox.setBounds(screenWidth/2 - 1f*imageCheckboxOn.getWidth()/2, screenHeight *0.5f,imageCheckboxOn.getWidth(),imageCheckboxOn.getHeight());
 
         stage = new Stage(new ScreenViewport()); //Set up a stage for the ui
         stage.addActor(buttonStart); //Add the button to the stage to perform rendering and take input.
         stage.addActor(buttonSettings);
         stage.addActor(buttonScore);
         stage.addActor(buttonTutorial);
-        stage.addActor(table);
-
+        stage.addActor(checkBox);
         Gdx.input.setInputProcessor(stage); //Start taking input from the ui
 
     }
@@ -138,48 +122,28 @@ public class MainMenuScreen implements Screen {
 
     @Override
     public void show() {
-        buttonStart.addListener(new ClickListener()
-        {
-            public boolean handle(Event event) {
-                if(event.toString() == "touchDown"){
-                    System.out.println(("clickeo start"));
-                    game.setScreen(new GameScreen(game,multiplayer));
-                    return true;
-                }
-                return false;
+        buttonStart.addListener(new ClickListener(){
+            public void clicked(InputEvent event, float x, float y){
+                game.setScreen(new GameScreen(game, multiplayer));
+                System.out.println("Start Button");
             }
         });
-        buttonSettings.addListener(new ClickListener()
-        {
-            public boolean handle(Event event) {
-                if(event.toString() == "touchDown"){
-                    System.out.println(("clickeo settings"));
-                    game.setScreen(new SettingsScreen(game));
-                    return true;
-                }
-                return false;
+        buttonSettings.addListener(new ClickListener(){
+            public void clicked(InputEvent event, float x, float y){
+                game.setScreen(new SettingsScreen(game));
+                System.out.println("Settings Button");
             }
         });
-        buttonScore.addListener(new ClickListener()
-        {
-            public boolean handle(Event event) {
-                if(event.toString() == "touchDown"){
-                    System.out.println(("clickeo score"));
-                    game.setScreen(new HighScoreScreen(game,true,false));
-                    return true;
-                }
-                return false;
+        buttonScore.addListener(new ClickListener(){
+            public void clicked(InputEvent event, float x, float y){
+                game.setScreen(new HighScoreScreen(game,true,false));
+                System.out.println("Score Button");
             }
         });
-        buttonTutorial.addListener(new ClickListener()
-        {
-            public boolean handle(Event event) {
-                if(event.toString() == "touchDown"){
-                    System.out.println(("clickeo tutorial"));
-                    game.setScreen(new TutorialScreen(game));
-                    return true;
-                }
-                return false;
+        buttonTutorial.addListener(new ClickListener(){
+            public void clicked(InputEvent event, float x, float y){
+                game.setScreen(new TutorialScreen(game));
+                System.out.println("Tutorial Button");
             }
         });
         checkBox.addListener(new ClickListener()
@@ -234,6 +198,7 @@ public class MainMenuScreen implements Screen {
     public void dispose() {
         camera = null;
         stage.dispose();
+
     }
 
 
