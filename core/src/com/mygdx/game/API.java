@@ -3,7 +3,15 @@ package com.mygdx.game;
 import java.util.ArrayList;
 
 public interface API {
-    void getHighScores(ArrayList<Score> dataHolder);
-    void addScore();
+    void getScores(ArrayList<Score> dataHolder);
+
+    void setScore(int score);
+
+    void setInfoPlayer(Player player);
+
+    void getInfoRival(Player player);
+
+
+
 
 }

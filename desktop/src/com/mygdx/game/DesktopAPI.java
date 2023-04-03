@@ -1,13 +1,8 @@
-package com.mygdx.game.client;
-
-import com.mygdx.game.API;
-import com.mygdx.game.Player;
-import com.mygdx.game.Score;
+package com.mygdx.game;
 
 import java.util.ArrayList;
 
-public class htmlAPI implements API {
-
+public class DesktopAPI implements API {
 
 
     @Override

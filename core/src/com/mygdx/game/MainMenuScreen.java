@@ -9,7 +9,18 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Event;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
+
 
 import org.w3c.dom.Text;
 
@@ -17,9 +28,8 @@ public class MainMenuScreen implements Screen {
 
     //Distance between buttons
     private final int distance = 250;
-    final Lecturer_fight game;
-    OrthographicCamera camera;
-    Texture playButton, settingsButton, scoreButton, avatarButton, toggleONButton, toggleOFFButton,tutorialButton,titleImage,backgroundImage;
+
+    Texture avatarButton, titleImage,backgroundImage;
 
     Preferences prefs = Gdx.app.getPreferences("Lecturer-Fight");
     private final float screenHeight = Gdx.graphics.getHeight();
@@ -33,7 +43,36 @@ public class MainMenuScreen implements Screen {
     SettingsScreen settings;
 
 
+
+    final Lecturer_fight game;
+    OrthographicCamera camera;
+
+
+
+    // all the buttons
+
+    private final Stage stage;
+    private Texture imageStart;
+    private final ImageButton buttonStart;
+    private Texture imageSettings;
+    private final ImageButton buttonSettings;
+    private Texture imageScore;
+    private final ImageButton buttonScore;
+    private Texture imageTutorial;
+    private final ImageButton buttonTutorial;
+
+    private Texture imageCheckboxOff;
+    private Texture imageCheckboxOn;
+
+    private TextureRegion regionCheckboxOn;
+    private TextureRegion regionCheckboxOff;
+
+    private final CheckBox checkBox;
+    private boolean multiplayer;
+
+
     public MainMenuScreen(final Lecturer_fight game) {
+
         this.game = game;
         this.camera = new OrthographicCamera();
         this.settings = new SettingsScreen(game);
@@ -43,18 +82,10 @@ public class MainMenuScreen implements Screen {
         prefs.flush();
 
 
-        playButton = new Texture(Gdx.files.internal("new_images/PLAY.png"));
-        settingsButton = new Texture(Gdx.files.internal("new_images/SETTINGS.png"));
-        scoreButton = new Texture(Gdx.files.internal("new_images/HIGHSCORE.png"));
-        toggleONButton = new Texture(Gdx.files.internal("new_images/TOGGLE_ON.png"));
-        toggleOFFButton = new Texture(Gdx.files.internal("new_images/TOGGLE_OFF.png"));
-        tutorialButton = new Texture(Gdx.files.internal("new_images/TUTORIAL.png"));
-
         avatarButton = new Texture(Gdx.files.internal(prefs.getString("Avatar")));
         titleImage = new Texture(Gdx.files.internal("new_images/TITLE.png"));
         backgroundImage = new Texture(Gdx.files.internal("new_images/BG.png"));
 
-        buttonHeight = playButton.getHeight()*buttonWidth/playButton.getWidth();
 
         font.getData().setScale(5,5);
         font.setColor(new Color(0x023D8Bff));
@@ -64,20 +95,98 @@ public class MainMenuScreen implements Screen {
         prefs.putBoolean("Multiplayer", true);
         prefs.flush();
 
+
         //play music
         settings.playMusic();
+
+        imageSettings = new Texture(Gdx.files.internal("new_images/SETTINGS.png"));
+        buttonSettings = new ImageButton( new TextureRegionDrawable( new TextureRegion( imageSettings)));
+        buttonSettings.setBounds(buttonSettings.getX(),buttonSettings.getY(),buttonSettings.getWidth(),buttonSettings.getHeight());
+        float screenWidth = Gdx.graphics.getWidth();
+        float screenHeight = Gdx.graphics.getHeight();
+        buttonSettings.setBounds(screenWidth /2 - 0.7f*imageSettings.getWidth()/2, screenHeight *0.9f,imageSettings.getWidth()*0.7f,imageSettings.getHeight()*0.7f);
+
+        imageStart = new Texture(Gdx.files.internal("new_images/PLAY.png"));
+        buttonStart = new ImageButton(new TextureRegionDrawable(new TextureRegion(imageStart))); //Set the button up
+        buttonStart.setBounds(screenWidth /2 - 1f*imageStart.getWidth()/2, screenHeight *0.7f,imageStart.getWidth(),imageStart.getHeight());
+
+        imageScore = new Texture(Gdx.files.internal("new_images/HIGHSCORE.png"));
+        buttonScore = new ImageButton(new TextureRegionDrawable( new TextureRegion(imageScore)));
+        buttonScore.setBounds(screenWidth /2 - 0.7f*imageScore.getWidth()/2, screenHeight *0.3f,imageScore.getWidth()*0.7f,imageScore.getHeight()*0.7f);
+
+
+        imageTutorial = new Texture(Gdx.files.internal("new_images/TUTORIAL.png"));
+        buttonTutorial = new ImageButton(new TextureRegionDrawable(new TextureRegion(imageTutorial)));
+        buttonTutorial.setBounds(screenWidth /2 - 0.7f* imageTutorial.getWidth()/2, screenHeight *0.1f, imageTutorial.getWidth()*0.7f, imageTutorial.getHeight()*0.7f);
+
+
+        imageCheckboxOn = new Texture(Gdx.files.internal("new_images/TOGGLE_ON.png"));
+        imageCheckboxOff = new Texture(Gdx.files.internal("new_images/TOGGLE_OFF.png"));
+        regionCheckboxOff = new TextureRegion(imageCheckboxOff);
+        regionCheckboxOn = new TextureRegion(imageCheckboxOn);
+        CheckBox.CheckBoxStyle checkboxStyle = new CheckBox.CheckBoxStyle();
+        font.setColor(Color.WHITE);
+        font.getData().setScale(7);
+        checkboxStyle.font = font;
+
+        checkboxStyle.checkboxOff = new TextureRegionDrawable(regionCheckboxOff);
+        checkboxStyle.checkboxOn = new TextureRegionDrawable(regionCheckboxOn);
+
+        checkBox = new CheckBox("Multiplayer? ", checkboxStyle);
+        checkBox.setBounds(screenWidth /2 - 1f*imageCheckboxOn.getWidth()/2, screenHeight *0.5f,imageCheckboxOn.getWidth(),imageCheckboxOn.getHeight());
+
+        stage = new Stage(new ScreenViewport()); //Set up a stage for the ui
+        stage.addActor(buttonStart); //Add the button to the stage to perform rendering and take input.
+        stage.addActor(buttonSettings);
+        stage.addActor(buttonScore);
+        stage.addActor(buttonTutorial);
+        stage.addActor(checkBox);
+        Gdx.input.setInputProcessor(stage); //Start taking input from the ui
+
 
     }
 
 
-    @Override
+    @Override  // Add listeners to check when user clicks on buttons
     public void show() {
-
+       buttonStart.addListener(new ClickListener(){
+            public void clicked(InputEvent event, float x, float y){
+                game.setScreen(new GameScreen(game, multiplayer));
+                System.out.println("Start Button");
+            }
+        });
+        buttonSettings.addListener(new ClickListener(){
+            public void clicked(InputEvent event, float x, float y){
+                game.setScreen(new SettingsScreen(game));
+                System.out.println("Settings Button");
+            }
+        });
+        buttonScore.addListener(new ClickListener(){
+            public void clicked(InputEvent event, float x, float y){
+                game.setScreen(new HighScoreScreen(game,true,false));
+                System.out.println("Score Button");
+            }
+        });
+        buttonTutorial.addListener(new ClickListener(){
+            public void clicked(InputEvent event, float x, float y){
+                game.setScreen(new TutorialScreen(game));
+                System.out.println("Tutorial Button");
+            }
+        });
+        checkBox.addListener(new ClickListener(){
+            public void clicked(InputEvent event, float x, float y){
+                    System.out.println(("clickeo multiplayer"));
+                    boolean isChecked = checkBox.isChecked();
+                    multiplayer = isChecked;
+                    System.out.println(multiplayer);
+                }
+        });
     }
 
     @Override
     public void render(float delta) {
         ScreenUtils.clear(0, 0, 0.2f, 1);
+
         float playButtonX = screenWidth/2;
         float playButtonY = screenHeight/2;
         camera.update();
@@ -99,61 +208,18 @@ public class MainMenuScreen implements Screen {
         font.draw(batch, "Made by Group 16", screenWidth/2-distance*7/6, 150);
         font.draw(batch, "Multiplayer",(screenWidth-buttonWidth)/2+20,((screenHeight-buttonHeight)/2)+(buttonHeight-distance));
 
-        //square buttons
-        batch.draw(playButton, (screenWidth-buttonWidth)/2,(screenHeight-buttonHeight)/2, buttonWidth, buttonHeight);
-        batch.draw(scoreButton, (screenWidth-buttonWidth)/2,(screenHeight-buttonHeight)/2-distance*4/3, buttonWidth, buttonHeight);
-        batch.draw(tutorialButton,(screenWidth-buttonWidth)/2,(screenHeight-buttonHeight)/2-distance*7/3,buttonWidth, buttonHeight);
 
         //other buttons
-        batch.draw(settingsButton, screenWidth-230, screenHeight-150,300,settingsButton.getHeight()*300/settingsButton.getWidth());
-        batch.draw(((prefs.getBoolean("Multiplayer")) ? toggleONButton : toggleOFFButton), screenWidth/2+35,((screenHeight-buttonHeight)/2)-distance*4/9,300,toggleONButton.getHeight()*300/toggleONButton.getWidth());
         batch.draw(avatarButton, (screenWidth-prefs.getInteger("AvatarWidth"))/2, playButtonY+(float)avatarButton.getWidth()/2, prefs.getInteger("AvatarWidth"), prefs.getInteger("AvatarHeight"));
 
         batch.end();
 
 
-        //&& Gdx.graphics.getHeight()
-        //when playButton is touched -> go to gameScreen
-        if (Gdx.input.isTouched()) {
-            System.out.println("x"+Gdx.input.getX());
-            System.out.println("y"+Gdx.input.getY());
-            //settings
-            if(Gdx.input.getX() > 940 && Gdx.input.getY() < 150){
-                dispose();
-                game.setScreen(new SettingsScreen(game));
-            }
-            //avatarselection
-            else if((Gdx.input.getX() > 360 && Gdx.input.getX() < 700) && (Gdx.input.getY() > 240 && Gdx.input.getY() < 750)){
-                dispose();
-                game.setScreen(new AvatarScreen(game));
-            }
-            //multiplpayer toggle
-            //toggles experience glitching when we click on them because the click is registered many times if pressed longer than like 0.1secs
-            else if((Gdx.input.getX() > 650 && Gdx.input.getX() < 800) && (Gdx.input.getY() > 1040 && Gdx.input.getY() < 1130)) {
-                boolean current_multiplayer = prefs.getBoolean("Multiplayer");
-                prefs.putBoolean("Multiplayer", ((current_multiplayer) ? false : true));
-                prefs.flush();
 
-                //legge til en sjekk hvor det må være min 0.7sek siden sist kanskje?
-                //gjøre dette ved å legge til en float? i prefs som sjekkes mot. eller kanskje bare en variabel siden den ikke skal brukes noen andre steder
-            }
 
-            //play
-            else if((Gdx.input.getX() > 270 && Gdx.input.getX() < 800) && (Gdx.input.getY() > 820 && Gdx.input.getY() < 1030)){
-                dispose();
-                game.setScreen(new GameScreen(game));
-            }
-            /*highscore
-            else if((Gdx.input.getX() > 270 && Gdx.input.getX() < 800) && (Gdx.input.getY() > 1160 && Gdx.input.getY() < 1360)){
-                dispose();
-                game.setScreen(new HighScoreScreen(game));
-            }*/
-            //tutorial
-            else if((Gdx.input.getX() > 270 && Gdx.input.getX() < 800) && (Gdx.input.getY() > 1420 && Gdx.input.getY() < 1610)){
-                dispose();
-                game.setScreen(new TutorialScreen(game));
-            }
-        }
+        stage.act(Gdx.graphics.getDeltaTime()); //Perform ui logic
+        stage.draw(); //Draw the ui
+
     }
 
     @Override
@@ -173,12 +239,14 @@ public class MainMenuScreen implements Screen {
 
     @Override
     public void hide() {
-
+        stage.dispose();
     }
 
     @Override
     public void dispose() {
         camera = null;
+        stage.dispose();
+
     }
 
 
