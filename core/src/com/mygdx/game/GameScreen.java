@@ -129,8 +129,8 @@ public class GameScreen implements Screen{
     }
 
     private void showRivalScore(){
-        batch.draw(player2.getTexture(), player.getX(), player.getY()-100, player2.getWidth(), player2.getHeight());
-        font.draw(batch, "Player 1: " + player.getScore() + " - Player2: " + player2.getScore(), screenWidth/2, screenHeight);
+        batch.draw(player2.getTexture(), screenWidth*0.8f, screenHeight*0.95f, player2.getWidth(), player2.getHeight());
+        font.draw(batch, "Player 1: " + player.getScore() + " - Player2: " + player2.getScore(), screenWidth/3, screenHeight*0.97f);
         game.api.getCoors(player2);
     }
 

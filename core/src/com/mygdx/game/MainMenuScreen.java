@@ -20,14 +20,13 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public class MainMenuScreen implements Screen {
 
-    //Distance between buttons
-    private final int distance = 200;
+
     final Lecturer_fight game;
     OrthographicCamera camera;
-
-
-    SpriteBatch batch = new SpriteBatch();
+    
     BitmapFont font = new BitmapFont();
+
+    // all the buttons
 
     private Stage stage;
     private Texture imageStart;
@@ -144,7 +143,7 @@ public class MainMenuScreen implements Screen {
             public boolean handle(Event event) {
                 if(event.toString() == "touchDown"){
                     System.out.println(("clickeo start"));
-                    //game.setScreen(new GameScreen(game,multiplayer));
+                    game.setScreen(new GameScreen(game,multiplayer));
                     return true;
                 }
                 return false;
