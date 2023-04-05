@@ -97,8 +97,9 @@ public class MainMenuScreen implements Screen {
 
 
         //play music
+        System.out.println("musikk er på: " + settings.isMusic_on());
         if (settings.isMusic_on()){
-            settings.startMusic();
+            settings.playMusic();
         }
 
         imageSettings = new Texture(Gdx.files.internal("new_images/SETTINGS.png"));

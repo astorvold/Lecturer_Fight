@@ -53,7 +53,7 @@ public class GameScreen implements Screen{
 
         //play music
         if (settings.isMusic_on()){
-            settings.startMusic();
+            settings.playMusic();
         }
     }
 
@@ -170,12 +170,17 @@ public class GameScreen implements Screen{
             obstacles.get(i).changePos(-speed);
             if (player.checkColisions(obstacles.get(i))) {
 
+                //plays die sound if turned on in settings
+                settings.dieMusic();
+                settings.stopMusic();
+
                 // send score to DB and set player as non-ready
                 game.api.setScore(player.getScore());
                 System.out.println("Score sent to db -> " + player.getScore() + " point");
                 player.setReady(false);
                 game.api.setInfoPlayer(player);
                 game.setScreen(new HighScoreScreen(this.game,true,true));
+
             }
             //If the obstacle is getting out the bounds it will be put again
             if(obstacles.get(i).getY()<0){
@@ -188,6 +193,8 @@ public class GameScreen implements Screen{
             coins.get(i).changePos(-speed);
             if (player.checkColisions(coins.get(i))) {
                 player.increaseScore(100);
+                //play point sound if it is turned on in settings
+                settings.pointMusic();
                 coins.get(i).setY(obstacles.get(highestObstacle).getY() + obstacles.get(highestObstacle).getHeight() +70);
             }
             //If the coin is getting out the bounds it will be put again.

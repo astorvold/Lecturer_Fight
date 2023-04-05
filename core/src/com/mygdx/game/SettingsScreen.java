@@ -16,9 +16,9 @@ import com.badlogic.gdx.utils.ScreenUtils;
 public class SettingsScreen implements Screen {
     final Lecturer_fight game;
     OrthographicCamera camera;
-    Music music = Gdx.audio.newMusic(Gdx.files.internal("Dumb Ways To Die.mp3"));
-    Music point = Gdx.audio.newMusic(Gdx.files.internal("point.mp3"));
-    Music die = Gdx.audio.newMusic(Gdx.files.internal("die.mp3"));
+    private Music music = Gdx.audio.newMusic(Gdx.files.internal("Dumb Ways To Die.mp3"));
+    private Music point = Gdx.audio.newMusic(Gdx.files.internal("point.mp3"));
+    private Music die = Gdx.audio.newMusic(Gdx.files.internal("die.mp3"));
     Texture backButton, backgroundImage, toggleONButton, toggleOFFButton;
 
 
@@ -27,7 +27,7 @@ public class SettingsScreen implements Screen {
     private final float screenWidth = Gdx.graphics.getWidth();
     SpriteBatch batch = new SpriteBatch();
     BitmapFont font = new BitmapFont();
-    boolean music_on = true, sound_on = true;
+    private boolean music_on, sound_on;
     Preferences prefs = Gdx.app.getPreferences("Lecturer_Fight");
 
 
@@ -63,6 +63,8 @@ public class SettingsScreen implements Screen {
 
         //music_on = true;
         music.setVolume(0.5f);
+        point.setVolume(0.5f);
+        die.setVolume(0.5f);
         if (music_on){
             playMusic();
         }
@@ -109,12 +111,14 @@ public class SettingsScreen implements Screen {
                 int current_state = prefs.getInteger("Music");
                 prefs.putInteger("Music", ((current_state == 1) ? 0 : 1));
                 if(current_state == 1){
-                    //mekk å skru av music
-                    //music.pause(); kanskje?
+                    //music off
                     stopMusic();
+                    setMusic(false);
+                    System.out.println("musikk er på: " + isMusic_on());
                 }else{
-                    //mekk å skru på music
+                    //music on
                     playMusic();
+                    System.out.println("musikk er på: " + isMusic_on());
                 }
             }
             //turn sound on/off
@@ -123,10 +127,10 @@ public class SettingsScreen implements Screen {
                 prefs.putInteger("Sound", ((current_state == 1) ? 0 : 1));
                 // trenger kanskje ikke å gjøre noe under her siden play-koden kan sjekke om prefs("sound")==1 og så lager lyd
                 if(current_state == 1){
-                    //mekk å skru av sound
+                    //sound off
                     sound_on = false;
                 }else{
-                    //mekk å skru på sound
+                    //sound on
                     sound_on = true;
 
                 }
@@ -160,28 +164,36 @@ public class SettingsScreen implements Screen {
 
     }
 
+    private void setMusic(boolean boo){
+        this.music_on =boo;
+    }
+
     public boolean isMusic_on(){
         return this.music_on;
     }
 
-    public boolean isSound_on(){
-        return this.sound_on;
-    }
 
     public void playMusic(){
             music.setLooping(true);
             music.play();
-            music_on = true;
-    }
-
-    public void startMusic(){
-        music.play();
+            setMusic(true);
     }
 
     public void stopMusic(){
         if(music_on){
             music.pause();
-            music_on = false;
+        }
+    }
+
+    public void pointMusic(){
+        if (sound_on){
+            point.play();
+        }
+    }
+
+    public void dieMusic(){
+        if(sound_on){
+            die.play();
         }
     }
 
@@ -189,7 +201,8 @@ public class SettingsScreen implements Screen {
     public void dispose() {
         batch.dispose();
         music.dispose();
-
+        point.dispose();
+        die.dispose();
     }
 }
 
