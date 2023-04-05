@@ -40,7 +40,7 @@ public class MainMenuScreen implements Screen {
     SpriteBatch batch = new SpriteBatch();
     BitmapFont font = new BitmapFont();
 
-    SettingsScreen settings;
+    private SettingsScreen settings;
 
 
 
@@ -97,7 +97,9 @@ public class MainMenuScreen implements Screen {
 
 
         //play music
-        settings.playMusic();
+        if (settings.isMusic_on()){
+            settings.startMusic();
+        }
 
         imageSettings = new Texture(Gdx.files.internal("new_images/SETTINGS.png"));
         buttonSettings = new ImageButton( new TextureRegionDrawable( new TextureRegion( imageSettings)));
@@ -153,24 +155,28 @@ public class MainMenuScreen implements Screen {
             public void clicked(InputEvent event, float x, float y){
                 game.setScreen(new GameScreen(game, multiplayer));
                 System.out.println("Start Button");
+                settings.stopMusic();
             }
         });
         buttonSettings.addListener(new ClickListener(){
             public void clicked(InputEvent event, float x, float y){
                 game.setScreen(new SettingsScreen(game));
                 System.out.println("Settings Button");
+                settings.stopMusic();
             }
         });
         buttonScore.addListener(new ClickListener(){
             public void clicked(InputEvent event, float x, float y){
                 game.setScreen(new HighScoreScreen(game,true,false));
                 System.out.println("Score Button");
+                settings.stopMusic();
             }
         });
         buttonTutorial.addListener(new ClickListener(){
             public void clicked(InputEvent event, float x, float y){
                 game.setScreen(new TutorialScreen(game));
                 System.out.println("Tutorial Button");
+                settings.stopMusic();
             }
         });
         checkBox.addListener(new ClickListener(){
@@ -179,6 +185,7 @@ public class MainMenuScreen implements Screen {
                     boolean isChecked = checkBox.isChecked();
                     multiplayer = isChecked;
                     System.out.println(multiplayer);
+                    settings.stopMusic();
                 }
         });
     }
@@ -192,12 +199,6 @@ public class MainMenuScreen implements Screen {
         camera.update();
         game.batch.setProjectionMatrix(camera.combined);
 
-        //music
-        if (settings.isMusic_on()){
-            settings.playMusic();
-        } else{
-            settings.stopMusic();
-        }
 
         batch.begin();
         //design

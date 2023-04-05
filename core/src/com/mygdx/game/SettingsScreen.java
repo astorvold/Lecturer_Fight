@@ -18,6 +18,7 @@ public class SettingsScreen implements Screen {
     OrthographicCamera camera;
     Music music = Gdx.audio.newMusic(Gdx.files.internal("Dumb Ways To Die.mp3"));
     Music point = Gdx.audio.newMusic(Gdx.files.internal("point.mp3"));
+    Music die = Gdx.audio.newMusic(Gdx.files.internal("die.mp3"));
     Texture backButton, backgroundImage, toggleONButton, toggleOFFButton;
 
 
@@ -60,7 +61,11 @@ public class SettingsScreen implements Screen {
         //AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         //audioManager.setStreamVolume(AudioManager.STREAM_MUSIC);
 
+        //music_on = true;
         music.setVolume(0.5f);
+        if (music_on){
+            playMusic();
+        }
 
     }
 
@@ -96,6 +101,7 @@ public class SettingsScreen implements Screen {
             if (Gdx.input.getX() < 150 && Gdx.input.getY() < 150) {
                 dispose();
                 game.setScreen(new MainMenuScreen(game));
+                stopMusic();
             }
 
             //turn music on/off
@@ -106,11 +112,9 @@ public class SettingsScreen implements Screen {
                     //mekk å skru av music
                     //music.pause(); kanskje?
                     stopMusic();
-                    music_on = false;
                 }else{
                     //mekk å skru på music
                     playMusic();
-                    music_on = true;
                 }
             }
             //turn sound on/off
@@ -157,23 +161,27 @@ public class SettingsScreen implements Screen {
     }
 
     public boolean isMusic_on(){
-        return music_on;
+        return this.music_on;
     }
 
     public boolean isSound_on(){
-        return sound_on;
+        return this.sound_on;
     }
 
     public void playMusic(){
-        if(!music_on){
             music.setLooping(true);
             music.play();
-        }
+            music_on = true;
+    }
+
+    public void startMusic(){
+        music.play();
     }
 
     public void stopMusic(){
         if(music_on){
             music.pause();
+            music_on = false;
         }
     }
 

@@ -23,6 +23,8 @@ public class GameScreen implements Screen{
     private SpriteBatch batch = new SpriteBatch();
     private BitmapFont font = new BitmapFont();
 
+    private SettingsScreen settings;
+
     public Player player;
     public Player player2;
     public ArrayList<Entity> obstacles;
@@ -41,12 +43,18 @@ public class GameScreen implements Screen{
         // create the camera and the SpriteBatch
         this.camera = new OrthographicCamera();
         camera.setToOrtho(false, 800, 480);
+        this.settings = new SettingsScreen(game);
         //Initializing objects
         player = new Player("bird.png", screenWidth/2, screenHeight/2, 96,96);
         initializeObstacles();
         initializeCoins();
         highestObstacle = 7;
         this.multiplayer = multiplayer;
+
+        //play music
+        if (settings.isMusic_on()){
+            settings.startMusic();
+        }
     }
 
     private float generateRandomNumber(int from, int to){
