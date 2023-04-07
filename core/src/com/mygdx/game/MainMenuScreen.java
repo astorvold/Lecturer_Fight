@@ -32,17 +32,8 @@ public class MainMenuScreen implements Screen {
     // all the buttons
 
     private final Stage stage;
-    private Texture imageStart;
-    private final ImageButton buttonStart;
-    private Texture imageSettings;
-    private final ImageButton buttonSettings;
-    private Texture imageScore;
-    private final ImageButton buttonScore;
-    private Texture imageTutorial;
-    private final ImageButton buttonTutorial;
-
-    private Texture imageCheckboxOff;
-    private Texture imageCheckboxOn;
+    private Texture imageStart, imageSettings, imageScore, imageTutorial, imageCheckboxOff, imageCheckboxOn;
+    private final ImageButton buttonStart, buttonSettings, buttonScore, buttonTutorial;
 
     private TextureRegion regionCheckboxOn;
     private TextureRegion regionCheckboxOff;
@@ -99,7 +90,6 @@ public class MainMenuScreen implements Screen {
         stage.addActor(buttonTutorial);
         stage.addActor(checkBox);
         Gdx.input.setInputProcessor(stage); //Start taking input from the ui
-
     }
 
 
