@@ -43,7 +43,8 @@ public class GameScreen implements Screen{
         // create the camera and the SpriteBatch
         this.camera = new OrthographicCamera();
         camera.setToOrtho(false, 800, 480);
-        this.settings = new SettingsScreen(game);
+        //this.settings = new SettingsScreen(game);
+        this.settings = SettingsScreen.getInstance(game);
         //Initializing objects
         player = new Player("bird.png", screenWidth/2, screenHeight/2, 96,96);
         initializeObstacles();

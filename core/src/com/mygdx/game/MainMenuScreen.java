@@ -75,7 +75,7 @@ public class MainMenuScreen implements Screen {
 
         this.game = game;
         this.camera = new OrthographicCamera();
-        this.settings = new SettingsScreen(game);
+        this.settings = SettingsScreen.getInstance(game);
         camera.setToOrtho(false,800,400);
 
         prefs.putString("Avatar", "alfinge_avatar.png");
@@ -161,7 +161,8 @@ public class MainMenuScreen implements Screen {
         });
         buttonSettings.addListener(new ClickListener(){
             public void clicked(InputEvent event, float x, float y){
-                game.setScreen(new SettingsScreen(game));
+                //game.setScreen(new SettingsScreen(game));
+                game.setScreen(settings);
                 System.out.println("Settings Button");
                 settings.stopMusic();
             }
@@ -248,6 +249,7 @@ public class MainMenuScreen implements Screen {
     public void dispose() {
         camera = null;
         stage.dispose();
+        settings.dispose();
 
     }
 

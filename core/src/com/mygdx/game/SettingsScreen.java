@@ -15,6 +15,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 
 public class SettingsScreen implements Screen {
     final Lecturer_fight game;
+    private static SettingsScreen instance;
     OrthographicCamera camera;
     private Music music = Gdx.audio.newMusic(Gdx.files.internal("Dumb Ways To Die.mp3"));
     private Music point = Gdx.audio.newMusic(Gdx.files.internal("point.mp3"));
@@ -27,11 +28,11 @@ public class SettingsScreen implements Screen {
     private final float screenWidth = Gdx.graphics.getWidth();
     SpriteBatch batch = new SpriteBatch();
     BitmapFont font = new BitmapFont();
-    private boolean music_on, sound_on;
+    private boolean music_on = true, sound_on = true;
     Preferences prefs = Gdx.app.getPreferences("Lecturer_Fight");
 
 
-    public SettingsScreen(final Lecturer_fight game) {
+    private SettingsScreen(final Lecturer_fight game) {
         this.game = game;
         this.camera = new OrthographicCamera();
         camera.setToOrtho(false,800,400);
@@ -65,10 +66,18 @@ public class SettingsScreen implements Screen {
         music.setVolume(0.5f);
         point.setVolume(0.5f);
         die.setVolume(0.5f);
+        System.out.println("musikk er på: "+isMusic_on() + music_on);
         if (music_on){
             playMusic();
         }
 
+    }
+
+    public static synchronized SettingsScreen getInstance(Lecturer_fight game) {
+        if (instance == null) {
+            instance = new SettingsScreen(game);
+        }
+        return instance;
     }
 
     @Override
