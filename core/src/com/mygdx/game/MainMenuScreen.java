@@ -22,13 +22,9 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public class MainMenuScreen implements Screen {
 
-
     final Lecturer_fight game;
     OrthographicCamera camera;
-
-
     BitmapFont font = new BitmapFont();
-
     // all the buttons
 
     private final Stage stage;
