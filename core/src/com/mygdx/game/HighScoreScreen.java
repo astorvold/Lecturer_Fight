@@ -36,6 +36,8 @@ public class HighScoreScreen implements Screen {
     private Texture imagePlayAgain;
     private ImageButton buttonPlayAgain;
 
+    private SettingsScreen settings;
+
 
     private int screenHeight = Gdx.graphics.getHeight();
     private int screenWidth = Gdx.graphics.getWidth();
@@ -49,6 +51,7 @@ public class HighScoreScreen implements Screen {
         this.font2 = new BitmapFont();
         this.backButton = backButton;
         this.playAgainButton = playAgainButton;
+        this.settings = new SettingsScreen(game);
 
         stage = new Stage(new ScreenViewport()); //Set up a stage for the ui
 
@@ -67,6 +70,11 @@ public class HighScoreScreen implements Screen {
         }
         Gdx.input.setInputProcessor(stage);
 
+        //play music
+        if (settings.isMusic_on()){
+            settings.playMusic();
+        }
+
     }
 
     @Override
@@ -78,6 +86,7 @@ public class HighScoreScreen implements Screen {
             public void clicked(InputEvent event, float x, float y){
                 game.setScreen(new MainMenuScreen(game));
                 System.out.println("Back Button");
+                settings.stopMusic();
             }
         });
         if (playAgainButton){
@@ -85,6 +94,7 @@ public class HighScoreScreen implements Screen {
                 public void clicked(InputEvent event, float x, float y){
                     game.setScreen(new GameScreen(game,false));
                     System.out.println("Back Button");
+                    settings.stopMusic();
                 }
             });
         }

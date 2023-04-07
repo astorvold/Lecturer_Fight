@@ -23,6 +23,8 @@ public class GameScreen implements Screen{
     private SpriteBatch batch = new SpriteBatch();
     private BitmapFont font = new BitmapFont();
 
+    private SettingsScreen settings;
+
     public Player player;
     public Player player2;
     public ArrayList<Entity> obstacles;
@@ -41,12 +43,18 @@ public class GameScreen implements Screen{
         // create the camera and the SpriteBatch
         this.camera = new OrthographicCamera();
         camera.setToOrtho(false, 800, 480);
+        this.settings = new SettingsScreen(game);
         //Initializing objects
         player = new Player("bird.png", screenWidth/2, screenHeight/2, 96,96);
         initializeObstacles();
         initializeCoins();
         highestObstacle = 7;
         this.multiplayer = multiplayer;
+
+        //play music
+        if (settings.isMusic_on()){
+            settings.playMusic();
+        }
     }
 
     private float generateRandomNumber(int from, int to){
@@ -162,12 +170,17 @@ public class GameScreen implements Screen{
             obstacles.get(i).changePos(-speed);
             if (player.checkColisions(obstacles.get(i))) {
 
+                //plays die sound if turned on in settings
+                settings.dieMusic();
+                settings.stopMusic();
+
                 // send score to DB and set player as non-ready
                 game.api.setScore(player.getScore());
                 System.out.println("Score sent to db -> " + player.getScore() + " point");
                 player.setReady(false);
                 game.api.setInfoPlayer(player);
                 game.setScreen(new HighScoreScreen(this.game,true,true));
+
             }
             //If the obstacle is getting out the bounds it will be put again
             if(obstacles.get(i).getY()<0){
@@ -180,6 +193,8 @@ public class GameScreen implements Screen{
             coins.get(i).changePos(-speed);
             if (player.checkColisions(coins.get(i))) {
                 player.increaseScore(100);
+                //play point sound if it is turned on in settings
+                settings.pointMusic();
                 coins.get(i).setY(obstacles.get(highestObstacle).getY() + obstacles.get(highestObstacle).getHeight() +70);
             }
             //If the coin is getting out the bounds it will be put again.
