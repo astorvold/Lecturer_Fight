@@ -7,14 +7,18 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.TimeUtils;
 
+import org.w3c.dom.Text;
+
 public class GameScreen implements Screen{
     public static final int OBSTACLES_PER_SCREEN = 8;
     public static final int COINS_PER_SCREEN = 3;
-
+    private int backgroundPos = 0;
+    private Texture background;
     private final int speed = 3;
     private final Lecturer_fight game;
     private final float screenHeight = Gdx.graphics.getHeight();
@@ -45,7 +49,8 @@ public class GameScreen implements Screen{
         camera.setToOrtho(false, 800, 480);
         this.settings = new SettingsScreen(game);
         //Initializing objects
-        player = new Player("bird.png", screenWidth/2, screenHeight/2, 96,96);
+        background = new Texture("new_images/BG.png");
+        player = new Player("alfinge_avatar.png", screenWidth/2, screenHeight/2, 96,96);
         initializeObstacles();
         initializeCoins();
         highestObstacle = 7;
@@ -110,9 +115,14 @@ public class GameScreen implements Screen{
 
         // starts creating obstacles
         if(multiplayer == false || (multiplayer && player2.isReady())){
+            batch.begin();
+            batch.draw(background,0, backgroundPos, screenWidth,background.getHeight()*screenWidth/background.getWidth());
+            batch.end();
             createObstacles();
             movementControl();
             checkCollisions();
+            if(-backgroundPos >= background.getHeight()) backgroundPos = -3000;
+            else backgroundPos -= speed;
         }
         else{
             batch.begin();
@@ -121,13 +131,8 @@ public class GameScreen implements Screen{
             font.draw(batch, "Waiting for you opponent!!", Gdx.graphics.getWidth()*0.1f, Gdx.graphics.getHeight()/2);
             batch.end();
         }
-        // Controlling the player
 
     }
-
-
-
-
     private void createObstacles(){
         // begin a new batch and draw the bucket and all drops
         batch.begin();

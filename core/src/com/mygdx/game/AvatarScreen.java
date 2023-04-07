@@ -124,12 +124,12 @@ public class AvatarScreen implements Screen {
 
     @Override
     public void hide() {
-
+        //batch.dispose();
     }
 
     @Override
     public void dispose() {
-
+        batch.dispose();
     }
 }
 

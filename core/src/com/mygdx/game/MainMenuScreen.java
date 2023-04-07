@@ -56,7 +56,6 @@ public class MainMenuScreen implements Screen {
         titleImage = new Texture(Gdx.files.internal("new_images/TITLE.png"));
         backgroundImage = new Texture(Gdx.files.internal("new_images/BG.png"));
 
-
         font.getData().setScale(5,5);
         font.setColor(new Color(0x023D8Bff));
 
@@ -84,11 +83,11 @@ public class MainMenuScreen implements Screen {
     private void initializeButtons(){
         imageSettings = new Texture(Gdx.files.internal("new_images/SETTINGS.png"));
         buttonSettings = new ImageButton( new TextureRegionDrawable( new TextureRegion( imageSettings)));
-        buttonSettings.setBounds(screenWidth*0.1f - 0.5f*imageSettings.getWidth()/2, screenHeight *0.9f,imageSettings.getWidth()*0.5f,imageSettings.getHeight()*0.5f);
+        buttonSettings.setBounds(screenWidth*0.12f - 0.4f*imageSettings.getWidth()/2, screenHeight *0.89f,imageSettings.getWidth()*0.4f,imageSettings.getHeight()*0.4f);
 
         imageAvatar = new Texture(Gdx.files.internal("alfinge_avatar.png"));
         buttonAvatar = new ImageButton(new TextureRegionDrawable(new TextureRegion(imageAvatar)));
-        buttonAvatar.setBounds(screenWidth*0.9f - 0.5f*imageAvatar.getWidth()/2, screenHeight *0.9f,imageAvatar.getWidth()*0.5f,imageAvatar.getHeight()*0.5f);
+        buttonAvatar.setBounds(screenWidth*0.9f - 0.4f*imageAvatar.getWidth()/2, screenHeight *0.89f,imageAvatar.getWidth()*0.4f,imageAvatar.getHeight()*0.4f);
 
         imageStart = new Texture(Gdx.files.internal("new_images/PLAY.png"));
         buttonStart = new ImageButton(new TextureRegionDrawable(new TextureRegion(imageStart))); //Set the button up
@@ -169,33 +168,17 @@ public class MainMenuScreen implements Screen {
     @Override
     public void render(float delta) {
         ScreenUtils.clear(0, 0, 0.2f, 1);
-
-        float playButtonX = screenWidth/2;
-        float playButtonY = screenHeight/2;
         camera.update();
         game.batch.setProjectionMatrix(camera.combined);
-
-
         batch.begin();
         //design
         batch.draw(backgroundImage,0,0,screenWidth,backgroundImage.getHeight()*screenWidth/backgroundImage.getWidth());
-        batch.draw(titleImage,screenWidth/2 - titleImage.getWidth()/2, 0.73f*screenHeight, titleImage.getWidth(), titleImage.getHeight());
-
+        batch.draw(titleImage,screenWidth/2 - 0.81f*titleImage.getWidth()/2, 0.73f*screenHeight, 0.8f*titleImage.getWidth(), 0.8f*titleImage.getHeight());
         //text
-        font.draw(batch, "Made by Group 16", 0.45f*screenWidth/2, 150);
-
-
-        //other buttons
-        //batch.draw(avatarButton, (screenWidth-prefs.getInteger("AvatarWidth"))/2, playButtonY+(float)avatarButton.getWidth()/2, prefs.getInteger("AvatarWidth"), prefs.getInteger("AvatarHeight"));
-
+        font.draw(batch, "Made by Group 16", 0.3f*screenWidth/2, 0.1f*screenHeight);
         batch.end();
-
-
-
-
         stage.act(Gdx.graphics.getDeltaTime()); //Perform ui logic
         stage.draw(); //Draw the ui
-
     }
 
     @Override
@@ -224,8 +207,6 @@ public class MainMenuScreen implements Screen {
         camera = null;
         stage.dispose();
         batch.dispose();
-
     }
-
 
 }
