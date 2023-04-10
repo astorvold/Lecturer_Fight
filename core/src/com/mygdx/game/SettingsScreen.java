@@ -32,7 +32,7 @@ public class SettingsScreen implements Screen {
     Preferences prefs = Gdx.app.getPreferences("Lecturer_Fight");
 
 
-    private SettingsScreen(final Lecturer_fight game) {
+    SettingsScreen(final Lecturer_fight game) {
         this.game = game;
         this.camera = new OrthographicCamera();
         camera.setToOrtho(false,800,400);
