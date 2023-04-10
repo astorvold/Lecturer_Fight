@@ -51,7 +51,8 @@ public class HighScoreScreen implements Screen {
         this.font2 = new BitmapFont();
         this.backButton = backButton;
         this.playAgainButton = playAgainButton;
-        this.settings = new SettingsScreen(game);
+        //this.settings = new SettingsScreen(game);
+        this.settings = SettingsScreen.getInstance(game);
 
         stage = new Stage(new ScreenViewport()); //Set up a stage for the ui
 
