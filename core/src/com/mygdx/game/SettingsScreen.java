@@ -15,7 +15,6 @@ import com.badlogic.gdx.utils.ScreenUtils;
 
 public class SettingsScreen implements Screen {
     final Lecturer_fight game;
-    private static SettingsScreen instance;
     OrthographicCamera camera;
     private Music music = Gdx.audio.newMusic(Gdx.files.internal("Dumb Ways To Die.mp3"));
     private Music point = Gdx.audio.newMusic(Gdx.files.internal("point.mp3"));
@@ -28,15 +27,22 @@ public class SettingsScreen implements Screen {
     private final float screenWidth = Gdx.graphics.getWidth();
     SpriteBatch batch = new SpriteBatch();
     BitmapFont font = new BitmapFont();
-    private boolean music_on = true, sound_on = true;
+    private boolean music_on, sound_on;
     Preferences prefs = Gdx.app.getPreferences("Lecturer_Fight");
+    private Preferences musicprefs;
 
 
-    private SettingsScreen(final Lecturer_fight game) {
+
+    public SettingsScreen(final Lecturer_fight game) {
         this.game = game;
         this.camera = new OrthographicCamera();
         camera.setToOrtho(false,800,400);
         font.getData().setScale(10,10);
+
+        musicprefs = Gdx.app.getPreferences("music-prefs");
+        music_on = musicprefs.getBoolean("music-on", true);
+        sound_on = musicprefs.getBoolean("sound-on", true);
+
 
         //sound = new Texture(Gdx.files.internal("sound-icon.png"));
         //noSound = new Texture(Gdx.files.internal("sound-off-icon.png"));
@@ -48,11 +54,11 @@ public class SettingsScreen implements Screen {
         toggleOFFButton = new Texture(Gdx.files.internal("new_images/TOGGLE_OFF.png"));
 
         //handle on/off logic and be able to use it elsewhere
-        /*
+/*
         prefs.putInteger("Music",1);
         prefs.putInteger("Sound",1);
-        prefs.flush();*/
-
+        prefs.flush();
+*/
 
         //edit font
         font.setColor(new Color(0x023D8Bff));
@@ -62,27 +68,17 @@ public class SettingsScreen implements Screen {
         //AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         //audioManager.setStreamVolume(AudioManager.STREAM_MUSIC);
 
-        //music_on = true;
         music.setVolume(0.5f);
         point.setVolume(0.5f);
         die.setVolume(0.5f);
-        System.out.println("musikk er på: "+isMusic_on() + music_on);
-        if (music_on){
-            playMusic();
-        }
-
-    }
-
-    public static synchronized SettingsScreen getInstance(Lecturer_fight game) {
-        if (instance == null) {
-            instance = new SettingsScreen(game);
-        }
-        return instance;
     }
 
     @Override
     public void show() {
-
+        System.out.println("musikk er på: " + isMusic_on());
+        if (isMusic_on()){
+            playMusic();
+        }
     }
 
     @Override
@@ -95,7 +91,7 @@ public class SettingsScreen implements Screen {
 
         //texts
         font.draw(batch,"Settings",screenWidth*1/3+20, screenHeight-50);
-        font.draw(batch,((music_on) ? "Turn music off:" : "Turn music on:"),100, screenHeight*3/4);
+        font.draw(batch,((isMusic_on()) ? "Turn music off:" : "Turn music on:"),100, screenHeight*3/4);
         font.draw(batch,((sound_on) ? "Turn sound off:" : "Turn sound on:"),100, screenHeight*2/3);
 
         //toggle-buttons
@@ -112,7 +108,6 @@ public class SettingsScreen implements Screen {
             if (Gdx.input.getX() < 150 && Gdx.input.getY() < 150) {
                 dispose();
                 game.setScreen(new MainMenuScreen(game));
-                stopMusic();
             }
 
             //turn music on/off
@@ -123,10 +118,13 @@ public class SettingsScreen implements Screen {
                     //music off
                     stopMusic();
                     setMusic(false);
+                    //savePreferences();
                     System.out.println("musikk er på: " + isMusic_on());
+
                 }else{
                     //music on
                     playMusic();
+                    savePreferences();
                     System.out.println("musikk er på: " + isMusic_on());
                 }
             }
@@ -138,10 +136,11 @@ public class SettingsScreen implements Screen {
                 if(current_state == 1){
                     //sound off
                     sound_on = false;
+                    savePreferences();
                 }else{
                     //sound on
                     sound_on = true;
-
+                    savePreferences();
                 }
             }
             prefs.flush();
@@ -170,15 +169,27 @@ public class SettingsScreen implements Screen {
 
     @Override
     public void hide() {
+        stopMusic();
+    }
 
+    public void savePreferences() {
+        musicprefs.putBoolean("music-on", this.music_on);
+        musicprefs.putBoolean("sound-on", this.sound_on);
+        musicprefs.flush();
     }
 
     private void setMusic(boolean boo){
         this.music_on =boo;
+        savePreferences();
     }
 
     public boolean isMusic_on(){
-        return this.music_on;
+        music_on = musicprefs.getBoolean("music-on", true);
+        return music_on;
+    }
+    public boolean isSound_on(){
+        sound_on = musicprefs.getBoolean("sound-on", true);
+        return sound_on;
     }
 
 
@@ -195,13 +206,13 @@ public class SettingsScreen implements Screen {
     }
 
     public void pointMusic(){
-        if (sound_on){
+        if (isSound_on()){
             point.play();
         }
     }
 
     public void dieMusic(){
-        if(sound_on){
+        if(isSound_on()){
             die.play();
         }
     }

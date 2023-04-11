@@ -17,6 +17,8 @@ public class AvatarScreen implements Screen {
     private final int screenHeight = Gdx.graphics.getHeight();
     private final int screenWidth = Gdx.graphics.getWidth();
 
+    private SettingsScreen settings;
+
 
     //avatar logic and textures
     Texture alfIngeAvatar, schauAvatar, backButton, backgroundImage;
@@ -32,6 +34,7 @@ public class AvatarScreen implements Screen {
 
     public AvatarScreen(final Lecturer_fight game) {
         this.game = game;
+        this.settings = new SettingsScreen(game);
         this.camera = new OrthographicCamera();
         camera.setToOrtho(false,800,400);
 
@@ -63,7 +66,10 @@ public class AvatarScreen implements Screen {
 
     @Override
     public void show() {
-
+        //play music
+        if (settings.isMusic_on()){
+            settings.playMusic();
+        }
     }
 
     @Override
@@ -114,17 +120,18 @@ public class AvatarScreen implements Screen {
 
     @Override
     public void pause() {
-
+        settings.pause();
     }
 
     @Override
     public void resume() {
+        settings.resume();
 
     }
 
     @Override
     public void hide() {
-
+        settings.stopMusic();
     }
 
     @Override

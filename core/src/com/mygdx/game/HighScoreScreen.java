@@ -51,8 +51,7 @@ public class HighScoreScreen implements Screen {
         this.font2 = new BitmapFont();
         this.backButton = backButton;
         this.playAgainButton = playAgainButton;
-        //this.settings = new SettingsScreen(game);
-        this.settings = SettingsScreen.getInstance(game);
+        this.settings = new SettingsScreen(game);
 
         stage = new Stage(new ScreenViewport()); //Set up a stage for the ui
 
@@ -71,15 +70,16 @@ public class HighScoreScreen implements Screen {
         }
         Gdx.input.setInputProcessor(stage);
 
-        //play music
-        if (settings.isMusic_on()){
-            settings.playMusic();
-        }
 
     }
 
     @Override
     public void show() {
+
+        //play music
+        if (settings.isMusic_on()){
+            settings.playMusic();
+        }
         scoreList = new ArrayList<Score>();
         game.api.getScores(scoreList);    // retrieves the scores from the DB and saves them in scoreList
 
@@ -87,7 +87,6 @@ public class HighScoreScreen implements Screen {
             public void clicked(InputEvent event, float x, float y){
                 game.setScreen(new MainMenuScreen(game));
                 System.out.println("Back Button");
-                settings.stopMusic();
             }
         });
         if (playAgainButton){
@@ -95,7 +94,6 @@ public class HighScoreScreen implements Screen {
                 public void clicked(InputEvent event, float x, float y){
                     game.setScreen(new GameScreen(game,false));
                     System.out.println("Back Button");
-                    settings.stopMusic();
                 }
             });
         }
@@ -137,22 +135,24 @@ public class HighScoreScreen implements Screen {
 
     @Override
     public void pause() {
+        settings.pause();
 
     }
 
     @Override
     public void resume() {
+        settings.resume();
 
     }
 
     @Override
     public void hide() {
         stage.dispose();
+        settings.stopMusic();
 
     }
 
     @Override
     public void dispose() {
-
     }
 }

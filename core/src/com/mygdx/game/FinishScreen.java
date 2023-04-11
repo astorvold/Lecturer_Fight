@@ -11,14 +11,18 @@ import com.badlogic.gdx.utils.ScreenUtils;
 public class FinishScreen implements Screen {
 
     final Lecturer_fight game;
+
+    private SettingsScreen settings;
     OrthographicCamera camera;
     Texture finishButton;
     SpriteBatch batch = new SpriteBatch();
-    BitmapFont font = new BitmapFont();;
+    BitmapFont font = new BitmapFont();
 
 
     public FinishScreen(final Lecturer_fight game) {
         this.game = game;
+        this.settings = new SettingsScreen(game);
+
         this.camera = new OrthographicCamera();
         camera.setToOrtho(false,800,400);
 
@@ -29,7 +33,10 @@ public class FinishScreen implements Screen {
 
     @Override
     public void show() {
-
+        //play music
+        if (settings.isMusic_on()){
+            settings.playMusic();
+        }
     }
 
     @Override
@@ -52,17 +59,17 @@ public class FinishScreen implements Screen {
 
     @Override
     public void pause() {
-
+        settings.pause();
     }
 
     @Override
     public void resume() {
-
+        settings.resume();
     }
 
     @Override
     public void hide() {
-
+        settings.stopMusic();
     }
 
     @Override

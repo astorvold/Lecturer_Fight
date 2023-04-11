@@ -16,6 +16,8 @@ import java.util.prefs.PreferenceChangeEvent;
 public class TutorialScreen implements Screen {
     final Lecturer_fight game;
     OrthographicCamera camera;
+
+    private SettingsScreen settings;
     Texture backButton, forwardButton, backgroundImage, tutorialImage;
 
     SpriteBatch batch = new SpriteBatch();
@@ -28,6 +30,7 @@ public class TutorialScreen implements Screen {
 
     public TutorialScreen(final Lecturer_fight game) {
         this.game = game;
+        this.settings = new SettingsScreen(game);
         this.camera = new OrthographicCamera();
         camera.setToOrtho(false,800,400);
 
@@ -49,7 +52,10 @@ public class TutorialScreen implements Screen {
 
     @Override
     public void show() {
-
+        //play music
+        if (settings.isMusic_on()){
+            settings.playMusic();
+        }
     }
 
     @Override
@@ -101,17 +107,17 @@ public class TutorialScreen implements Screen {
 
     @Override
     public void pause() {
-
+        settings.pause();
     }
 
     @Override
     public void resume() {
-
+        settings.resume();
     }
 
     @Override
     public void hide() {
-
+        settings.stopMusic();
     }
 
     @Override

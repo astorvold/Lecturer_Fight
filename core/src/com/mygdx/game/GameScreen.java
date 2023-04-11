@@ -37,14 +37,15 @@ public class GameScreen implements Screen{
 
 
 
+
     public GameScreen(final Lecturer_fight game,boolean multiplayer) {
         this.game = game;
+        this.settings = new SettingsScreen(game);
         System.out.println("game screen");
         // create the camera and the SpriteBatch
         this.camera = new OrthographicCamera();
         camera.setToOrtho(false, 800, 480);
-        //this.settings = new SettingsScreen(game);
-        this.settings = SettingsScreen.getInstance(game);
+
         //Initializing objects
         player = new Player("bird.png", screenWidth/2, screenHeight/2, 96,96);
         initializeObstacles();
@@ -52,10 +53,6 @@ public class GameScreen implements Screen{
         highestObstacle = 7;
         this.multiplayer = multiplayer;
 
-        //play music
-        if (settings.isMusic_on()){
-            settings.playMusic();
-        }
     }
 
     private float generateRandomNumber(int from, int to){
@@ -213,6 +210,10 @@ public class GameScreen implements Screen{
     }
     @Override
     public void show() {
+        //play music
+        if (settings.isMusic_on()){
+            settings.playMusic();
+        }
         // start the playback of the background music
         // when the screen is shown
 
@@ -227,14 +228,17 @@ public class GameScreen implements Screen{
     @Override
     public void hide() {
         player.setReady(false);
+        settings.stopMusic();
 
     }
     @Override
     public void pause() {
+        settings.pause();
 
     }
     @Override
     public void resume() {
+        settings.resume();
     }
     @Override
     public void dispose() {

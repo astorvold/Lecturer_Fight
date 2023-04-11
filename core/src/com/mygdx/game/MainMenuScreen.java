@@ -75,7 +75,8 @@ public class MainMenuScreen implements Screen {
 
         this.game = game;
         this.camera = new OrthographicCamera();
-        this.settings = SettingsScreen.getInstance(game);
+        this.settings = new SettingsScreen(game);
+
         camera.setToOrtho(false,800,400);
 
         prefs.putString("Avatar", "alfinge_avatar.png");
@@ -95,12 +96,6 @@ public class MainMenuScreen implements Screen {
         prefs.putBoolean("Multiplayer", true);
         prefs.flush();
 
-
-        //play music
-        System.out.println("musikk er på: " + settings.isMusic_on());
-        if (settings.isMusic_on()){
-            settings.playMusic();
-        }
 
         imageSettings = new Texture(Gdx.files.internal("new_images/SETTINGS.png"));
         buttonSettings = new ImageButton( new TextureRegionDrawable( new TextureRegion( imageSettings)));
@@ -152,11 +147,15 @@ public class MainMenuScreen implements Screen {
 
     @Override  // Add listeners to check when user clicks on buttons
     public void show() {
+
+        //play music
+        if (settings.isMusic_on()){
+            settings.playMusic();
+        }
        buttonStart.addListener(new ClickListener(){
             public void clicked(InputEvent event, float x, float y){
                 game.setScreen(new GameScreen(game, multiplayer));
                 System.out.println("Start Button");
-                settings.stopMusic();
             }
         });
         buttonSettings.addListener(new ClickListener(){
@@ -164,21 +163,18 @@ public class MainMenuScreen implements Screen {
                 //game.setScreen(new SettingsScreen(game));
                 game.setScreen(settings);
                 System.out.println("Settings Button");
-                settings.stopMusic();
             }
         });
         buttonScore.addListener(new ClickListener(){
             public void clicked(InputEvent event, float x, float y){
                 game.setScreen(new HighScoreScreen(game,true,false));
                 System.out.println("Score Button");
-                settings.stopMusic();
             }
         });
         buttonTutorial.addListener(new ClickListener(){
             public void clicked(InputEvent event, float x, float y){
                 game.setScreen(new TutorialScreen(game));
                 System.out.println("Tutorial Button");
-                settings.stopMusic();
             }
         });
         checkBox.addListener(new ClickListener(){
@@ -187,7 +183,6 @@ public class MainMenuScreen implements Screen {
                     boolean isChecked = checkBox.isChecked();
                     multiplayer = isChecked;
                     System.out.println(multiplayer);
-                    settings.stopMusic();
                 }
         });
     }
@@ -232,25 +227,26 @@ public class MainMenuScreen implements Screen {
 
     @Override
     public void pause() {
+        settings.pause();
 
     }
 
     @Override
     public void resume() {
+        settings.resume();
 
     }
 
     @Override
     public void hide() {
         stage.dispose();
+        settings.stopMusic();
     }
 
     @Override
     public void dispose() {
         camera = null;
         stage.dispose();
-        settings.dispose();
-
     }
 
 
