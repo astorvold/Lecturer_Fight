@@ -16,4 +16,6 @@ public class Coin extends Entity{
     public void changePos(int newPos) {
         y+=newPos;
     }
+
+
 }

@@ -32,7 +32,7 @@ public class GameScreen implements Screen{
     public Player player;
     public Player player2;
     public ArrayList<Entity> obstacles;
-    public ArrayList<Entity> coins;
+    public ArrayList<Coin> coins;
     private int highestObstacle;
 
     long startTime;
@@ -77,10 +77,10 @@ public class GameScreen implements Screen{
     }
     private void initializeCoins(){
         coins = new ArrayList<>();
-        for(int i = 1; i <= COINS_PER_SCREEN; i++){
+        for(int i = 0; i < COINS_PER_SCREEN; i++){
+            int pos = i*OBSTACLES_PER_SCREEN/COINS_PER_SCREEN;
             float x = generateRandomNumber(100, (int)screenWidth-100);
-            int random_int = (int)generateRandomNumber(1,7);
-            float y = generateRandomNumber((int)(obstacles.get(random_int-1).getY() + obstacles.get(random_int-1).getHeight()) +70 , (int) obstacles.get(random_int).getY()-(64+70));
+            float y = generateRandomNumber((int)(obstacles.get(pos).getY() + obstacles.get(pos).getHeight()) +70 , (int) obstacles.get(pos).getY()+(64+70));
             coins.add(new Coin("coin.png", x, y, 64,64));
         }
     }
@@ -119,7 +119,7 @@ public class GameScreen implements Screen{
             batch.begin();
             batch.draw(background,0, backgroundPos, screenWidth,background.getHeight()*screenWidth/background.getWidth());
             batch.end();
-            createObstacles();
+            createEntities();
             movementControl();
             checkCollisions();
             if(-backgroundPos >= background.getHeight()) backgroundPos = -3000;
@@ -134,14 +134,15 @@ public class GameScreen implements Screen{
         }
 
     }
-    private void createObstacles(){
+    private void createEntities(){
         // begin a new batch and draw the bucket and all drops
         batch.begin();
         batch.draw(player.getTexture(), player.getX(), player.getY(), player.getWidth(), player.getHeight());
         for(int i = 0; i < OBSTACLES_PER_SCREEN; i++)
             batch.draw(obstacles.get(i).getTexture(), obstacles.get(i).getX(), obstacles.get(i).getY(), obstacles.get(i).getWidth(), obstacles.get(i).getHeight());
         for(int i = 0; i < COINS_PER_SCREEN; i++)
-            batch.draw(coins.get(i).getTexture(), coins.get(i).getX(), coins.get(i).getY(), coins.get(i).getWidth(), coins.get(i).getHeight());
+            if(coins.get(i).getTexture() != null)
+                batch.draw(coins.get(i).getTexture(), coins.get(i).getX(), coins.get(i).getY(), coins.get(i).getWidth(), coins.get(i).getHeight());
         font.getData().setScale(3);
         font.setColor(Color.BLACK);
 
@@ -199,20 +200,33 @@ public class GameScreen implements Screen{
             coins.get(i).changePos(-speed);
             if (player.checkColisions(coins.get(i))) {
                 player.increaseScore(100);
-                //play point sound if it is turned on in settings
-                settings.pointMusic();
-                coins.get(i).setY(obstacles.get(highestObstacle).getY() + obstacles.get(highestObstacle).getHeight() +70);
+                settings.pointMusic(); //play point sound if it is turned on in settings
+                coins.get(i).disappear();
             }
             //If the coin is getting out the bounds it will be put again.
             //It will be put on top of the highest obstacle
             if(coins.get(i).getY()<0){
                 float x = generateRandomNumber(100, (int)screenWidth-100);
                 float y = obstacles.get(highestObstacle).getY() + obstacles.get(highestObstacle).getHeight() +70;
+                if(coins.get(i).getTexture() == null){
+                    coins.get(i).setTexture(new Texture("coin.png"));
+                }
                 coins.get(i).setX(x);
                 coins.get(i).setY(y);
             }
         }
     }
+
+    private int getRelativePosition(int pos){
+        int i = 0;
+        while(i <= OBSTACLES_PER_SCREEN/2){
+            if(pos == OBSTACLES_PER_SCREEN-1) pos = 1;
+            else pos ++;
+            i++;
+        }
+        return pos;
+    }
+
     @Override
     public void resize(int width, int height) {
     }
