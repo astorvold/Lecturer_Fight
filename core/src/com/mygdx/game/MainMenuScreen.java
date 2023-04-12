@@ -64,9 +64,9 @@ public class MainMenuScreen implements Screen {
         prefs.putBoolean("Multiplayer", true);
         prefs.flush();
         //play music
-        System.out.println("musikk er på: " + settings.isMusic_on());
-        if (settings.isMusic_on()){
-            settings.playMusic();
+        System.out.println("musikk er på: " + Configuration.isMusic_on());
+        if (Configuration.isMusic_on()){
+            Configuration.playMusic();
         }
 
         initializeButtons();
@@ -121,14 +121,12 @@ public class MainMenuScreen implements Screen {
             public void clicked(InputEvent event, float x, float y){
                 game.setScreen(new GameScreen(game, multiplayer));
                 System.out.println("Start Button");
-                settings.stopMusic();
             }
         });
         buttonSettings.addListener(new ClickListener(){
             public void clicked(InputEvent event, float x, float y){
                 game.setScreen(new SettingsScreen(game));
                 System.out.println("Settings Button");
-                settings.stopMusic();
             }
         });
 
@@ -136,7 +134,6 @@ public class MainMenuScreen implements Screen {
             public void clicked(InputEvent event, float x, float y){
                 game.setScreen(new AvatarScreen(game));
                 System.out.println("Avatar Button");
-                settings.stopMusic();
             }
         });
 
@@ -144,14 +141,12 @@ public class MainMenuScreen implements Screen {
             public void clicked(InputEvent event, float x, float y){
                 game.setScreen(new HighScoreScreen(game,true,false));
                 System.out.println("Score Button");
-                settings.stopMusic();
             }
         });
         buttonTutorial.addListener(new ClickListener(){
             public void clicked(InputEvent event, float x, float y){
                 game.setScreen(new TutorialScreen(game));
                 System.out.println("Tutorial Button");
-                settings.stopMusic();
             }
         });
         checkBox.addListener(new ClickListener(){
@@ -160,7 +155,6 @@ public class MainMenuScreen implements Screen {
                     boolean isChecked = checkBox.isChecked();
                     multiplayer = isChecked;
                     System.out.println(multiplayer);
-                    settings.stopMusic();
                 }
         });
     }

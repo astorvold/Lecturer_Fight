@@ -72,8 +72,8 @@ public class HighScoreScreen implements Screen {
         Gdx.input.setInputProcessor(stage);
 
         //play music
-        if (settings.isMusic_on()){
-            settings.playMusic();
+        if (Configuration.isMusic_on()){
+            Configuration.playMusic();
         }
 
     }
@@ -87,7 +87,6 @@ public class HighScoreScreen implements Screen {
             public void clicked(InputEvent event, float x, float y){
                 game.setScreen(new MainMenuScreen(game));
                 System.out.println("Back Button");
-                settings.stopMusic();
             }
         });
         if (playAgainButton){
@@ -95,7 +94,6 @@ public class HighScoreScreen implements Screen {
                 public void clicked(InputEvent event, float x, float y){
                     game.setScreen(new GameScreen(game,false));
                     System.out.println("Back Button");
-                    settings.stopMusic();
                 }
             });
         }

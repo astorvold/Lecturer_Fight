@@ -58,8 +58,8 @@ public class GameScreen implements Screen{
         this.multiplayer = multiplayer;
 
         //play music
-        if (settings.isMusic_on()){
-            settings.playMusic();
+        if (Configuration.isMusic_on()){
+            Configuration.playMusic();
         }
     }
 
@@ -178,8 +178,7 @@ public class GameScreen implements Screen{
             if (player.checkColisions(obstacles.get(i))) {
 
                 //plays die sound if turned on in settings
-                settings.dieMusic();
-                settings.stopMusic();
+                Configuration.dieMusic();
 
                 // send score to DB and set player as non-ready
                 game.api.setScore(player.getScore());
@@ -200,7 +199,7 @@ public class GameScreen implements Screen{
             coins.get(i).changePos(-speed);
             if (player.checkColisions(coins.get(i))) {
                 player.increaseScore(100);
-                settings.pointMusic(); //play point sound if it is turned on in settings
+                Configuration.pointMusic(); //play point sound if it is turned on in settings
                 coins.get(i).disappear();
             }
             //If the coin is getting out the bounds it will be put again.

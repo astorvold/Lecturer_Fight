@@ -1,5 +1,7 @@
 package com.mygdx.game;
 
+import static com.mygdx.game.Configuration.playMusic;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
@@ -9,26 +11,34 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
+
+import org.graalvm.compiler.nodes.TypeCheckHints;
 
 public class SettingsScreen implements Screen {
     final Lecturer_fight game;
     private static SettingsScreen instance;
     OrthographicCamera camera;
-    private Music music = Gdx.audio.newMusic(Gdx.files.internal("Dumb Ways To Die.mp3"));
-    private Music point = Gdx.audio.newMusic(Gdx.files.internal("point.mp3"));
-    private Music die = Gdx.audio.newMusic(Gdx.files.internal("die.mp3"));
-    Texture backButton, backgroundImage, toggleONButton, toggleOFFButton;
+    Texture imageBack, backgroundImage, imageToggleON, imageToggleOFF;
+    private ImageButton buttonBack;
+    private CheckBox musicCheckBox, soundCheckBox;
 
-
+    private Stage stage;
     private final float screenHeight = Gdx.graphics.getHeight();
 
     private final float screenWidth = Gdx.graphics.getWidth();
     SpriteBatch batch = new SpriteBatch();
     BitmapFont font = new BitmapFont();
-    private boolean music_on = true, sound_on = true;
     Preferences prefs = Gdx.app.getPreferences("Lecturer_Fight");
 
 
@@ -42,10 +52,7 @@ public class SettingsScreen implements Screen {
         //noSound = new Texture(Gdx.files.internal("sound-off-icon.png"));
 
         //create Textures
-        backButton = new Texture(Gdx.files.internal("new_images/ARROW_LEFT.png"));
         backgroundImage = new Texture(Gdx.files.internal("new_images/LIGHT_BG.png"));
-        toggleONButton = new Texture(Gdx.files.internal("new_images/TOGGLE_ON.png"));
-        toggleOFFButton = new Texture(Gdx.files.internal("new_images/TOGGLE_OFF.png"));
 
         //handle on/off logic and be able to use it elsewhere
         /*
@@ -63,14 +70,39 @@ public class SettingsScreen implements Screen {
         //audioManager.setStreamVolume(AudioManager.STREAM_MUSIC);
 
         //music_on = true;
-        music.setVolume(0.5f);
-        point.setVolume(0.5f);
-        die.setVolume(0.5f);
-        System.out.println("musikk er på: "+isMusic_on() + music_on);
-        if (music_on){
-            playMusic();
+        Configuration.getMusic().setVolume(0.5f);
+        Configuration.getPoint().setVolume(0.5f);
+        Configuration.getDie().setVolume(0.5f);
+        System.out.println("musikk er på: "+Configuration.isMusic_on() + Configuration.isMusic_on());
+        if (Configuration.isMusic_on()){
+            Configuration.playMusic();
         }
+        initializeButtons();
+        stage = new Stage(new ScreenViewport());
+        stage.addActor(buttonBack);
+        stage.addActor(musicCheckBox);
+        stage.addActor(soundCheckBox);
+        Gdx.input.setInputProcessor(stage);
+    }
 
+    private void initializeButtons(){
+        imageBack = new Texture(Gdx.files.internal("new_images/ARROW_LEFT.png"));
+        buttonBack = new ImageButton(new TextureRegionDrawable(new TextureRegion(imageBack)));
+        buttonBack.setBounds(screenWidth*0.12f - 0.4f*imageBack.getWidth()/2, screenHeight *0.89f,imageBack.getWidth()*0.4f,imageBack.getHeight()*0.4f);
+
+
+        imageToggleON = new Texture(Gdx.files.internal("new_images/TOGGLE_ON.png"));
+        imageToggleOFF = new Texture(Gdx.files.internal("new_images/TOGGLE_OFF.png"));
+        CheckBox.CheckBoxStyle checkboxStyle = new CheckBox.CheckBoxStyle();
+        font.setColor(Color.WHITE);
+        font.getData().setScale(7);
+        checkboxStyle.font = font;
+        checkboxStyle.checkboxOn = new TextureRegionDrawable(new TextureRegion(imageToggleON));
+        checkboxStyle.checkboxOff = new TextureRegionDrawable(new TextureRegion(imageToggleOFF));
+        musicCheckBox = new CheckBox("", checkboxStyle);
+        soundCheckBox = new CheckBox("", checkboxStyle);
+        musicCheckBox.setBounds(screenWidth*2/3,screenHeight*3/4-110,350,imageToggleON.getHeight()*350/imageToggleON.getWidth());
+        soundCheckBox.setBounds(screenWidth*2/3,screenHeight*2/3-110,350,imageToggleON.getHeight()*350/imageToggleON.getWidth());
     }
 
     public static synchronized SettingsScreen getInstance(Lecturer_fight game) {
@@ -82,7 +114,29 @@ public class SettingsScreen implements Screen {
 
     @Override
     public void show() {
-
+        buttonBack.addListener(new ClickListener(){
+            public void clicked(InputEvent event, float x, float y){
+                game.setScreen(new MainMenuScreen(game));
+                System.out.println("Back Button from avatarScreen");
+            }
+        });
+        musicCheckBox.addListener(new ClickListener(){
+            public void clicked(InputEvent event, float x, float y){
+                System.out.println(("clickeo stopMusic"));
+                if(Configuration.isMusic_on()) {
+                    Configuration.changeMusic();
+                }
+                else{
+                    Configuration.changeMusic();
+                }
+            }
+        });
+        soundCheckBox.addListener(new ClickListener(){
+            public void clicked(InputEvent event, float x, float y){
+                System.out.println(("clickeo stopSound"));
+                Configuration.changeSound();
+            }
+        });
     }
 
     @Override
@@ -91,66 +145,23 @@ public class SettingsScreen implements Screen {
         batch.begin();
         //page items
         batch.draw(backgroundImage,0,0,screenWidth,backgroundImage.getHeight()*screenWidth/backgroundImage.getWidth());
-        batch.draw(backButton, -50, screenHeight-150,300,backButton.getHeight()*300/backButton.getWidth());
 
         //texts
         font.draw(batch,"Settings",screenWidth*1/3+20, screenHeight-50);
-        font.draw(batch,((music_on) ? "Turn music off:" : "Turn music on:"),100, screenHeight*3/4);
-        font.draw(batch,((sound_on) ? "Turn sound off:" : "Turn sound on:"),100, screenHeight*2/3);
-
-        //toggle-buttons
-        batch.draw(((prefs.getInteger("Music") == 1) ? toggleONButton : toggleOFFButton),screenWidth*2/3,screenHeight*3/4-110,350,toggleONButton.getHeight()*350/toggleONButton.getWidth());
-        batch.draw(((prefs.getInteger("Sound") == 1) ? toggleONButton : toggleOFFButton),screenWidth*2/3,screenHeight*2/3-110,350,toggleONButton.getHeight()*350/toggleONButton.getWidth());
+        font.draw(batch,((Configuration.isMusic_on()) ? "Turn music off:" : "Turn music on:"),100, screenHeight*3/4);
+        font.draw(batch,((Configuration.isSound_on()) ? "Turn sound off:" : "Turn sound on:"),100, screenHeight*2/3);
 
         //sound
         //batch.draw(sound, screenWidth-sound.getWidth()-20, screenHeight-sound.getHeight()-20);
         batch.end();
-
-
-        if (Gdx.input.isTouched()) {
-            //Return to main-menu
-            if (Gdx.input.getX() < 150 && Gdx.input.getY() < 150) {
-                dispose();
-                game.setScreen(new MainMenuScreen(game));
-                stopMusic();
-            }
-
-            //turn music on/off
-            if((Gdx.input.getX()<970 && Gdx.input.getX()>810) && (Gdx.input.getY()<550 && Gdx.input.getY()>470)){
-                int current_state = prefs.getInteger("Music");
-                prefs.putInteger("Music", ((current_state == 1) ? 0 : 1));
-                if(current_state == 1){
-                    //music off
-                    stopMusic();
-                    setMusic(false);
-                    System.out.println("musikk er på: " + isMusic_on());
-                }else{
-                    //music on
-                    playMusic();
-                    System.out.println("musikk er på: " + isMusic_on());
-                }
-            }
-            //turn sound on/off
-            else if((Gdx.input.getX()<970 && Gdx.input.getX()>810) && (Gdx.input.getY()<700 && Gdx.input.getY()>620)){
-                int current_state = prefs.getInteger("Sound");
-                prefs.putInteger("Sound", ((current_state == 1) ? 0 : 1));
-                // trenger kanskje ikke å gjøre noe under her siden play-koden kan sjekke om prefs("sound")==1 og så lager lyd
-                if(current_state == 1){
-                    //sound off
-                    sound_on = false;
-                }else{
-                    //sound on
-                    sound_on = true;
-
-                }
-            }
-            prefs.flush();
-
-
+        stage.act(Gdx.graphics.getDeltaTime()); //Perform ui logic
+        stage.draw(); //Draw the ui
+        if(Configuration.isMusic_on()){
+            musicCheckBox.setChecked(true);
         }
-
-
-
+        if(Configuration.isSound_on()){
+            soundCheckBox.setChecked(true);
+        }
     }
 
     @Override
@@ -173,45 +184,9 @@ public class SettingsScreen implements Screen {
 
     }
 
-    private void setMusic(boolean boo){
-        this.music_on =boo;
-    }
-
-    public boolean isMusic_on(){
-        return this.music_on;
-    }
-
-
-    public void playMusic(){
-            music.setLooping(true);
-            music.play();
-            setMusic(true);
-    }
-
-    public void stopMusic(){
-        if(music_on){
-            music.pause();
-        }
-    }
-
-    public void pointMusic(){
-        if (sound_on){
-            point.play();
-        }
-    }
-
-    public void dieMusic(){
-        if(sound_on){
-            die.play();
-        }
-    }
-
     @Override
     public void dispose() {
         batch.dispose();
-        music.dispose();
-        point.dispose();
-        die.dispose();
     }
 }
 
