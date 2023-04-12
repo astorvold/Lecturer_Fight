@@ -16,6 +16,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
+import java.util.Objects;
+
 import jdk.tools.jmod.Main;
 
 public class AvatarScreen implements Screen {
@@ -27,13 +29,12 @@ public class AvatarScreen implements Screen {
     private final int screenWidth = Gdx.graphics.getWidth();
 
     private Stage stage;
-    private ImageButton buttonBack;
+    private ImageButton buttonBack, buttonAlfinge, buttonSchau;
 
     //avatar logic and textures
     Texture alfIngeAvatar, schauAvatar, imageBack, backgroundImage;
-    boolean alfinge_chosen = ((prefs.getString("Avatar") == "alfinge_avatar.png" && prefs.getString("Avatar") == null) ? true : false);
-    boolean schau_chosen = ((prefs.getString("Avatar") == "schau_avatar.png") ? true : false);
-    boolean updated = false;
+    boolean alfinge_chosen;
+    boolean schau_chosen;
 
     //animation
     SpriteBatch batch = new SpriteBatch();
@@ -46,13 +47,8 @@ public class AvatarScreen implements Screen {
         this.camera = new OrthographicCamera();
         camera.setToOrtho(false,800,400);
         //create Textures
-        alfIngeAvatar = new Texture(Gdx.files.internal("alfinge_avatar.png"));
-        schauAvatar = new Texture(Gdx.files.internal("schau_avatar.png"));
-        imageBack = new Texture(Gdx.files.internal("new_images/ARROW_LEFT.png"));
-        buttonBack = new ImageButton(new TextureRegionDrawable(new TextureRegion(imageBack)));
-        buttonBack.setBounds(screenWidth*0.12f - 0.4f*imageBack.getWidth()/2, screenHeight *0.89f,imageBack.getWidth()*0.4f,imageBack.getHeight()*0.4f);
         backgroundImage = new Texture(Gdx.files.internal("new_images/LIGHT_BG.png"));
-
+        initializeButtons();
         //update avatar-logic if it has changed
         check_Avatar();
         //edit font
@@ -60,19 +56,33 @@ public class AvatarScreen implements Screen {
         font.getData().setScale(6,6);
         stage = new Stage(new ScreenViewport());
         stage.addActor(buttonBack);
+        stage.addActor(buttonAlfinge);
+        stage.addActor(buttonSchau);
         Gdx.input.setInputProcessor(stage);
 
     }
+    private void initializeButtons(){
+        alfIngeAvatar = new Texture(Gdx.files.internal("alfinge_avatar.png"));
+        buttonAlfinge = new ImageButton(new TextureRegionDrawable(new TextureRegion(alfIngeAvatar)));
+        buttonAlfinge.setBounds(screenWidth*0.15f,screenHeight/2, 0.73f*alfIngeAvatar.getWidth(), 0.73f*alfIngeAvatar.getHeight());
 
+        schauAvatar = new Texture(Gdx.files.internal("schau_avatar.png"));
+        buttonSchau = new ImageButton(new TextureRegionDrawable(new TextureRegion(schauAvatar)));
+        buttonSchau.setBounds(screenWidth*0.6f,screenHeight/2, schauAvatar.getWidth(),schauAvatar.getHeight());
+
+        imageBack = new Texture(Gdx.files.internal("new_images/ARROW_LEFT.png"));
+        buttonBack = new ImageButton(new TextureRegionDrawable(new TextureRegion(imageBack)));
+        buttonBack.setBounds(screenWidth*0.12f - 0.4f*imageBack.getWidth()/2, screenHeight *0.89f,imageBack.getWidth()*0.4f,imageBack.getHeight()*0.4f);
+    }
     private void check_Avatar() {
-        if(prefs.getString("Avatar") == "alfinge_avatar.png") {
+        String path = Configuration.getTexturePath();
+        if(path.equals("alfinge_avatar.png")) {
             alfinge_chosen = true;
-            schau_chosen = !alfinge_chosen;
-        } else if (prefs.getString("Avatar") == "schau_avatar.png") {
+            schau_chosen = false;
+        } else if (path.equals("schau_avatar.png")) {
             schau_chosen = true;
-            alfinge_chosen = !schau_chosen;
+            alfinge_chosen = false;
         }
-        updated = true;
     }
 
 
@@ -82,6 +92,20 @@ public class AvatarScreen implements Screen {
             public void clicked(InputEvent event, float x, float y){
                 game.setScreen(new MainMenuScreen(game));
                 System.out.println("Back Button from avatarScreen");
+            }
+        });
+        buttonAlfinge.addListener(new ClickListener(){
+            public void clicked(InputEvent event, float x, float y){
+                prefs.putString("Avatar", "alfinge_avatar.png");
+                Configuration.setPlayerTexture("alfinge_avatar.png");
+                alfinge_chosen = true; schau_chosen = false;
+            }
+        });
+        buttonSchau.addListener(new ClickListener(){
+            public void clicked(InputEvent event, float x, float y){
+                prefs.putString("Avatar", "schau_avatar.png");
+                Configuration.setPlayerTexture("schau_avatar.png");
+                alfinge_chosen = false; schau_chosen = true;
             }
         });
 
@@ -94,32 +118,15 @@ public class AvatarScreen implements Screen {
         //page items
         batch.draw(backgroundImage,0,0,screenWidth,backgroundImage.getHeight()*screenWidth/backgroundImage.getWidth());
         font.draw(batch,"Avatar Selection",screenWidth*1/4-20, screenHeight-50);
-        // avatars
-        batch.draw(alfIngeAvatar,screenWidth/8,screenHeight/2);
-        batch.draw(schauAvatar,screenWidth*4/7,screenHeight/2,alfIngeAvatar.getWidth(),schauAvatar.getHeight()*alfIngeAvatar.getWidth()/schauAvatar.getWidth()+10);
         //text
         font.draw(batch, "Alf-Inge", screenWidth/8+40,screenHeight*7/8-40);
         font.draw(batch, "Christian\n  Schau", screenWidth*7/12,screenHeight*7/8);
         //the !updated thing is because when you first click the page it says neither avatar is chosen which is wrong
-        font.draw(batch, ((alfinge_chosen) ? "Chosen" : ((!updated) ? "Standard" : "Not chosen")),((alfinge_chosen) ? (screenWidth/8+30) : (screenWidth/8-40)),screenHeight/2-20);
+        font.draw(batch, ((alfinge_chosen) ? "Chosen" : "Not chosen"),((alfinge_chosen) ? (screenWidth/8+30) : (screenWidth/8-40)),screenHeight/2-20);
         font.draw(batch, ((schau_chosen) ? "Chosen" : "Not chosen"), ((schau_chosen) ? (screenWidth*4/7) : (screenWidth/2)), screenHeight/2-20);
         batch.end();
         stage.act(Gdx.graphics.getDeltaTime()); //Perform ui logic
         stage.draw(); //Draw the ui
-
-
-        if (Gdx.input.isTouched()) {
-            //Return to main-menu
-            //update avatar
-            if((Gdx.input.getX()<470 && Gdx.input.getX()>150) && (Gdx.input.getY()<920 && Gdx.input.getY()>410)){
-                prefs.putString("Avatar", "alfinge_avatar.png");
-            }else if((Gdx.input.getX()<960 && Gdx.input.getX()>600) && (Gdx.input.getY()<920 && Gdx.input.getY()>410)){
-                prefs.putString("Avatar", "schau_avatar.png");
-            }
-            //update avatar logic
-            prefs.flush();
-            check_Avatar();
-        }
     }
 
     @Override
@@ -145,6 +152,7 @@ public class AvatarScreen implements Screen {
     @Override
     public void dispose() {
         batch.dispose();
+        stage.dispose();
     }
 }
 

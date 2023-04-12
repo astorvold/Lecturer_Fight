@@ -2,6 +2,7 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.graphics.Texture;
 
 public abstract class Configuration {
 
@@ -10,6 +11,23 @@ public abstract class Configuration {
     private static Music die = Gdx.audio.newMusic(Gdx.files.internal("die.mp3"));
     private static boolean music_on = true, sound_on = true;
 
+    private static String textureString;
+    private static Texture playerTexture;
+
+    public static void setPlayerTexture(String path){
+        if(playerTexture != null) {
+            playerTexture.dispose();
+            playerTexture = null;
+        }
+        textureString = path;
+        playerTexture = new Texture(path);
+    }
+    public static String getTexturePath(){
+        return textureString;
+    }
+    public static Texture getPlayerTexture(){
+        return playerTexture;
+    }
     public static Music getMusic(){
         return music;
     }

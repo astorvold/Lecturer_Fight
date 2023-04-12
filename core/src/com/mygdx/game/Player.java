@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 public class Player extends Entity {
     private int score;
     private boolean ready;
-    public Player(String texture, float x, float y, float width, float height){
+    public Player(Texture texture, float x, float y, float width, float height){
         super(texture);
         score = 0;
         this.width = width;

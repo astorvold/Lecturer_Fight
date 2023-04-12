@@ -8,8 +8,8 @@ public abstract class Entity {
     protected float height, width;
     Texture texture;
 
-    public Entity(String texture){
-        this.texture = new Texture(texture);
+    public Entity(Texture texture){
+        this.texture = new Texture(texture.getTextureData());
     }
     protected float generateRandomNumber(int from, int to){
         return (float)Math.floor(Math.random() * (to - from + 1) + from);

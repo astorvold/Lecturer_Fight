@@ -51,7 +51,7 @@ public class GameScreen implements Screen{
         this.settings = SettingsScreen.getInstance(game);
         //Initializing objects
         background = new Texture("new_images/BG.png");
-        player = new Player("alfinge_avatar.png", screenWidth/2, screenHeight/2, 96,96);
+        player = new Player(Configuration.getPlayerTexture(), screenWidth/2, screenHeight/2, 96,96);
         initializeObstacles();
         initializeCoins();
         highestObstacle = 7;
@@ -72,7 +72,7 @@ public class GameScreen implements Screen{
             float aux = screenWidth;
             int random_int = (int)Math.floor(Math.random() * (1 + 1) + 0);
             if(random_int == 0) aux = aux * random_int;
-            obstacles.add(new Obstacle("obstacle.png", aux, screenHeight + screenHeight * (float)(i*1.5)/OBSTACLES_PER_SCREEN, 256, 96));
+            obstacles.add(new Obstacle(new Texture("obstacle.png"), aux, screenHeight + screenHeight * (float)(i*1.5)/OBSTACLES_PER_SCREEN, 256, 96));
         }
     }
     private void initializeCoins(){
@@ -81,7 +81,7 @@ public class GameScreen implements Screen{
             int pos = i*OBSTACLES_PER_SCREEN/COINS_PER_SCREEN;
             float x = generateRandomNumber(100, (int)screenWidth-100);
             float y = generateRandomNumber((int)(obstacles.get(pos).getY() + obstacles.get(pos).getHeight()) +70 , (int) obstacles.get(pos).getY()+(64+70));
-            coins.add(new Coin("coin.png", x, y, 64,64));
+            coins.add(new Coin(new Texture("coin.png"), x, y, 64,64));
         }
     }
     public void movementControl(){
@@ -238,7 +238,7 @@ public class GameScreen implements Screen{
 
         if (multiplayer == true){
             player.setReady(true);
-            player2 = new Player("bird2.png", 500, screenHeight/3, 96,96);
+            player2 = new Player(Configuration.getPlayerTexture(), 500, screenHeight/3, 96,96);
 
         }
     }

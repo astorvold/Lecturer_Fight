@@ -42,25 +42,17 @@ public class MainMenuScreen implements Screen {
 
 
     public MainMenuScreen(final Lecturer_fight game) {
-
         this.game = game;
         this.camera = new OrthographicCamera();
         this.settings = new SettingsScreen(game);
         camera.setToOrtho(false,800,400);
 
-        //prefs.putString("Avatar", "alfinge_avatar.png");
-        //prefs.flush();
-
-
-        //imageAvatar = new Texture(Gdx.files.internal(prefs.getString("Avatar")));
         titleImage = new Texture(Gdx.files.internal("new_images/TITLE.png"));
         backgroundImage = new Texture(Gdx.files.internal("new_images/BG.png"));
 
         font.getData().setScale(5,5);
         font.setColor(new Color(0x023D8Bff));
 
-        /*prefs.putInteger("AvatarHeight", 522);
-        prefs.putInteger("AvatarWidth", imageAvatar.getWidth()*prefs.getInteger("AvatarHeight")/imageAvatar.getHeight());*/
         prefs.putBoolean("Multiplayer", true);
         prefs.flush();
         //play music
@@ -81,11 +73,17 @@ public class MainMenuScreen implements Screen {
     }
 
     private void initializeButtons(){
+        Texture texture;
         imageSettings = new Texture(Gdx.files.internal("new_images/SETTINGS.png"));
         buttonSettings = new ImageButton( new TextureRegionDrawable( new TextureRegion( imageSettings)));
         buttonSettings.setBounds(screenWidth*0.12f - 0.4f*imageSettings.getWidth()/2, screenHeight *0.89f,imageSettings.getWidth()*0.4f,imageSettings.getHeight()*0.4f);
 
-        imageAvatar = new Texture(Gdx.files.internal("alfinge_avatar.png"));
+        if(Configuration.getPlayerTexture() == null) {
+            Configuration.setPlayerTexture("alfinge_avatar.png");
+        }
+        else texture = Configuration.getPlayerTexture();
+
+        imageAvatar = new Texture(Configuration.getTexturePath());
         buttonAvatar = new ImageButton(new TextureRegionDrawable(new TextureRegion(imageAvatar)));
         buttonAvatar.setBounds(screenWidth*0.9f - 0.4f*imageAvatar.getWidth()/2, screenHeight *0.89f,imageAvatar.getWidth()*0.4f,imageAvatar.getHeight()*0.4f);
 
@@ -112,7 +110,7 @@ public class MainMenuScreen implements Screen {
         checkboxStyle.font = font;
         checkboxStyle.checkboxOff = new TextureRegionDrawable(regionCheckboxOff);
         checkboxStyle.checkboxOn = new TextureRegionDrawable(regionCheckboxOn);
-        checkBox = new CheckBox("Multiplayer? ", checkboxStyle);
+        checkBox = new CheckBox("\tMultiplayer? ", checkboxStyle);
         checkBox.setBounds(screenWidth /2 - 1f*imageCheckboxOn.getWidth()/2, screenHeight *0.5f,imageCheckboxOn.getWidth(),imageCheckboxOn.getHeight());
     }
     @Override  // Add listeners to check when user clicks on buttons
