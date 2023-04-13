@@ -34,7 +34,7 @@ public class MainMenuScreen implements Screen {
     private final Lecturer_fight game;
     private OrthographicCamera camera;
     private final Stage stage;
-    Texture imageStart, imageSettings, imageScore, imageTutorial, imageCheckboxOff, imageCheckboxOn, imageAvatar, titleImage,backgroundImage;
+    Texture titleImage, backgroundImage;
     private ImageButton buttonStart, buttonSettings, buttonScore, buttonTutorial, buttonAvatar;
     private TextureRegion regionCheckboxOn, regionCheckboxOff;
     private CheckBox checkBox;
@@ -56,9 +56,9 @@ public class MainMenuScreen implements Screen {
         prefs.putBoolean("Multiplayer", true);
         prefs.flush();
         //play music
-        System.out.println("musikk er på: " + Configuration.isMusic_on());
-        if (Configuration.isMusic_on()){
-            Configuration.playMusic();
+        System.out.println("musikk er på: " + Configuration.getInstance().isMusic_on());
+        if (Configuration.getInstance().isMusic_on()){
+            Configuration.getInstance().playMusic();
         }
 
         initializeButtons();
@@ -73,32 +73,22 @@ public class MainMenuScreen implements Screen {
     }
 
     private void initializeButtons(){
-        Texture texture;
-        imageSettings = new Texture(Gdx.files.internal("new_images/SETTINGS.png"));
-        buttonSettings = new ImageButton( new TextureRegionDrawable( new TextureRegion( imageSettings)));
-        buttonSettings.setBounds(screenWidth*0.12f - 0.4f*imageSettings.getWidth()/2, screenHeight *0.89f,imageSettings.getWidth()*0.4f,imageSettings.getHeight()*0.4f);
+        Texture imageStart, imageSettings, imageScore, imageTutorial, imageCheckboxOff, imageCheckboxOn, imageAvatar;
+        imageSettings = new Texture("new_images/SETTINGS.png");
+        buttonSettings = ButtonFactory.createButton(imageSettings,screenWidth*0.12f - 0.4f*imageSettings.getWidth()/2, screenHeight *0.89f,imageSettings.getWidth()*0.4f,imageSettings.getHeight()*0.4f);
 
-        if(Configuration.getPlayerTexture() == null) {
-            Configuration.setPlayerTexture("alfinge_avatar.png");
-        }
-        else texture = Configuration.getPlayerTexture();
-
-        imageAvatar = new Texture(Configuration.getTexturePath());
-        buttonAvatar = new ImageButton(new TextureRegionDrawable(new TextureRegion(imageAvatar)));
-        buttonAvatar.setBounds(screenWidth*0.9f - 0.4f*imageAvatar.getWidth()/2, screenHeight *0.89f,imageAvatar.getWidth()*0.4f,imageAvatar.getHeight()*0.4f);
+        if(Configuration.getInstance().getPlayerTexture() == null) Configuration.getInstance().setPlayerTexture("alfinge_avatar.png");
+        imageAvatar = Configuration.getInstance().getPlayerTexture();
+        buttonAvatar = ButtonFactory.createButton(imageAvatar,screenWidth*0.9f - 0.4f*imageAvatar.getWidth()/2, screenHeight *0.89f,imageAvatar.getWidth()*0.4f,imageAvatar.getHeight()*0.4f);
 
         imageStart = new Texture(Gdx.files.internal("new_images/PLAY.png"));
-        buttonStart = new ImageButton(new TextureRegionDrawable(new TextureRegion(imageStart))); //Set the button up
-        buttonStart.setBounds(screenWidth /2 - 0.7f*imageStart.getWidth()/2, screenHeight *0.6f,0.7f*imageStart.getWidth(),0.7f*imageStart.getHeight());
+        buttonStart = ButtonFactory.createButton(imageStart,screenWidth /2 - 0.7f*imageStart.getWidth()/2, screenHeight *0.6f,0.7f*imageStart.getWidth(),0.7f*imageStart.getHeight());
 
         imageScore = new Texture(Gdx.files.internal("new_images/HIGHSCORE.png"));
-        buttonScore = new ImageButton(new TextureRegionDrawable( new TextureRegion(imageScore)));
-        buttonScore.setBounds(screenWidth /2 - 0.55f*imageScore.getWidth()/2, screenHeight *0.3f,imageScore.getWidth()*0.55f,imageScore.getHeight()*0.55f);
-
+        buttonScore = ButtonFactory.createButton(imageScore,screenWidth /2 - 0.55f*imageScore.getWidth()/2, screenHeight *0.3f,imageScore.getWidth()*0.55f,imageScore.getHeight()*0.55f);
 
         imageTutorial = new Texture(Gdx.files.internal("new_images/TUTORIAL.png"));
-        buttonTutorial = new ImageButton(new TextureRegionDrawable(new TextureRegion(imageTutorial)));
-        buttonTutorial.setBounds(screenWidth /2 - 0.55f* imageTutorial.getWidth()/2, screenHeight *0.15f, imageTutorial.getWidth()*0.55f, imageTutorial.getHeight()*0.55f);
+        buttonTutorial = ButtonFactory.createButton(imageTutorial,screenWidth /2 - 0.55f* imageTutorial.getWidth()/2, screenHeight *0.15f, imageTutorial.getWidth()*0.55f, imageTutorial.getHeight()*0.55f);
 
         imageCheckboxOn = new Texture(Gdx.files.internal("new_images/TOGGLE_ON.png"));
         imageCheckboxOff = new Texture(Gdx.files.internal("new_images/TOGGLE_OFF.png"));

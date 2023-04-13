@@ -51,15 +51,15 @@ public class GameScreen implements Screen{
         this.settings = SettingsScreen.getInstance(game);
         //Initializing objects
         background = new Texture("new_images/BG.png");
-        player = new Player(Configuration.getPlayerTexture(), screenWidth/2, screenHeight/2, 96,96);
+        player = new Player(Configuration.getInstance().getPlayerTexture(), screenWidth/2, screenHeight/2, 96,96);
         initializeObstacles();
         initializeCoins();
         highestObstacle = 7;
         this.multiplayer = multiplayer;
 
         //play music
-        if (Configuration.isMusic_on()){
-            Configuration.playMusic();
+        if (Configuration.getInstance().isMusic_on()){
+            Configuration.getInstance().playMusic();
         }
     }
 
@@ -178,7 +178,7 @@ public class GameScreen implements Screen{
             if (player.checkColisions(obstacles.get(i))) {
 
                 //plays die sound if turned on in settings
-                Configuration.dieMusic();
+                Configuration.getInstance().dieMusic();
 
                 // send score to DB and set player as non-ready
                 game.api.setScore(player.getScore());
@@ -199,7 +199,7 @@ public class GameScreen implements Screen{
             coins.get(i).changePos(-speed);
             if (player.checkColisions(coins.get(i))) {
                 player.increaseScore(100);
-                Configuration.pointMusic(); //play point sound if it is turned on in settings
+                Configuration.getInstance().pointMusic(); //play point sound if it is turned on in settings
                 coins.get(i).disappear();
             }
             //If the coin is getting out the bounds it will be put again.
@@ -238,7 +238,7 @@ public class GameScreen implements Screen{
 
         if (multiplayer == true){
             player.setReady(true);
-            player2 = new Player(Configuration.getPlayerTexture(), 500, screenHeight/3, 96,96);
+            player2 = new Player(Configuration.getInstance().getPlayerTexture(), 500, screenHeight/3, 96,96);
 
         }
     }

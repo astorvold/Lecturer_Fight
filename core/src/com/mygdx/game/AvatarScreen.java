@@ -27,20 +27,15 @@ public class AvatarScreen implements Screen {
     OrthographicCamera camera;
     private final int screenHeight = Gdx.graphics.getHeight();
     private final int screenWidth = Gdx.graphics.getWidth();
-
     private Stage stage;
     private ImageButton buttonBack, buttonAlfinge, buttonSchau;
-
     //avatar logic and textures
-    Texture alfIngeAvatar, schauAvatar, imageBack, backgroundImage;
+    Texture backgroundImage;
     boolean alfinge_chosen;
     boolean schau_chosen;
-
     //animation
     SpriteBatch batch = new SpriteBatch();
     BitmapFont font = new BitmapFont();
-
-
 
     public AvatarScreen(final Lecturer_fight game) {
         this.game = game;
@@ -59,23 +54,20 @@ public class AvatarScreen implements Screen {
         stage.addActor(buttonAlfinge);
         stage.addActor(buttonSchau);
         Gdx.input.setInputProcessor(stage);
-
     }
     private void initializeButtons(){
+        Texture alfIngeAvatar, schauAvatar, imageBack;
         alfIngeAvatar = new Texture(Gdx.files.internal("alfinge_avatar.png"));
-        buttonAlfinge = new ImageButton(new TextureRegionDrawable(new TextureRegion(alfIngeAvatar)));
-        buttonAlfinge.setBounds(screenWidth*0.15f,screenHeight/2, 0.73f*alfIngeAvatar.getWidth(), 0.73f*alfIngeAvatar.getHeight());
+        buttonAlfinge = ButtonFactory.createButton(alfIngeAvatar,screenWidth*0.15f,screenHeight/2, 0.73f*alfIngeAvatar.getWidth(), 0.73f*alfIngeAvatar.getHeight());
 
         schauAvatar = new Texture(Gdx.files.internal("schau_avatar.png"));
-        buttonSchau = new ImageButton(new TextureRegionDrawable(new TextureRegion(schauAvatar)));
-        buttonSchau.setBounds(screenWidth*0.6f,screenHeight/2, schauAvatar.getWidth(),schauAvatar.getHeight());
+        buttonSchau = ButtonFactory.createButton(schauAvatar,screenWidth*0.6f,screenHeight/2, schauAvatar.getWidth(),schauAvatar.getHeight());
 
         imageBack = new Texture(Gdx.files.internal("new_images/ARROW_LEFT.png"));
-        buttonBack = new ImageButton(new TextureRegionDrawable(new TextureRegion(imageBack)));
-        buttonBack.setBounds(screenWidth*0.12f - 0.4f*imageBack.getWidth()/2, screenHeight *0.89f,imageBack.getWidth()*0.4f,imageBack.getHeight()*0.4f);
+        buttonBack = ButtonFactory.createButton(imageBack,screenWidth*0.12f - 0.4f*imageBack.getWidth()/2, screenHeight *0.89f,imageBack.getWidth()*0.4f,imageBack.getHeight()*0.4f);
     }
     private void check_Avatar() {
-        String path = Configuration.getTexturePath();
+        String path = Configuration.getInstance().getTexturePath();
         if(path.equals("alfinge_avatar.png")) {
             alfinge_chosen = true;
             schau_chosen = false;
@@ -84,7 +76,6 @@ public class AvatarScreen implements Screen {
             alfinge_chosen = false;
         }
     }
-
 
     @Override
     public void show() {
@@ -97,14 +88,14 @@ public class AvatarScreen implements Screen {
         buttonAlfinge.addListener(new ClickListener(){
             public void clicked(InputEvent event, float x, float y){
                 prefs.putString("Avatar", "alfinge_avatar.png");
-                Configuration.setPlayerTexture("alfinge_avatar.png");
+                Configuration.getInstance().setPlayerTexture("alfinge_avatar.png");
                 alfinge_chosen = true; schau_chosen = false;
             }
         });
         buttonSchau.addListener(new ClickListener(){
             public void clicked(InputEvent event, float x, float y){
                 prefs.putString("Avatar", "schau_avatar.png");
-                Configuration.setPlayerTexture("schau_avatar.png");
+                Configuration.getInstance().setPlayerTexture("schau_avatar.png");
                 alfinge_chosen = false; schau_chosen = true;
             }
         });

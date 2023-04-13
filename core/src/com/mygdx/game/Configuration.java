@@ -4,17 +4,21 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
 
-public abstract class Configuration {
+import jdk.nashorn.internal.runtime.regexp.joni.Config;
 
+public class Configuration {
     private static Music music = Gdx.audio.newMusic(Gdx.files.internal("Dumb Ways To Die.mp3"));
     private static Music point = Gdx.audio.newMusic(Gdx.files.internal("point.mp3"));
     private static Music die = Gdx.audio.newMusic(Gdx.files.internal("die.mp3"));
     private static boolean music_on = true, sound_on = true;
-
     private static String textureString;
     private static Texture playerTexture;
-
-    public static void setPlayerTexture(String path){
+    private static Configuration configuration = new Configuration();
+    private Configuration(){}
+    public static Configuration getInstance(){
+        return configuration;
+    }
+    public void setPlayerTexture(String path){
         if(playerTexture != null) {
             playerTexture.dispose();
             playerTexture = null;
@@ -22,31 +26,31 @@ public abstract class Configuration {
         textureString = path;
         playerTexture = new Texture(path);
     }
-    public static String getTexturePath(){
+    public String getTexturePath(){
         return textureString;
     }
-    public static Texture getPlayerTexture(){
+    public Texture getPlayerTexture(){
         return playerTexture;
     }
-    public static Music getMusic(){
+    public Music getMusic(){
         return music;
     }
-    public static Music getPoint(){
+    public Music getPoint(){
         return point;
     }
-    public static Music getDie(){
+    public Music getDie(){
         return die;
     }
-    public static boolean isMusic_on(){
+    public boolean isMusic_on(){
         return music_on;
     }
-    public static void playMusic(){
+    public void playMusic(){
         music.setLooping(true);
         music.play();
         music_on = true;
     }
 
-    public static  void changeMusic(){
+    public void changeMusic(){
         if(music_on){
             music.pause();
             music_on = false;
@@ -56,18 +60,18 @@ public abstract class Configuration {
             music_on = true;
         }
     }
-    public static boolean isSound_on(){
+    public boolean isSound_on(){
         return sound_on;
     }
-    public static void changeSound(){
+    public void changeSound(){
         sound_on = !sound_on;
     }
-    public static void pointMusic(){
+    public void pointMusic(){
         if (sound_on){
             point.play();
         }
     }
-    public static void dieMusic(){
+    public void dieMusic(){
         if(sound_on){
             die.play();
         }

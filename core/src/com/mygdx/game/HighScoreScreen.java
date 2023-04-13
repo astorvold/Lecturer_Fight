@@ -57,23 +57,19 @@ public class HighScoreScreen implements Screen {
         stage = new Stage(new ScreenViewport()); //Set up a stage for the ui
 
         imageStart = new Texture(Gdx.files.internal("back.png"));
-        buttonStart = new ImageButton(new TextureRegionDrawable(new TextureRegion(imageStart))); //Set the button up
-        buttonStart.setBounds(screenWidth/5 - 1f*imageStart.getWidth()/2, screenHeight *0.9f,imageStart.getWidth(),imageStart.getHeight());
-
+        buttonStart = ButtonFactory.createButton(imageStart,screenWidth/5 - 1f*imageStart.getWidth()/2, screenHeight *0.9f,imageStart.getWidth(),imageStart.getHeight());
         stage.addActor(buttonStart);
 
         if (playAgainButton){
             imagePlayAgain= new Texture(Gdx.files.internal("start.png"));
-            buttonPlayAgain = new ImageButton(new TextureRegionDrawable(new TextureRegion(imagePlayAgain))); //Set the button up
-            buttonPlayAgain.setBounds(screenWidth/5 - 1f*imagePlayAgain.getWidth()/2, screenHeight *0.4f,imagePlayAgain.getWidth(),imagePlayAgain.getHeight());
-
+            buttonPlayAgain = ButtonFactory.createButton(imagePlayAgain,screenWidth/5 - 1f*imagePlayAgain.getWidth()/2, screenHeight *0.4f,imagePlayAgain.getWidth(),imagePlayAgain.getHeight());
             stage.addActor(buttonPlayAgain);
         }
         Gdx.input.setInputProcessor(stage);
 
         //play music
-        if (Configuration.isMusic_on()){
-            Configuration.playMusic();
+        if (Configuration.getInstance().isMusic_on()){
+            Configuration.getInstance().playMusic();
         }
 
     }

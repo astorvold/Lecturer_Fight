@@ -1,7 +1,5 @@
 package com.mygdx.game;
 
-import static com.mygdx.game.Configuration.playMusic;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
@@ -32,7 +30,6 @@ public class SettingsScreen implements Screen {
     Texture imageBack, backgroundImage, imageToggleON, imageToggleOFF;
     private ImageButton buttonBack;
     private CheckBox musicCheckBox, soundCheckBox;
-
     private Stage stage;
     private final float screenHeight = Gdx.graphics.getHeight();
 
@@ -70,12 +67,12 @@ public class SettingsScreen implements Screen {
         //audioManager.setStreamVolume(AudioManager.STREAM_MUSIC);
 
         //music_on = true;
-        Configuration.getMusic().setVolume(0.5f);
-        Configuration.getPoint().setVolume(0.5f);
-        Configuration.getDie().setVolume(0.5f);
-        System.out.println("musikk er på: "+Configuration.isMusic_on() + Configuration.isMusic_on());
-        if (Configuration.isMusic_on()){
-            Configuration.playMusic();
+        Configuration.getInstance().getMusic().setVolume(0.5f);
+        Configuration.getInstance().getPoint().setVolume(0.5f);
+        Configuration.getInstance().getDie().setVolume(0.5f);
+        System.out.println("musikk er på: "+Configuration.getInstance().isMusic_on() + Configuration.getInstance().isMusic_on());
+        if (Configuration.getInstance().isMusic_on()){
+            Configuration.getInstance().playMusic();
         }
         initializeButtons();
         stage = new Stage(new ScreenViewport());
@@ -123,18 +120,18 @@ public class SettingsScreen implements Screen {
         musicCheckBox.addListener(new ClickListener(){
             public void clicked(InputEvent event, float x, float y){
                 System.out.println(("clickeo stopMusic"));
-                if(Configuration.isMusic_on()) {
-                    Configuration.changeMusic();
+                if(Configuration.getInstance().isMusic_on()) {
+                    Configuration.getInstance().changeMusic();
                 }
                 else{
-                    Configuration.changeMusic();
+                    Configuration.getInstance().changeMusic();
                 }
             }
         });
         soundCheckBox.addListener(new ClickListener(){
             public void clicked(InputEvent event, float x, float y){
                 System.out.println(("clickeo stopSound"));
-                Configuration.changeSound();
+                Configuration.getInstance().changeSound();
             }
         });
     }
@@ -148,18 +145,18 @@ public class SettingsScreen implements Screen {
 
         //texts
         font.draw(batch,"Settings",screenWidth*1/3+20, screenHeight-50);
-        font.draw(batch,((Configuration.isMusic_on()) ? "Turn music off:" : "Turn music on:"),100, screenHeight*3/4);
-        font.draw(batch,((Configuration.isSound_on()) ? "Turn sound off:" : "Turn sound on:"),100, screenHeight*2/3);
+        font.draw(batch,((Configuration.getInstance().isMusic_on()) ? "Turn music off:" : "Turn music on:"),100, screenHeight*3/4);
+        font.draw(batch,((Configuration.getInstance().isSound_on()) ? "Turn sound off:" : "Turn sound on:"),100, screenHeight*2/3);
 
         //sound
         //batch.draw(sound, screenWidth-sound.getWidth()-20, screenHeight-sound.getHeight()-20);
         batch.end();
         stage.act(Gdx.graphics.getDeltaTime()); //Perform ui logic
         stage.draw(); //Draw the ui
-        if(Configuration.isMusic_on()){
+        if(Configuration.getInstance().isMusic_on()){
             musicCheckBox.setChecked(true);
         }
-        if(Configuration.isSound_on()){
+        if(Configuration.getInstance().isSound_on()){
             soundCheckBox.setChecked(true);
         }
     }
