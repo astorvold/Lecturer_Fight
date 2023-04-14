@@ -3,6 +3,7 @@ package com.mygdx.game;
 import java.awt.Button;
 import java.util.ArrayList;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
@@ -36,7 +37,7 @@ public class GameScreen implements Screen{
     private BitmapFont font = new BitmapFont();
 
     private SettingsScreen settings;
-    private ImageButton buttonPause, aux;
+    private ImageButton buttonPause, buttonResume, buttonQuit;
     public Player player;
     public Player player2;
     public ArrayList<Entity> obstacles;
@@ -57,27 +58,18 @@ public class GameScreen implements Screen{
         camera.setToOrtho(false, 800, 480);
 
         //Initializing objects
-        Texture imagePause = new Texture("new_images/PAUSE.png");
-        buttonPause = ButtonFactory.createButton(imagePause, screenWidth-imagePause.getWidth()*0.17f, screenHeight - imagePause.getHeight()*0.3f, imagePause.getWidth()*0.2f, imagePause.getHeight()*0.2f);
-        aux = ButtonFactory.createButton(imagePause, screenWidth/2-imagePause.getWidth()*0.17f, screenHeight/2 - imagePause.getHeight()*0.3f, imagePause.getWidth()*0.2f, imagePause.getHeight()*0.2f);
-        background = new Texture("new_images/BG.png");
-        player = new Player(Configuration.getInstance().getPlayerTexture(), screenWidth/2, screenHeight/2, 96,96);
         initializeObstacles();
         initializeCoins();
+        initializeButtons();
         highestObstacle = 7;
         this.multiplayer = multiplayer;
+        player = new Player(Configuration.getInstance().getPlayerTexture(), screenWidth/2, screenHeight/2, 96,96);
 
         //play music
         if (Configuration.getInstance().isMusic_on()){
             Configuration.getInstance().playMusic();
         }
-        stage = new Stage(new ScreenViewport()); //Set up a stage for the
-        stage.addActor(buttonPause);
-        Gdx.input.setInputProcessor(stage); //Start taking input from the ui
 
-        pausedStage = new Stage(new ScreenViewport());
-        pausedStage.addActor(aux);
-        Gdx.input.setInputProcessor(pausedStage);
 
         if(multiplayer == false) state = GameState.RUNNING_SINGLEPLAYER;
         else {
@@ -86,6 +78,27 @@ public class GameScreen implements Screen{
             if(player2.isReady()) state = GameState.RUNNING_SINGLEPLAYER;
             else state = GameState.WAITING;
         }
+    }
+    private void initializeButtons(){
+        Texture imagePause = new Texture("new_images/PAUSE.png");
+        buttonPause = ButtonFactory.createButton(imagePause, screenWidth-imagePause.getWidth()*0.17f, screenHeight - imagePause.getHeight()*0.3f, imagePause.getWidth()*0.2f, imagePause.getHeight()*0.2f);
+
+        Texture imageResume = new Texture("new_images/RESUME.png");
+        buttonResume = ButtonFactory.createButton(imageResume,screenWidth /3.5f, screenHeight *0.4f,0.5f*screenWidth,0.5f*screenHeight);
+
+        Texture imageQuit = new Texture("new_images/QUIT.png");
+        buttonQuit = ButtonFactory.createButton(imageQuit,screenWidth /3.5f, screenHeight *0.2f,0.5f*screenWidth,0.5f*screenHeight);
+
+        background = new Texture("new_images/BG.png");
+
+        stage = new Stage(new ScreenViewport()); //Set up a stage for the
+        stage.addActor(buttonPause);
+        Gdx.input.setInputProcessor(stage); //Start taking input from the ui
+
+        pausedStage = new Stage(new ScreenViewport());
+        pausedStage.addActor(buttonResume);
+        pausedStage.addActor(buttonQuit);
+        Gdx.input.setInputProcessor(pausedStage);
     }
 
     private float generateRandomNumber(int from, int to){
@@ -97,7 +110,7 @@ public class GameScreen implements Screen{
             float aux = screenWidth;
             int random_int = (int)Math.floor(Math.random() * (1 + 1) + 0);
             if(random_int == 0) aux = aux * random_int;
-            obstacles.add(new Obstacle(new Texture("obstacle.png"), aux, screenHeight + screenHeight * (float)(i*1.5)/OBSTACLES_PER_SCREEN, 256, 96));
+            obstacles.add(new Obstacle(new Texture("obstacles/BUILDING1.png"), aux, screenHeight + screenHeight * (float)(i*1.5)/OBSTACLES_PER_SCREEN, 256, 96));
         }
     }
     private void initializeCoins(){
@@ -106,17 +119,16 @@ public class GameScreen implements Screen{
             int pos = i*OBSTACLES_PER_SCREEN/COINS_PER_SCREEN;
             float x = generateRandomNumber(100, (int)screenWidth-100);
             float y = generateRandomNumber((int)(obstacles.get(pos).getY() + obstacles.get(pos).getHeight()) +70 , (int) obstacles.get(pos).getY()+(64+70));
-            coins.add(new Coin(new Texture("coin.png"), x, y, 64,64));
+            coins.add(new Coin(new Texture("new_images/COIN.png"), x, y, 64,64));
         }
     }
     public void movementControl(){
-        buttonPause.addListener(new ClickListener(){
-            public void clicked(InputEvent event, float x, float y){
+        if (Gdx.input.isTouched()) {
+            System.out.println("X: " +Gdx.input.getX() + ", " +buttonPause.getX() + "\n" + " Y: " +Gdx.input.getY() + ", "+ buttonPause.getY());
+            if((Gdx.input.getX() >= buttonPause.getX() && Gdx.input.getX() <= buttonPause.getX() + buttonPause.getWidth() ) &&
+                    ( screenHeight- Gdx.input.getY() >= buttonPause.getY() && screenHeight - Gdx.input.getY() <= buttonPause.getY() + buttonPause.getHeight()) ) {
                 state = GameState.PAUSED;
-                System.out.println("paused");
             }
-        });
-        if (Gdx.input.isTouched() && Gdx.input.getY() < 0) {
             if(Gdx.input.getX() >= screenWidth/2)
                 if (player.getX() < screenWidth -player.getWidth()) player.changePos(10);
                 else player.changePos(-10);
@@ -129,11 +141,11 @@ public class GameScreen implements Screen{
         batch.begin();
         batch.draw(background,0, backgroundPos, screenWidth,background.getHeight()*screenWidth/background.getWidth());
         batch.end();
-        stage.act(Gdx.graphics.getDeltaTime()); //Perform ui logic
-        stage.draw(); //Draw the ui
         createEntities();
         movementControl();
         checkCollisions();
+        stage.act(Gdx.graphics.getDeltaTime()); //Perform ui logic
+        stage.draw(); //Draw the ui
         if(-backgroundPos >= background.getHeight()) backgroundPos = -3000;
         else backgroundPos -= speed;
 
@@ -148,6 +160,9 @@ public class GameScreen implements Screen{
 
     @Override
     public void pause() {
+        batch.begin();
+        batch.draw(background,0,0,screenWidth,background.getHeight()*screenWidth/background.getWidth());
+        batch.end();
         pausedStage.act(Gdx.graphics.getDeltaTime()); //Perform ui logic
         pausedStage.draw(); //Draw the ui
     }
@@ -269,6 +284,16 @@ public class GameScreen implements Screen{
         // start the playback of the background music
         // when the screen is shown
         startTime = TimeUtils.millis();
+        buttonResume.addListener(new ClickListener(){
+            public void clicked(InputEvent event, float x, float y){
+                state = GameState.RUNNING_SINGLEPLAYER;
+            }
+        });
+        buttonQuit.addListener(new ClickListener(){
+            public void clicked(InputEvent event, float x, float y){
+                game.setScreen(new MainMenuScreen(game));
+            }
+        });
     }
     @Override
     public void hide() {
@@ -281,6 +306,9 @@ public class GameScreen implements Screen{
     @Override
     public void dispose() {
         player.getTexture().dispose();
+        stage.dispose();
+        pausedStage.dispose();
+        batch.dispose();
         for(int i = 0; i < OBSTACLES_PER_SCREEN; i++) obstacles.get(i).getTexture().dispose();
         for(int i = 0; i < COINS_PER_SCREEN; i++) coins.get(i).getTexture().dispose();
     }
