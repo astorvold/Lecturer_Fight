@@ -1,5 +1,6 @@
 package com.mygdx.game;
 
+import java.awt.Button;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
@@ -10,13 +11,20 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Window;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.TimeUtils;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import org.w3c.dom.Text;
 
 public class GameScreen implements Screen{
     public static final int OBSTACLES_PER_SCREEN = 8;
     public static final int COINS_PER_SCREEN = 3;
+    public GameState state;
     private int backgroundPos = 0;
     private Texture background;
     private final int speed = 3;
@@ -28,16 +36,16 @@ public class GameScreen implements Screen{
     private BitmapFont font = new BitmapFont();
 
     private SettingsScreen settings;
-
+    private ImageButton buttonPause, aux;
     public Player player;
     public Player player2;
     public ArrayList<Entity> obstacles;
     public ArrayList<Coin> coins;
     private int highestObstacle;
-
     long startTime;
-
     private boolean multiplayer;
+    private Stage stage;
+    private Stage pausedStage;
 
 
 
@@ -47,9 +55,11 @@ public class GameScreen implements Screen{
         // create the camera and the SpriteBatch
         this.camera = new OrthographicCamera();
         camera.setToOrtho(false, 800, 480);
-        //this.settings = new SettingsScreen(game);
-        this.settings = SettingsScreen.getInstance(game);
+
         //Initializing objects
+        Texture imagePause = new Texture("new_images/PAUSE.png");
+        buttonPause = ButtonFactory.createButton(imagePause, screenWidth-imagePause.getWidth()*0.17f, screenHeight - imagePause.getHeight()*0.3f, imagePause.getWidth()*0.2f, imagePause.getHeight()*0.2f);
+        aux = ButtonFactory.createButton(imagePause, screenWidth/2-imagePause.getWidth()*0.17f, screenHeight/2 - imagePause.getHeight()*0.3f, imagePause.getWidth()*0.2f, imagePause.getHeight()*0.2f);
         background = new Texture("new_images/BG.png");
         player = new Player(Configuration.getInstance().getPlayerTexture(), screenWidth/2, screenHeight/2, 96,96);
         initializeObstacles();
@@ -60,6 +70,21 @@ public class GameScreen implements Screen{
         //play music
         if (Configuration.getInstance().isMusic_on()){
             Configuration.getInstance().playMusic();
+        }
+        stage = new Stage(new ScreenViewport()); //Set up a stage for the
+        stage.addActor(buttonPause);
+        Gdx.input.setInputProcessor(stage); //Start taking input from the ui
+
+        pausedStage = new Stage(new ScreenViewport());
+        pausedStage.addActor(aux);
+        Gdx.input.setInputProcessor(pausedStage);
+
+        if(multiplayer == false) state = GameState.RUNNING_SINGLEPLAYER;
+        else {
+            player.setReady(true);
+            player2 = new Player(Configuration.getInstance().getPlayerTexture(), 500, screenHeight/3, 96,96);
+            if(player2.isReady()) state = GameState.RUNNING_SINGLEPLAYER;
+            else state = GameState.WAITING;
         }
     }
 
@@ -85,8 +110,13 @@ public class GameScreen implements Screen{
         }
     }
     public void movementControl(){
-
-        if (Gdx.input.isTouched()) {
+        buttonPause.addListener(new ClickListener(){
+            public void clicked(InputEvent event, float x, float y){
+                state = GameState.PAUSED;
+                System.out.println("paused");
+            }
+        });
+        if (Gdx.input.isTouched() && Gdx.input.getY() < 0) {
             if(Gdx.input.getX() >= screenWidth/2)
                 if (player.getX() < screenWidth -player.getWidth()) player.changePos(10);
                 else player.changePos(-10);
@@ -94,6 +124,32 @@ public class GameScreen implements Screen{
                 if (player.getX() > 0) player.changePos(-10);
                 else player.changePos(10);
         }
+    }
+    private void running(){
+        batch.begin();
+        batch.draw(background,0, backgroundPos, screenWidth,background.getHeight()*screenWidth/background.getWidth());
+        batch.end();
+        stage.act(Gdx.graphics.getDeltaTime()); //Perform ui logic
+        stage.draw(); //Draw the ui
+        createEntities();
+        movementControl();
+        checkCollisions();
+        if(-backgroundPos >= background.getHeight()) backgroundPos = -3000;
+        else backgroundPos -= speed;
+
+    }
+    private void waiting(){
+        batch.begin();
+        font.getData().setScale(6);
+        font.setColor(Color.BLACK);
+        font.draw(batch, "Waiting for you opponent!!", Gdx.graphics.getWidth()*0.1f, Gdx.graphics.getHeight()/2);
+        batch.end();
+    }
+
+    @Override
+    public void pause() {
+        pausedStage.act(Gdx.graphics.getDeltaTime()); //Perform ui logic
+        pausedStage.draw(); //Draw the ui
     }
 
     @Override
@@ -108,31 +164,22 @@ public class GameScreen implements Screen{
         camera.update();
         game.batch.setProjectionMatrix(camera.combined);
 
-        // checks coordinates and isReady of players
-        if(multiplayer){
-            game.api.getInfoRival(player2);
-            game.api.setInfoPlayer(player);
+        switch (state){
+            case RUNNING_SINGLEPLAYER:
+                running();
+                break;
+            case RUNNING_MULTIPLAYER:
+                game.api.getInfoRival(player2);
+                game.api.setInfoPlayer(player);
+                running();
+                break;
+            case WAITING:
+                waiting();
+                break;
+            case PAUSED:
+                pause();
+                break;
         }
-
-        // starts creating obstacles
-        if(multiplayer == false || (multiplayer && player2.isReady())){
-            batch.begin();
-            batch.draw(background,0, backgroundPos, screenWidth,background.getHeight()*screenWidth/background.getWidth());
-            batch.end();
-            createEntities();
-            movementControl();
-            checkCollisions();
-            if(-backgroundPos >= background.getHeight()) backgroundPos = -3000;
-            else backgroundPos -= speed;
-        }
-        else{
-            batch.begin();
-            font.getData().setScale(6);
-            font.setColor(Color.BLACK);
-            font.draw(batch, "Waiting for you opponent!!", Gdx.graphics.getWidth()*0.1f, Gdx.graphics.getHeight()/2);
-            batch.end();
-        }
-
     }
     private void createEntities(){
         // begin a new batch and draw the bucket and all drops
@@ -145,7 +192,6 @@ public class GameScreen implements Screen{
                 batch.draw(coins.get(i).getTexture(), coins.get(i).getX(), coins.get(i).getY(), coins.get(i).getWidth(), coins.get(i).getHeight());
         font.getData().setScale(3);
         font.setColor(Color.BLACK);
-
         // send position to DB
         game.api.setInfoPlayer(player);
 
@@ -215,17 +261,6 @@ public class GameScreen implements Screen{
             }
         }
     }
-
-    private int getRelativePosition(int pos){
-        int i = 0;
-        while(i <= OBSTACLES_PER_SCREEN/2){
-            if(pos == OBSTACLES_PER_SCREEN-1) pos = 1;
-            else pos ++;
-            i++;
-        }
-        return pos;
-    }
-
     @Override
     public void resize(int width, int height) {
     }
@@ -233,22 +268,11 @@ public class GameScreen implements Screen{
     public void show() {
         // start the playback of the background music
         // when the screen is shown
-
         startTime = TimeUtils.millis();
-
-        if (multiplayer == true){
-            player.setReady(true);
-            player2 = new Player(Configuration.getInstance().getPlayerTexture(), 500, screenHeight/3, 96,96);
-
-        }
     }
     @Override
     public void hide() {
         player.setReady(false);
-
-    }
-    @Override
-    public void pause() {
 
     }
     @Override

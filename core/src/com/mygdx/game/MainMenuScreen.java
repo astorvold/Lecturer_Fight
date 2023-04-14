@@ -76,6 +76,7 @@ public class MainMenuScreen implements Screen {
         Texture imageStart, imageSettings, imageScore, imageTutorial, imageCheckboxOff, imageCheckboxOn, imageAvatar;
         imageSettings = new Texture("new_images/SETTINGS.png");
         buttonSettings = ButtonFactory.createButton(imageSettings,screenWidth*0.12f - 0.4f*imageSettings.getWidth()/2, screenHeight *0.89f,imageSettings.getWidth()*0.4f,imageSettings.getHeight()*0.4f);
+        System.out.println("Coordinates Settings: x = " + screenWidth + ", y = " + screenHeight);
 
         if(Configuration.getInstance().getPlayerTexture() == null) Configuration.getInstance().setPlayerTexture("alfinge_avatar.png");
         imageAvatar = Configuration.getInstance().getPlayerTexture();
@@ -89,6 +90,7 @@ public class MainMenuScreen implements Screen {
 
         imageTutorial = new Texture(Gdx.files.internal("new_images/TUTORIAL.png"));
         buttonTutorial = ButtonFactory.createButton(imageTutorial,screenWidth /2 - 0.55f* imageTutorial.getWidth()/2, screenHeight *0.15f, imageTutorial.getWidth()*0.55f, imageTutorial.getHeight()*0.55f);
+
 
         imageCheckboxOn = new Texture(Gdx.files.internal("new_images/TOGGLE_ON.png"));
         imageCheckboxOff = new Texture(Gdx.files.internal("new_images/TOGGLE_OFF.png"));
