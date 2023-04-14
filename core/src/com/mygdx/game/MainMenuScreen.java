@@ -34,7 +34,7 @@ public class MainMenuScreen implements Screen {
     private final Lecturer_fight game;
     private OrthographicCamera camera;
     private final Stage stage;
-    Texture titleImage, backgroundImage;
+    Texture titleImage, backgroundImage, madeByTxt;
     private ImageButton buttonStart, buttonSettings, buttonScore, buttonTutorial, buttonAvatar;
     private TextureRegion regionCheckboxOn, regionCheckboxOff;
     private CheckBox checkBox;
@@ -49,6 +49,7 @@ public class MainMenuScreen implements Screen {
 
         titleImage = new Texture(Gdx.files.internal("new_images/TITLE.png"));
         backgroundImage = new Texture(Gdx.files.internal("new_images/BG.png"));
+        madeByTxt = new Texture(Gdx.files.internal("new_images/madebyTxt.png"));
 
         font.getData().setScale(5,5);
         font.setColor(new Color(0x023D8Bff));
@@ -157,7 +158,8 @@ public class MainMenuScreen implements Screen {
         batch.draw(backgroundImage,0,0,screenWidth,backgroundImage.getHeight()*screenWidth/backgroundImage.getWidth());
         batch.draw(titleImage,screenWidth/2 - 0.81f*titleImage.getWidth()/2, 0.73f*screenHeight, 0.8f*titleImage.getWidth(), 0.8f*titleImage.getHeight());
         //text
-        font.draw(batch, "Made by Group 16", 0.3f*screenWidth/2, 0.1f*screenHeight);
+        //font.draw(batch, "Made by Group 16", 0.3f*screenWidth/2, 0.1f*screenHeight);
+        batch.draw(madeByTxt,0,-50,screenWidth,madeByTxt.getHeight()*screenWidth/madeByTxt.getWidth());
         batch.end();
         stage.act(Gdx.graphics.getDeltaTime()); //Perform ui logic
         stage.draw(); //Draw the ui

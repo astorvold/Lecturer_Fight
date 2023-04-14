@@ -27,7 +27,7 @@ public class SettingsScreen implements Screen {
     final Lecturer_fight game;
     private static SettingsScreen instance;
     OrthographicCamera camera;
-    Texture imageBack, backgroundImage, imageToggleON, imageToggleOFF;
+    Texture imageBack, backgroundImage, imageToggleON, imageToggleOFF, settingsTxt;
     private ImageButton buttonBack;
     private CheckBox musicCheckBox, soundCheckBox;
     private Stage stage;
@@ -50,6 +50,7 @@ public class SettingsScreen implements Screen {
 
         //create Textures
         backgroundImage = new Texture(Gdx.files.internal("new_images/LIGHT_BG.png"));
+        settingsTxt = new Texture(Gdx.files.internal("new_images/SettingsTxt.png"));
 
         //handle on/off logic and be able to use it elsewhere
         /*
@@ -144,7 +145,8 @@ public class SettingsScreen implements Screen {
         batch.draw(backgroundImage,0,0,screenWidth,backgroundImage.getHeight()*screenWidth/backgroundImage.getWidth());
 
         //texts
-        font.draw(batch,"Settings",screenWidth*1/3+20, screenHeight-50);
+        batch.draw(settingsTxt,screenWidth/4, screenHeight-settingsTxt.getHeight()-40, screenWidth/2, settingsTxt.getHeight()*screenWidth/settingsTxt.getWidth()*1/2);
+        //font.draw(batch,"Settings",screenWidth*1/3+20, screenHeight-50);
         font.draw(batch,((Configuration.getInstance().isMusic_on()) ? "Turn music off:" : "Turn music on:"),100, screenHeight*3/4);
         font.draw(batch,((Configuration.getInstance().isSound_on()) ? "Turn sound off:" : "Turn sound on:"),100, screenHeight*2/3);
 

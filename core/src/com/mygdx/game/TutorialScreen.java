@@ -16,7 +16,7 @@ import java.util.prefs.PreferenceChangeEvent;
 public class TutorialScreen implements Screen {
     final Lecturer_fight game;
     OrthographicCamera camera;
-    Texture backButton, forwardButton, backgroundImage, tutorialImage;
+    Texture backButton, forwardButton, backgroundImage, tutorialImage,tutorialTxt;
 
     SpriteBatch batch = new SpriteBatch();
     BitmapFont font = new BitmapFont();
@@ -36,7 +36,8 @@ public class TutorialScreen implements Screen {
         forwardButton = new Texture(Gdx.files.internal("new_images/ARROW_RIGHT.png"));
         backgroundImage = new Texture(Gdx.files.internal("new_images/LIGHT_BG.png"));
         tutorialImage = new Texture(Gdx.files.internal(image_list.get(prefs.getInteger("Tutorial_CurrentImage"))));
-
+        tutorialTxt = new Texture(Gdx.files.internal("new_images/TutorialTxt.png"));
+        
         //edit font
         font.setColor(new Color(0x023D8Bff));
         font.getData().setScale(6,6);
@@ -61,8 +62,8 @@ public class TutorialScreen implements Screen {
         batch.draw(backButton, -50, screenHeight-150,300,backButton.getHeight()*300/backButton.getWidth());
 
         //text
-        font.draw(batch,"Tutorial",screenWidth*1/3+20, screenHeight-50);
-
+        //font.draw(batch,"Tutorial",screenWidth*1/3+20, screenHeight-50);
+        batch.draw(tutorialTxt,screenWidth/4, screenHeight-tutorialTxt.getHeight()-40, screenWidth/2, tutorialTxt.getHeight()*screenWidth/tutorialTxt.getWidth()*1/2);
         //tutorial-image showing, currently a placeholder
         batch.draw(tutorialImage,screenWidth/6,screenHeight/4,screenWidth*2/3,screenHeight*7/12);
 
