@@ -30,7 +30,7 @@ public class AvatarScreen implements Screen {
     private Stage stage;
     private ImageButton buttonBack, buttonAlfinge, buttonSchau;
     //avatar logic and textures
-    Texture backgroundImage;
+    Texture backgroundImage, avatarSelectionTxt;
     boolean alfinge_chosen;
     boolean schau_chosen;
     //animation
@@ -43,6 +43,7 @@ public class AvatarScreen implements Screen {
         camera.setToOrtho(false,800,400);
         //create Textures
         backgroundImage = new Texture(Gdx.files.internal("new_images/LIGHT_BG.png"));
+        avatarSelectionTxt = new Texture(Gdx.files.internal("new_images/AvatarSelectionTxt.png"));
         initializeButtons();
         //update avatar-logic if it has changed
         check_Avatar();
@@ -108,7 +109,8 @@ public class AvatarScreen implements Screen {
 
         //page items
         batch.draw(backgroundImage,0,0,screenWidth,backgroundImage.getHeight()*screenWidth/backgroundImage.getWidth());
-        font.draw(batch,"Avatar Selection",screenWidth*1/4-20, screenHeight-50);
+        //font.draw(batch,"Avatar Selection",screenWidth*1/4-20, screenHeight-50);
+        batch.draw(avatarSelectionTxt,screenWidth/4, screenHeight-avatarSelectionTxt.getHeight(), screenWidth/2, avatarSelectionTxt.getHeight()*screenWidth/avatarSelectionTxt.getWidth()*1/2);
         //text
         font.draw(batch, "Alf-Inge", screenWidth/8+40,screenHeight*7/8-40);
         font.draw(batch, "Christian\n  Schau", screenWidth*7/12,screenHeight*7/8);

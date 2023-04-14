@@ -76,6 +76,7 @@ public class HighScoreScreen implements Screen {
 
     @Override
     public void show() {
+
         scoreList = new ArrayList<Score>();
         game.api.getScores(scoreList);    // retrieves the scores from the DB and saves them in scoreList
 
@@ -111,7 +112,7 @@ public class HighScoreScreen implements Screen {
         font.setColor(Color.WHITE);
         font2.getData().setScale(5);
         font2.setColor(Color.WHITE);
-
+        System.out.println("Bjjj");
         stage.act(Gdx.graphics.getDeltaTime()); //Perform ui logic
         stage.draw(); //Draw the ui
 

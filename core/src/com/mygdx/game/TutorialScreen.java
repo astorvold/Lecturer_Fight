@@ -11,10 +11,12 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-import java.util.ArrayList;
+
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.prefs.PreferenceChangeEvent;
@@ -22,86 +24,97 @@ import java.util.prefs.PreferenceChangeEvent;
 public class TutorialScreen implements Screen {
     final Lecturer_fight game;
     OrthographicCamera camera;
-    Texture imageBack, imageForward, backgroundImage, tutorialImage;
-
+    Texture backButton, forwardButton, backgroundImage, tutorialImage,tutorialTxt;
+    private ImageButton buttonbackup, buttonleft, buttonright;
+    private Stage stage;
     SpriteBatch batch = new SpriteBatch();
     BitmapFont font = new BitmapFont();
     Preferences prefs = Gdx.app.getPreferences("Lecturer_Fight");
     private List<String> image_list = Arrays.asList(new String[]{"new_images/LIGHT_BG.png"});
-    ImageButton buttonBackMenu, buttonBack, buttonForward;
+
     private final int screenHeight = Gdx.graphics.getHeight();
     private final int screenWidth = Gdx.graphics.getWidth();
-    private Stage stage;
 
     public TutorialScreen(final Lecturer_fight game) {
         this.game = game;
         this.camera = new OrthographicCamera();
         camera.setToOrtho(false,800,400);
-        prefs.putInteger("Tutorial_CurrentImage",0);
-        //create Textures
-        imageBack = new Texture(Gdx.files.internal("new_images/ARROW_LEFT.png"));
-        buttonBackMenu = ButtonFactory.createButton(imageBack,-50, screenHeight-150,300,imageBack.getHeight()*300f/imageBack.getWidth());
-        buttonBack = ButtonFactory.createButton(imageBack, 0, 150,500,imageBack.getHeight()*500f/imageBack.getWidth());
 
-        imageForward = new Texture(Gdx.files.internal("new_images/ARROW_RIGHT.png"));
-        buttonForward = ButtonFactory.createButton(imageForward, screenWidth-500, 150,500,imageForward.getHeight()*500f/imageForward.getWidth());
+
+
+        //create Textures
+
+
         backgroundImage = new Texture(Gdx.files.internal("new_images/LIGHT_BG.png"));
         tutorialImage = new Texture(Gdx.files.internal(image_list.get(prefs.getInteger("Tutorial_CurrentImage"))));
+        tutorialTxt = new Texture(Gdx.files.internal("new_images/TutorialTxt.png"));
+        initializeButtons();
 
+        stage = new Stage(new ScreenViewport()); //Set up a stage for the ui
+        stage.addActor(buttonbackup); //Add the button to the stage to perform rendering and take input.
+        stage.addActor(buttonleft);
+        stage.addActor(buttonright);
+
+        Gdx.input.setInputProcessor(stage); //Start taking input from the ui
         //edit font
         font.setColor(new Color(0x023D8Bff));
         font.getData().setScale(6,6);
 
         //re-start tutorial image logic at 0 every time we visit this page
+        prefs.putInteger("Tutorial_CurrentImage",0);
         prefs.flush();
-
-        stage = new Stage(new ScreenViewport()); //Set up a stage for the ui
-        stage.addActor(buttonBackMenu); //Add the button to the stage to perform rendering and take input.
-        stage.addActor(buttonBack);
-        stage.addActor(buttonForward);
-        Gdx.input.setInputProcessor(stage); //Start taking input from the ui
 
     }
 
-    @Override
-    public void show() {
-        buttonBackMenu.addListener(new ClickListener(){
-            public void clicked(InputEvent event, float x, float y){
-                game.setScreen(new MainMenuScreen(game));
-            }
-        });
-        buttonBack.addListener(new ClickListener(){
-            public void clicked(InputEvent event, float x, float y){
-                int current_img = prefs.getInteger("Tutorial_CurrentImage");
-                if(current_img > 0) {
-                    prefs.putInteger("Tutorial_CurrentImage", current_img-1);
-                    prefs.flush();
-                }
-            }
-        });
 
-        buttonForward.addListener(new ClickListener(){
-            public void clicked(InputEvent event, float x, float y){
-                int current_img = prefs.getInteger("Tutorial_CurrentImage");
-                if(current_img < image_list.size()-1) {
-                    prefs.putInteger("Tutorial_CurrentImage", current_img+1);
+    private void initializeButtons() {
+        Texture backup, left, right;
+
+        backup = new Texture("new_images/ARROW_LEFT.png");
+        buttonbackup = ButtonFactory.createButton(backup, (screenWidth / 35f)-75f, screenHeight * 0.67f, 0.5f * screenWidth, 0.5f * screenHeight);
+
+        left = new Texture("new_images/ARROW_LEFT.png");
+        buttonleft = ButtonFactory.createButton(left, screenWidth / 30f, screenHeight*0.01f, 0.35f * screenWidth, 0.5f * screenHeight);
+
+        right = new Texture("new_images/ARROW_RIGHT.png");
+        buttonright = ButtonFactory.createButton(right, screenWidth / 1.7f, screenHeight * 0.01f, 0.35f * screenWidth, 0.5f * screenHeight);
+    }
+
+        @Override
+    public void show() {
+
+            buttonbackup.addListener(new ClickListener(){
+                public void clicked(InputEvent event, float x, float y){
+                    game.setScreen(new MainMenuScreen(game));
+                    System.out.println("Back Button from avatarScreen");
                 }
-                prefs.flush();
-            }
-        });
+            });
+
     }
 
     @Override
     public void render(float delta) {
         batch.begin();
+
+
+
+
+
+
         //page items
         batch.draw(backgroundImage,0,0,screenWidth,backgroundImage.getHeight()*screenWidth/backgroundImage.getWidth());
+
+
         //text
-        font.draw(batch,"Tutorial",screenWidth*1/3+20, screenHeight-50);
+        //font.draw(batch,"Tutorial",screenWidth*1/3+20, screenHeight-50);
+        batch.draw(tutorialTxt,screenWidth/4, screenHeight-tutorialTxt.getHeight()-40, screenWidth/2, tutorialTxt.getHeight()*screenWidth/tutorialTxt.getWidth()*1/2);
         //tutorial-image showing, currently a placeholder
         batch.draw(tutorialImage,screenWidth/6,screenHeight/4,screenWidth*2/3,screenHeight*7/12);
+
+        //forward and backward arrows
+
+
         batch.end();
-        prefs.flush();
         stage.act(Gdx.graphics.getDeltaTime()); //Perform ui logic
         stage.draw(); //Draw the ui
     }
