@@ -76,21 +76,21 @@ public class MainMenuScreen implements Screen {
     private void initializeButtons(){
         Texture imageStart, imageSettings, imageScore, imageTutorial, imageCheckboxOff, imageCheckboxOn, imageAvatar;
         imageSettings = new Texture("new_images/SETTINGS.png");
-        buttonSettings = ButtonFactory.createButton(imageSettings,screenWidth /2 - 0.4f*imageSettings.getWidth()/2, screenHeight *0.68f,0.5f*screenWidth,0.5f*screenHeight);
+        buttonSettings = ButtonFactory.createButton(imageSettings,screenWidth /30f, screenHeight *0.68f,0.35f*screenWidth,0.5f*screenHeight);
 
 
         if(Configuration.getInstance().getPlayerTexture() == null) Configuration.getInstance().setPlayerTexture("alfinge_avatar.png");
         imageAvatar = Configuration.getInstance().getPlayerTexture();
-        buttonAvatar = ButtonFactory.createButton(imageAvatar,screenWidth*0.9f - 0.4f*imageAvatar.getWidth()/2, screenHeight *0.89f,imageAvatar.getWidth()*0.4f,imageAvatar.getHeight()*0.4f);
+        buttonAvatar =  ButtonFactory.createButton(imageAvatar,screenWidth /1.3f, screenHeight *0.85f,0.15f*screenWidth,0.15f*screenHeight);
 
         imageStart = new Texture(Gdx.files.internal("new_images/PLAY.png"));
-        buttonStart = ButtonFactory.createButton(imageStart,screenWidth /2 - 0.2f*imageStart.getWidth()/2, screenHeight *0.5f,0.5f*screenWidth,0.5f*screenHeight);
+
+        buttonStart = ButtonFactory.createButton(imageStart,screenWidth /3.5f, screenHeight *0.4f,0.5f*screenWidth,0.5f*screenHeight);
 
         imageScore = new Texture(Gdx.files.internal("new_images/HIGHSCORE.png"));
-        buttonScore = ButtonFactory.createButton(imageScore,screenWidth /2 - 0.2f*imageStart.getWidth()/2, screenHeight *0.15f,0.5f*screenWidth,0.5f*screenHeight);
+        buttonScore = ButtonFactory.createButton(imageScore,screenWidth /3.5f, screenHeight *0.13f,0.5f*screenWidth,0.5f*screenHeight);
         imageTutorial = new Texture(Gdx.files.internal("new_images/TUTORIAL.png"));
-        buttonTutorial = ButtonFactory.createButton(imageTutorial,screenWidth /2 - 0.2f*imageStart.getWidth()/2, screenHeight *0.015f,0.5f*screenWidth,0.5f*screenHeight);
-
+        buttonTutorial = ButtonFactory.createButton(imageTutorial,screenWidth /3.5f, screenHeight *0.001f,0.5f*screenWidth,0.5f*screenHeight);
         imageCheckboxOn = new Texture(Gdx.files.internal("new_images/TOGGLE_ON.png"));
         imageCheckboxOff = new Texture(Gdx.files.internal("new_images/TOGGLE_OFF.png"));
         regionCheckboxOff = new TextureRegion(imageCheckboxOff);
