@@ -84,9 +84,11 @@ public class SettingsScreen implements Screen {
     }
 
     private void initializeButtons(){
+
+
         imageBack = new Texture(Gdx.files.internal("new_images/ARROW_LEFT.png"));
         buttonBack = new ImageButton(new TextureRegionDrawable(new TextureRegion(imageBack)));
-        buttonBack.setBounds(screenWidth*0.12f - 0.4f*imageBack.getWidth()/2, screenHeight *0.89f,imageBack.getWidth()*0.4f,imageBack.getHeight()*0.4f);
+        buttonBack.setBounds((screenWidth / 35f)-65f, screenHeight *0.67f,0.4f * screenWidth, 0.4f * screenHeight);
 
 
         imageToggleON = new Texture(Gdx.files.internal("new_images/TOGGLE_ON.png"));
@@ -145,7 +147,7 @@ public class SettingsScreen implements Screen {
         batch.draw(backgroundImage,0,0,screenWidth,backgroundImage.getHeight()*screenWidth/backgroundImage.getWidth());
 
         //texts
-        batch.draw(settingsTxt,screenWidth/4, screenHeight-settingsTxt.getHeight()-40, screenWidth/2, settingsTxt.getHeight()*screenWidth/settingsTxt.getWidth()*1/2);
+        batch.draw(settingsTxt,screenWidth/3, screenHeight*0.85f, screenWidth/2, screenHeight/12);
         //font.draw(batch,"Settings",screenWidth*1/3+20, screenHeight-50);
         font.draw(batch,((Configuration.getInstance().isMusic_on()) ? "Turn music off:" : "Turn music on:"),100, screenHeight*3/4);
         font.draw(batch,((Configuration.getInstance().isSound_on()) ? "Turn sound off:" : "Turn sound on:"),100, screenHeight*2/3);

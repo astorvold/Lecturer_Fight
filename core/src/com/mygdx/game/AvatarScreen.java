@@ -59,13 +59,15 @@ public class AvatarScreen implements Screen {
     private void initializeButtons(){
         Texture alfIngeAvatar, schauAvatar, imageBack;
         alfIngeAvatar = new Texture(Gdx.files.internal("alfinge_avatar.png"));
-        buttonAlfinge = ButtonFactory.createButton(alfIngeAvatar,screenWidth*0.15f,screenHeight/2, 0.73f*alfIngeAvatar.getWidth(), 0.73f*alfIngeAvatar.getHeight());
+        buttonAlfinge = ButtonFactory.createButton(alfIngeAvatar,screenWidth /4f, screenHeight *0.5f,0.15f*screenWidth,0.15f*screenHeight);
+
 
         schauAvatar = new Texture(Gdx.files.internal("schau_avatar.png"));
-        buttonSchau = ButtonFactory.createButton(schauAvatar,screenWidth*0.6f,screenHeight/2, schauAvatar.getWidth(),schauAvatar.getHeight());
+        buttonSchau = ButtonFactory.createButton(schauAvatar,screenWidth /1.5f, screenHeight *0.5f,0.15f*screenWidth,0.15f*screenHeight);
 
         imageBack = new Texture(Gdx.files.internal("new_images/ARROW_LEFT.png"));
-        buttonBack = ButtonFactory.createButton(imageBack,screenWidth*0.12f - 0.4f*imageBack.getWidth()/2, screenHeight *0.89f,imageBack.getWidth()*0.4f,imageBack.getHeight()*0.4f);
+        buttonBack = ButtonFactory.createButton(imageBack,(screenWidth / 35f)-75f, screenHeight * 0.67f,0.5f * screenWidth, 0.5f * screenHeight);
+
     }
     private void check_Avatar() {
         String path = Configuration.getInstance().getTexturePath();
@@ -110,12 +112,15 @@ public class AvatarScreen implements Screen {
         //page items
         batch.draw(backgroundImage,0,0,screenWidth,backgroundImage.getHeight()*screenWidth/backgroundImage.getWidth());
         //font.draw(batch,"Avatar Selection",screenWidth*1/4-20, screenHeight-50);
-        batch.draw(avatarSelectionTxt,screenWidth/4, screenHeight-avatarSelectionTxt.getHeight(), screenWidth/2, avatarSelectionTxt.getHeight()*screenWidth/avatarSelectionTxt.getWidth()*1/2);
+        batch.draw(avatarSelectionTxt,screenWidth/3, screenHeight*0.9f, screenWidth/2, screenHeight/15);
+
         //text
-        font.draw(batch, "Alf-Inge", screenWidth/8+40,screenHeight*7/8-40);
+        BitmapFont font = new BitmapFont(); // initialize your font
+        font.getData().setScale(5); // set the font scale factor to 2
+        font.draw(batch, "Alf-Inge", screenWidth/8,screenHeight*7/8);
         font.draw(batch, "Christian\n  Schau", screenWidth*7/12,screenHeight*7/8);
         //the !updated thing is because when you first click the page it says neither avatar is chosen which is wrong
-        font.draw(batch, ((alfinge_chosen) ? "Chosen" : "Not chosen"),((alfinge_chosen) ? (screenWidth/8+30) : (screenWidth/8-40)),screenHeight/2-20);
+        font.draw(batch, ((alfinge_chosen) ? "Chosen" : "Not chosen"),((alfinge_chosen) ? (screenWidth/8) : (screenWidth/8)),screenHeight/2);
         font.draw(batch, ((schau_chosen) ? "Chosen" : "Not chosen"), ((schau_chosen) ? (screenWidth*4/7) : (screenWidth/2)), screenHeight/2-20);
         batch.end();
         stage.act(Gdx.graphics.getDeltaTime()); //Perform ui logic

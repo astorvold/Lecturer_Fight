@@ -97,12 +97,12 @@ public class MainMenuScreen implements Screen {
         regionCheckboxOn = new TextureRegion(imageCheckboxOn);
         CheckBox.CheckBoxStyle checkboxStyle = new CheckBox.CheckBoxStyle();
         font.setColor(Color.WHITE);
-        font.getData().setScale(7);
+        font.getData().setScale(5);
         checkboxStyle.font = font;
         checkboxStyle.checkboxOff = new TextureRegionDrawable(regionCheckboxOff);
         checkboxStyle.checkboxOn = new TextureRegionDrawable(regionCheckboxOn);
         checkBox = new CheckBox("\tMultiplayer? ", checkboxStyle);
-        checkBox.setBounds(screenWidth /2 - 1f*imageCheckboxOn.getWidth()/2, screenHeight *0.5f,imageCheckboxOn.getWidth(),imageCheckboxOn.getHeight());
+        checkBox.setBounds(screenWidth /2f, screenHeight *0.5f, screenWidth*0.05f,screenHeight*0.05f);
     }
     @Override  // Add listeners to check when user clicks on buttons
     public void show() {

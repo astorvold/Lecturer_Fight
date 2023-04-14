@@ -107,7 +107,7 @@ public class TutorialScreen implements Screen {
 
         //text
         //font.draw(batch,"Tutorial",screenWidth*1/3+20, screenHeight-50);
-        batch.draw(tutorialTxt,screenWidth/4, screenHeight-tutorialTxt.getHeight()-40, screenWidth/2, tutorialTxt.getHeight()*screenWidth/tutorialTxt.getWidth()*1/2);
+        batch.draw(tutorialTxt,screenWidth/3, screenHeight*0.85f, screenWidth/2, screenHeight/12);
         //tutorial-image showing, currently a placeholder
         batch.draw(tutorialImage,screenWidth/6,screenHeight/4,screenWidth*2/3,screenHeight*7/12);
 
