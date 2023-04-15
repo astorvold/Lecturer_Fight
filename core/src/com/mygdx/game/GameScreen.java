@@ -164,16 +164,6 @@ public class GameScreen implements Screen{
         batch.end();
         pausedStage.act(Gdx.graphics.getDeltaTime()); //Perform ui logic
         pausedStage.draw(); //Draw the ui
-        buttonResume.addListener(new ClickListener(){
-            public void clicked(InputEvent event, float x, float y){
-                state = GameState.RUNNING_SINGLEPLAYER;
-            }
-        });
-        buttonQuit.addListener(new ClickListener(){
-            public void clicked(InputEvent event, float x, float y){
-                game.setScreen(new MainMenuScreen(game));
-            }
-        });
     }
 
     @Override
@@ -292,6 +282,16 @@ public class GameScreen implements Screen{
         // start the playback of the background music
         // when the screen is shown
         startTime = TimeUtils.millis();
+            buttonQuit.addListener(new ClickListener() {
+                public void clicked(InputEvent event, float x, float y) {
+                    if(state == GameState.PAUSED) game.setScreen(new MainMenuScreen(game));
+                }
+            });
+            buttonResume.addListener(new ClickListener() {
+                public void clicked(InputEvent event, float x, float y) {
+                    if(state == GameState.PAUSED) state = GameState.RUNNING_SINGLEPLAYER;
+                }
+            });
     }
     @Override
     public void hide() {
