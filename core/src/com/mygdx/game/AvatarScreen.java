@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
@@ -28,7 +29,7 @@ public class AvatarScreen implements Screen {
     private final int screenHeight = Gdx.graphics.getHeight();
     private final int screenWidth = Gdx.graphics.getWidth();
     private Stage stage;
-    private ImageButton buttonBack, buttonAlfinge, buttonSchau;
+    private Image buttonBack, buttonAlfinge, buttonSchau;
     //avatar logic and textures
     Texture backgroundImage, avatarSelectionTxt;
     boolean alfinge_chosen;
@@ -59,14 +60,14 @@ public class AvatarScreen implements Screen {
     private void initializeButtons(){
         Texture alfIngeAvatar, schauAvatar, imageBack;
         alfIngeAvatar = new Texture(Gdx.files.internal("alfinge_avatar.png"));
-        buttonAlfinge = ButtonFactory.createButton(alfIngeAvatar,screenWidth /4f, screenHeight *0.5f,0.15f*screenWidth,0.15f*screenHeight);
+        buttonAlfinge = ButtonFactory.createButton(alfIngeAvatar,0.17f*screenWidth, screenHeight *0.55f,0.2f*screenWidth,0.2f*screenHeight);
 
 
         schauAvatar = new Texture(Gdx.files.internal("schau_avatar.png"));
-        buttonSchau = ButtonFactory.createButton(schauAvatar,screenWidth /1.5f, screenHeight *0.5f,0.15f*screenWidth,0.15f*screenHeight);
+        buttonSchau = ButtonFactory.createButton(schauAvatar,0.62f*screenWidth, screenHeight *0.55f,0.2f*screenWidth,0.2f*screenHeight);
 
         imageBack = new Texture(Gdx.files.internal("new_images/ARROW_LEFT.png"));
-        buttonBack = ButtonFactory.createButton(imageBack,(screenWidth / 35f)-75f, screenHeight * 0.67f,0.5f * screenWidth, 0.5f * screenHeight);
+        buttonBack = ButtonFactory.createButton(imageBack,0.1f*screenWidth -0.35f*screenWidth/2, screenHeight *0.9f,0.35f*screenWidth,0.08f*screenHeight);
 
     }
     private void check_Avatar() {

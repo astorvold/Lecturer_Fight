@@ -6,23 +6,31 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.BaseDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 
 import org.w3c.dom.Text;
+
+import java.awt.Button;
 
 public class MainMenuScreen implements Screen {
     private Preferences prefs = Gdx.app.getPreferences("Lecturer-Fight");
@@ -35,7 +43,7 @@ public class MainMenuScreen implements Screen {
     private OrthographicCamera camera;
     private final Stage stage;
     Texture titleImage, backgroundImage, madeByTxt;
-    private ImageButton buttonStart, buttonSettings, buttonScore, buttonTutorial, buttonAvatar;
+    private Image buttonStart, buttonSettings, buttonScore, buttonTutorial, buttonAvatar;
     private TextureRegion regionCheckboxOn, regionCheckboxOff;
     private CheckBox checkBox;
     private boolean multiplayer;
@@ -61,7 +69,6 @@ public class MainMenuScreen implements Screen {
         if (Configuration.getInstance().isMusic_on()){
             Configuration.getInstance().playMusic();
         }
-
         initializeButtons();
         stage = new Stage(new ScreenViewport()); //Set up a stage for the ui
         stage.addActor(buttonStart); //Add the button to the stage to perform rendering and take input.
@@ -76,20 +83,20 @@ public class MainMenuScreen implements Screen {
     private void initializeButtons(){
         Texture imageStart, imageSettings, imageScore, imageTutorial, imageCheckboxOff, imageCheckboxOn, imageAvatar;
         imageSettings = new Texture("new_images/SETTINGS.png");
-        buttonSettings = ButtonFactory.createButton(imageSettings,screenWidth /30f, screenHeight *0.68f,0.35f*screenWidth,0.5f*screenHeight);
+        buttonSettings = ButtonFactory.createButton(imageSettings,0.1f*screenWidth -0.35f*screenWidth/2, screenHeight *0.9f,0.35f*screenWidth,0.08f*screenHeight);
 
         if(Configuration.getInstance().getPlayerTexture() == null) Configuration.getInstance().setPlayerTexture("alfinge_avatar.png");
         imageAvatar = Configuration.getInstance().getPlayerTexture();
-        buttonAvatar =  ButtonFactory.createButton(imageAvatar,screenWidth /1.3f, screenHeight *0.85f,0.15f*screenWidth,0.15f*screenHeight);
+        buttonAvatar =  ButtonFactory.createButton(imageAvatar,0.9f*screenWidth - 0.15f*screenWidth/2, screenHeight *0.9f,0.15f*screenWidth,0.08f*screenHeight);
 
-        imageStart = new Texture(Gdx.files.internal("new_images/PLAY.png"));
-        buttonStart = ButtonFactory.createButton(imageStart,screenWidth /3.5f, screenHeight *0.4f,0.5f*screenWidth,0.5f*screenHeight);
+        imageStart = new Texture("new_images/PLAY.png");
+        buttonStart = ButtonFactory.createButton(imageStart,0.5f*screenWidth - 0.6f*screenWidth/2, screenHeight *0.6f,0.6f*screenWidth,0.12f*screenHeight);
 
         imageScore = new Texture(Gdx.files.internal("new_images/HIGHSCORE.png"));
-        buttonScore = ButtonFactory.createButton(imageScore,screenWidth /3.5f, screenHeight *0.13f,0.5f*screenWidth,0.5f*screenHeight);
+        buttonScore = ButtonFactory.createButton(imageScore,0.5f*screenWidth - 0.6f*screenWidth/2, screenHeight *0.3f,0.6f*screenWidth,0.12f*screenHeight);
 
         imageTutorial = new Texture(Gdx.files.internal("new_images/TUTORIAL.png"));
-        buttonTutorial = ButtonFactory.createButton(imageTutorial,screenWidth /3.5f, screenHeight *0.001f,0.5f*screenWidth,0.5f*screenHeight);
+        buttonTutorial = ButtonFactory.createButton(imageTutorial,0.5f*screenWidth - 0.6f*screenWidth/2, screenHeight *0.15f,0.6f*screenWidth,0.12f*screenHeight);
 
         imageCheckboxOn = new Texture(Gdx.files.internal("new_images/TOGGLE_ON.png"));
         imageCheckboxOff = new Texture(Gdx.files.internal("new_images/TOGGLE_OFF.png"));
@@ -101,8 +108,8 @@ public class MainMenuScreen implements Screen {
         checkboxStyle.font = font;
         checkboxStyle.checkboxOff = new TextureRegionDrawable(regionCheckboxOff);
         checkboxStyle.checkboxOn = new TextureRegionDrawable(regionCheckboxOn);
-        checkBox = new CheckBox("\tMultiplayer? ", checkboxStyle);
-        checkBox.setBounds(screenWidth /2f, screenHeight *0.5f, screenWidth*0.05f,screenHeight*0.05f);
+        checkBox = new CheckBox("", checkboxStyle);
+        checkBox.setBounds(0.15f*screenWidth , screenHeight *0.5f, screenWidth*0.05f,screenHeight*0.05f);
     }
     @Override  // Add listeners to check when user clicks on buttons
     public void show() {
@@ -156,7 +163,8 @@ public class MainMenuScreen implements Screen {
         batch.begin();
         //design
         batch.draw(backgroundImage,0,0,screenWidth,backgroundImage.getHeight()*screenWidth/backgroundImage.getWidth());
-        batch.draw(titleImage,screenWidth/2 - 0.81f*titleImage.getWidth()/2, 0.73f*screenHeight, 0.8f*titleImage.getWidth(), 0.8f*titleImage.getHeight());
+        batch.draw(titleImage,screenWidth/2 - 0.9f*screenWidth/2, 0.67f*screenHeight, 0.9f*screenWidth, 0.25f*screenHeight);
+        batch.draw(new Texture("new_images/MultiplayerTxt.png"),checkBox.getX() + screenWidth*0.6f/3, screenHeight *0.5f, screenWidth*0.6f,screenHeight*0.06f);
         //text
         //font.draw(batch, "Made by Group 16", 0.3f*screenWidth/2, 0.1f*screenHeight);
         batch.draw(madeByTxt,0,-50,screenWidth,madeByTxt.getHeight()*screenWidth/madeByTxt.getWidth());

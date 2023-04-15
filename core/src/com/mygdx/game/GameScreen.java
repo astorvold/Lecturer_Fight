@@ -14,6 +14,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -37,7 +38,7 @@ public class GameScreen implements Screen{
     private BitmapFont font = new BitmapFont();
 
     private SettingsScreen settings;
-    private ImageButton buttonPause, buttonResume, buttonQuit;
+    private Image buttonPause, buttonResume, buttonQuit;
     public Player player;
     public Player player2;
     public ArrayList<Entity> obstacles;
@@ -84,10 +85,10 @@ public class GameScreen implements Screen{
         buttonPause = ButtonFactory.createButton(imagePause, screenWidth-imagePause.getWidth()*0.17f, screenHeight - imagePause.getHeight()*0.3f, imagePause.getWidth()*0.2f, imagePause.getHeight()*0.2f);
 
         Texture imageResume = new Texture("new_images/RESUME.png");
-        buttonResume = ButtonFactory.createButton(imageResume,screenWidth /3.5f, screenHeight *0.4f,0.5f*screenWidth,0.5f*screenHeight);
+        buttonResume = ButtonFactory.createButton(imageResume,0.5f*screenWidth - 0.6f*screenWidth/2, screenHeight *0.6f,0.6f*screenWidth,0.12f*screenHeight);
 
         Texture imageQuit = new Texture("new_images/QUIT.png");
-        buttonQuit = ButtonFactory.createButton(imageQuit,screenWidth /3.5f, screenHeight *0.2f,0.5f*screenWidth,0.5f*screenHeight);
+        buttonQuit = ButtonFactory.createButton(imageQuit,0.5f*screenWidth - 0.6f*screenWidth/2, screenHeight *0.4f,0.6f*screenWidth,0.12f*screenHeight);
 
         background = new Texture("new_images/BG.png");
 
@@ -110,7 +111,7 @@ public class GameScreen implements Screen{
             float aux = screenWidth;
             int random_int = (int)Math.floor(Math.random() * (1 + 1) + 0);
             if(random_int == 0) aux = aux * random_int;
-            obstacles.add(new Obstacle(new Texture("obstacles/BUILDING1.png"), aux, screenHeight + screenHeight * (float)(i*1.5)/OBSTACLES_PER_SCREEN, 256, 96));
+            obstacles.add(new Obstacle(new Texture("obstacles/BUILDING1.png"), aux, screenHeight + screenHeight * (float)(i*1.5)/OBSTACLES_PER_SCREEN, screenWidth*0.3f, screenHeight*0.05f));
         }
     }
     private void initializeCoins(){

@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -25,7 +26,7 @@ public class TutorialScreen implements Screen {
     final Lecturer_fight game;
     OrthographicCamera camera;
     Texture backButton, forwardButton, backgroundImage, tutorialImage,tutorialTxt;
-    private ImageButton buttonBackMenu, buttonLeft, buttonRight;
+    private Image buttonBackMenu, buttonLeft, buttonRight;
     private Stage stage;
     SpriteBatch batch = new SpriteBatch();
     BitmapFont font = new BitmapFont();
@@ -67,13 +68,13 @@ public class TutorialScreen implements Screen {
         Texture backup, left, right;
 
         backup = new Texture("new_images/ARROW_LEFT.png");
-        buttonBackMenu = ButtonFactory.createButton(backup, (screenWidth / 35f)-75f, screenHeight * 0.67f, 0.5f * screenWidth, 0.5f * screenHeight);
+        buttonBackMenu = ButtonFactory.createButton(backup, 0.1f*screenWidth -0.35f*screenWidth/2, screenHeight *0.9f,0.35f*screenWidth,0.08f*screenHeight);
 
         left = new Texture("new_images/ARROW_LEFT.png");
-        buttonLeft = ButtonFactory.createButton(left, screenWidth / 30f, screenHeight*0.01f, 0.35f * screenWidth, 0.5f * screenHeight);
+        buttonLeft = ButtonFactory.createButton(left, 0.2f*screenWidth -0.35f*screenWidth/2, screenHeight *0.15f,0.35f*screenWidth,0.08f*screenHeight);
 
         right = new Texture("new_images/ARROW_RIGHT.png");
-        buttonRight = ButtonFactory.createButton(right, screenWidth / 1.7f, screenHeight * 0.01f, 0.35f * screenWidth, 0.5f * screenHeight);
+        buttonRight = ButtonFactory.createButton(right, 0.8f*screenWidth -0.35f*screenWidth/2, screenHeight *0.15f,0.35f*screenWidth,0.08f*screenHeight);
     }
 
         @Override
