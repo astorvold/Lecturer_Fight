@@ -53,7 +53,6 @@ public class GameScreen implements Screen{
 
     public GameScreen(final Lecturer_fight game,boolean multiplayer) {
         this.game = game;
-        System.out.println("game screen");
         // create the camera and the SpriteBatch
         this.camera = new OrthographicCamera();
         camera.setToOrtho(false, 800, 480);
@@ -125,7 +124,6 @@ public class GameScreen implements Screen{
     }
     public void movementControl(){
         if (Gdx.input.isTouched()) {
-            System.out.println("X: " +Gdx.input.getX() + ", " +buttonPause.getX() + "\n" + " Y: " +Gdx.input.getY() + ", "+ buttonPause.getY());
             if((Gdx.input.getX() >= buttonPause.getX() && Gdx.input.getX() <= buttonPause.getX() + buttonPause.getWidth() ) &&
                     ( screenHeight- Gdx.input.getY() >= buttonPause.getY() && screenHeight - Gdx.input.getY() <= buttonPause.getY() + buttonPause.getHeight()) ) {
                 state = GameState.PAUSED;
@@ -166,6 +164,16 @@ public class GameScreen implements Screen{
         batch.end();
         pausedStage.act(Gdx.graphics.getDeltaTime()); //Perform ui logic
         pausedStage.draw(); //Draw the ui
+        buttonResume.addListener(new ClickListener(){
+            public void clicked(InputEvent event, float x, float y){
+                state = GameState.RUNNING_SINGLEPLAYER;
+            }
+        });
+        buttonQuit.addListener(new ClickListener(){
+            public void clicked(InputEvent event, float x, float y){
+                game.setScreen(new MainMenuScreen(game));
+            }
+        });
     }
 
     @Override
@@ -244,7 +252,6 @@ public class GameScreen implements Screen{
 
                 // send score to DB and set player as non-ready
                 game.api.setScore(player.getScore());
-                System.out.println("Score sent to db -> " + player.getScore() + " point");
                 player.setReady(false);
                 game.api.setInfoPlayer(player);
                 game.setScreen(new HighScoreScreen(this.game,true,true));
@@ -270,7 +277,7 @@ public class GameScreen implements Screen{
                 float x = generateRandomNumber(100, (int)screenWidth-100);
                 float y = obstacles.get(highestObstacle).getY() + obstacles.get(highestObstacle).getHeight() +70;
                 if(coins.get(i).getTexture() == null){
-                    coins.get(i).setTexture(new Texture("coin.png"));
+                    coins.get(i).setTexture(new Texture("new_images/COIN.png"));
                 }
                 coins.get(i).setX(x);
                 coins.get(i).setY(y);
@@ -285,16 +292,6 @@ public class GameScreen implements Screen{
         // start the playback of the background music
         // when the screen is shown
         startTime = TimeUtils.millis();
-        buttonResume.addListener(new ClickListener(){
-            public void clicked(InputEvent event, float x, float y){
-                state = GameState.RUNNING_SINGLEPLAYER;
-            }
-        });
-        buttonQuit.addListener(new ClickListener(){
-            public void clicked(InputEvent event, float x, float y){
-                game.setScreen(new MainMenuScreen(game));
-            }
-        });
     }
     @Override
     public void hide() {
