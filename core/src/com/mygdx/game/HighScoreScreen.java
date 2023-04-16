@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
@@ -32,9 +33,8 @@ public class HighScoreScreen implements Screen {
     private Stage stage;
 
     private Texture imageStart;
-    private ImageButton buttonStart;
     private Texture imagePlayAgain;
-    private ImageButton buttonPlayAgain;
+    private Image buttonPlayAgain, buttonStart;
 
     private SettingsScreen settings;
 

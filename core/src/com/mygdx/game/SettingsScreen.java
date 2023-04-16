@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -28,7 +29,7 @@ public class SettingsScreen implements Screen {
     private static SettingsScreen instance;
     OrthographicCamera camera;
     Texture imageBack, backgroundImage, imageToggleON, imageToggleOFF, settingsTxt;
-    private ImageButton buttonBack;
+    private Image buttonBack;
     private CheckBox musicCheckBox, soundCheckBox;
     private Stage stage;
     private final float screenHeight = Gdx.graphics.getHeight();
@@ -87,8 +88,7 @@ public class SettingsScreen implements Screen {
 
 
         imageBack = new Texture(Gdx.files.internal("new_images/ARROW_LEFT.png"));
-        buttonBack = new ImageButton(new TextureRegionDrawable(new TextureRegion(imageBack)));
-        buttonBack.setBounds((screenWidth / 35f)-65f, screenHeight *0.67f,0.4f * screenWidth, 0.4f * screenHeight);
+        buttonBack = ButtonFactory.createButton(imageBack,0.1f*screenWidth -0.35f*screenWidth/2, screenHeight *0.9f,0.35f*screenWidth,0.08f*screenHeight);
 
 
         imageToggleON = new Texture(Gdx.files.internal("new_images/TOGGLE_ON.png"));

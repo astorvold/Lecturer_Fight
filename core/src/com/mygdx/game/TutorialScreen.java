@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -25,7 +26,7 @@ public class TutorialScreen implements Screen {
     final Lecturer_fight game;
     OrthographicCamera camera;
     Texture backButton, forwardButton, backgroundImage, tutorialImage,tutorialTxt;
-    private ImageButton buttonbackup, buttonleft, buttonright;
+    private Image buttonBackMenu, buttonLeft, buttonRight;
     private Stage stage;
     SpriteBatch batch = new SpriteBatch();
     BitmapFont font = new BitmapFont();
@@ -40,20 +41,16 @@ public class TutorialScreen implements Screen {
         this.camera = new OrthographicCamera();
         camera.setToOrtho(false,800,400);
 
-
-
         //create Textures
-
-
         backgroundImage = new Texture(Gdx.files.internal("new_images/LIGHT_BG.png"));
         tutorialImage = new Texture(Gdx.files.internal(image_list.get(prefs.getInteger("Tutorial_CurrentImage"))));
         tutorialTxt = new Texture(Gdx.files.internal("new_images/TutorialTxt.png"));
         initializeButtons();
 
         stage = new Stage(new ScreenViewport()); //Set up a stage for the ui
-        stage.addActor(buttonbackup); //Add the button to the stage to perform rendering and take input.
-        stage.addActor(buttonleft);
-        stage.addActor(buttonright);
+        stage.addActor(buttonBackMenu); //Add the button to the stage to perform rendering and take input.
+        stage.addActor(buttonLeft);
+        stage.addActor(buttonRight);
 
         Gdx.input.setInputProcessor(stage); //Start taking input from the ui
         //edit font
@@ -71,19 +68,19 @@ public class TutorialScreen implements Screen {
         Texture backup, left, right;
 
         backup = new Texture("new_images/ARROW_LEFT.png");
-        buttonbackup = ButtonFactory.createButton(backup, (screenWidth / 35f)-75f, screenHeight * 0.67f, 0.5f * screenWidth, 0.5f * screenHeight);
+        buttonBackMenu = ButtonFactory.createButton(backup, 0.1f*screenWidth -0.35f*screenWidth/2, screenHeight *0.9f,0.35f*screenWidth,0.08f*screenHeight);
 
         left = new Texture("new_images/ARROW_LEFT.png");
-        buttonleft = ButtonFactory.createButton(left, screenWidth / 30f, screenHeight*0.01f, 0.35f * screenWidth, 0.5f * screenHeight);
+        buttonLeft = ButtonFactory.createButton(left, 0.2f*screenWidth -0.35f*screenWidth/2, screenHeight *0.15f,0.35f*screenWidth,0.08f*screenHeight);
 
         right = new Texture("new_images/ARROW_RIGHT.png");
-        buttonright = ButtonFactory.createButton(right, screenWidth / 1.7f, screenHeight * 0.01f, 0.35f * screenWidth, 0.5f * screenHeight);
+        buttonRight = ButtonFactory.createButton(right, 0.8f*screenWidth -0.35f*screenWidth/2, screenHeight *0.15f,0.35f*screenWidth,0.08f*screenHeight);
     }
 
         @Override
     public void show() {
 
-            buttonbackup.addListener(new ClickListener(){
+            buttonBackMenu.addListener(new ClickListener(){
                 public void clicked(InputEvent event, float x, float y){
                     game.setScreen(new MainMenuScreen(game));
                     System.out.println("Back Button from avatarScreen");
@@ -95,16 +92,8 @@ public class TutorialScreen implements Screen {
     @Override
     public void render(float delta) {
         batch.begin();
-
-
-
-
-
-
         //page items
         batch.draw(backgroundImage,0,0,screenWidth,backgroundImage.getHeight()*screenWidth/backgroundImage.getWidth());
-
-
         //text
         //font.draw(batch,"Tutorial",screenWidth*1/3+20, screenHeight-50);
         batch.draw(tutorialTxt,screenWidth/3, screenHeight*0.85f, screenWidth/2, screenHeight/12);
