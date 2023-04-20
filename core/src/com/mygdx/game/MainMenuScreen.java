@@ -3,34 +3,20 @@ package com.mygdx.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.utils.BaseDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-
-
-import org.w3c.dom.Text;
-
-import java.awt.Button;
 
 public class MainMenuScreen implements Screen {
     private Preferences prefs = Gdx.app.getPreferences("Lecturer-Fight");
@@ -42,7 +28,7 @@ public class MainMenuScreen implements Screen {
     private final Lecturer_fight game;
     private OrthographicCamera camera;
     private final Stage stage;
-    Texture titleImage, backgroundImage, madeByTxt;
+    Texture titleImage, backgroundImage, madeByTxt, multiplayerImage;
     private Image buttonStart, buttonSettings, buttonScore, buttonTutorial, buttonAvatar;
     private TextureRegion regionCheckboxOn, regionCheckboxOff;
     private CheckBox checkBox;
@@ -54,9 +40,10 @@ public class MainMenuScreen implements Screen {
         this.camera = new OrthographicCamera();
         this.settings = new SettingsScreen(game);
         camera.setToOrtho(false,800,400);
-
+        multiplayerImage = new Texture("new_images/MultiplayerTxt.png");
         titleImage = new Texture(Gdx.files.internal("new_images/TITLE.png"));
         backgroundImage = new Texture(Gdx.files.internal("new_images/BG.png"));
+
         madeByTxt = new Texture(Gdx.files.internal("new_images/madebyTxt.png"));
 
         font.getData().setScale(5,5);
@@ -135,7 +122,7 @@ public class MainMenuScreen implements Screen {
 
         buttonScore.addListener(new ClickListener(){
             public void clicked(InputEvent event, float x, float y){
-                game.setScreen(new HighScoreScreen(game,true,false));
+                game.setScreen(new HighScoreScreen(game,true,false, 0 ));
                 System.out.println("Score Button");
             }
         });
@@ -164,7 +151,7 @@ public class MainMenuScreen implements Screen {
         //design
         batch.draw(backgroundImage,0,0,screenWidth,backgroundImage.getHeight()*screenWidth/backgroundImage.getWidth());
         batch.draw(titleImage,screenWidth/2 - 0.9f*screenWidth/2, 0.67f*screenHeight, 0.9f*screenWidth, 0.25f*screenHeight);
-        batch.draw(new Texture("new_images/MultiplayerTxt.png"),checkBox.getX() + screenWidth*0.6f/3, screenHeight *0.5f, screenWidth*0.6f,screenHeight*0.06f);
+        batch.draw(multiplayerImage,checkBox.getX() + screenWidth*0.6f/3, screenHeight *0.5f, screenWidth*0.6f,screenHeight*0.06f);
         //text
         //font.draw(batch, "Made by Group 16", 0.3f*screenWidth/2, 0.1f*screenHeight);
         batch.draw(madeByTxt,0,-50,screenWidth,madeByTxt.getHeight()*screenWidth/madeByTxt.getWidth());

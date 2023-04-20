@@ -1,9 +1,7 @@
 package com.mygdx.game;
 
-import java.awt.Button;
 import java.util.ArrayList;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
@@ -15,13 +13,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-
-import org.w3c.dom.Text;
 
 public class GameScreen implements Screen{
     public static final int OBSTACLES_PER_SCREEN = 8;
@@ -71,12 +65,16 @@ public class GameScreen implements Screen{
         }
 
 
-        if(multiplayer == false) state = GameState.RUNNING_SINGLEPLAYER;
+        if(multiplayer == false){
+            state = GameState.RUNNING_SINGLEPLAYER;
+        }
         else {
+            state = GameState.RUNNING_MULTIPLAYER;
             player.setReady(true);
             player2 = new Player(Configuration.getInstance().getPlayerTexture(), 500, screenHeight/3, 96,96);
-            if(player2.isReady()) state = GameState.RUNNING_SINGLEPLAYER;
-            else state = GameState.WAITING;
+            if(!player2.isReady()) {
+                state = GameState.WAITING;
+            }
         }
     }
     private void initializeButtons(){
@@ -153,8 +151,11 @@ public class GameScreen implements Screen{
         batch.begin();
         font.getData().setScale(6);
         font.setColor(Color.BLACK);
-        font.draw(batch, "Waiting for you opponent!!", Gdx.graphics.getWidth()*0.1f, Gdx.graphics.getHeight()/2);
+        font.draw(batch, "Waiting for your opponent!!", Gdx.graphics.getWidth()*0.02f, Gdx.graphics.getHeight()/2);
         batch.end();
+        if(player2.isReady()){
+            state = GameState.RUNNING_MULTIPLAYER;
+        }
     }
 
     @Override
@@ -198,6 +199,9 @@ public class GameScreen implements Screen{
                 running();
                 break;
             case WAITING:
+                game.api.setInfoPlayer(player);
+                game.api.getInfoRival(player2);
+                System.out.println(player2.isReady());
                 waiting();
                 break;
             case PAUSED:
@@ -229,8 +233,15 @@ public class GameScreen implements Screen{
             //my game gets ready to multiplayer
             showRivalScore();
         }
+        else{
+            showMyScore();
+        }
         batch.end();
     }
+    private void showMyScore(){
+        font.draw(batch, "Score: " + player.getScore(), screenWidth*0.45f, screenHeight*0.97f);
+    }
+
 
     private void showRivalScore(){
         batch.draw(player2.getTexture(), screenWidth*0.8f, screenHeight*0.95f, player2.getWidth(), player2.getHeight());
@@ -254,7 +265,7 @@ public class GameScreen implements Screen{
                 game.api.setScore(player.getScore());
                 player.setReady(false);
                 game.api.setInfoPlayer(player);
-                game.setScreen(new HighScoreScreen(this.game,true,true));
+                game.setScreen(new HighScoreScreen(this.game,true,true,player.getScore()));
 
             }
             //If the obstacle is getting out the bounds it will be put again

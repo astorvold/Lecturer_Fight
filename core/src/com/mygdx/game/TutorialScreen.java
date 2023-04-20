@@ -26,6 +26,7 @@ public class TutorialScreen implements Screen {
     final Lecturer_fight game;
     OrthographicCamera camera;
     Texture backButton, forwardButton, backgroundImage, tutorialImage,tutorialTxt;
+    Texture tutorial1, tutorial2, tutorial3, tutorial4;
     private Image buttonBackMenu, buttonLeft, buttonRight;
     private Stage stage;
     SpriteBatch batch = new SpriteBatch();
@@ -42,6 +43,8 @@ public class TutorialScreen implements Screen {
         camera.setToOrtho(false,800,400);
 
         //create Textures
+        tutorial1al1 = new Texture(Gdx.files.internal("new_images/1.png"));
+
         backgroundImage = new Texture(Gdx.files.internal("new_images/LIGHT_BG.png"));
         tutorialImage = new Texture(Gdx.files.internal(image_list.get(prefs.getInteger("Tutorial_CurrentImage"))));
         tutorialTxt = new Texture(Gdx.files.internal("new_images/TutorialTxt.png"));

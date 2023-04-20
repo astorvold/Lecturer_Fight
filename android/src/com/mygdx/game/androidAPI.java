@@ -61,16 +61,16 @@ public class androidAPI implements API{
     @Override
     public void setInfoPlayer(Player player) {
 
-        coorRef = database.getReference("Player2");
+        coorRef = database.getReference("Player1");
         coorRef.child("score").setValue(player.getScore());
 
-        coorRef = database.getReference("Player2");
+        coorRef = database.getReference("Player1");
         coorRef.child("ready").setValue(player.isReady());
     }
 
     @Override
     public void getInfoRival(Player player) {
-        coorRef = database.getReference("Player1");
+        coorRef = database.getReference("Player2");
         coorRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
