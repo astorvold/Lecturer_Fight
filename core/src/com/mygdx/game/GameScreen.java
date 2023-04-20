@@ -2,6 +2,7 @@ package com.mygdx.game;
 
 import java.util.ArrayList;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
@@ -10,6 +11,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -63,40 +65,46 @@ public class GameScreen implements Screen{
         if (Configuration.getInstance().isMusic_on()){
             Configuration.getInstance().playMusic();
         }
-
-
         if(multiplayer == false){
             state = GameState.RUNNING_SINGLEPLAYER;
         }
         else {
-            state = GameState.RUNNING_MULTIPLAYER;
             player.setReady(true);
             player2 = new Player(Configuration.getInstance().getPlayerTexture(), 500, screenHeight/3, 96,96);
             if(!player2.isReady()) {
                 state = GameState.WAITING;
             }
+            else {
+                state = GameState.RUNNING_MULTIPLAYER;
+            }
         }
     }
     private void initializeButtons(){
-        Texture imagePause = new Texture("new_images/PAUSE.png");
-        buttonPause = ButtonFactory.createButton(imagePause, screenWidth-imagePause.getWidth()*0.17f, screenHeight - imagePause.getHeight()*0.3f, imagePause.getWidth()*0.2f, imagePause.getHeight()*0.2f);
+        Texture imagePause;
+        if(multiplayer == false) {
+            imagePause  = new Texture("new_images/PAUSE.png");
+            buttonPause = ButtonFactory.createButton(imagePause, screenWidth-imagePause.getWidth()*0.17f, screenHeight - imagePause.getHeight()*0.3f, imagePause.getWidth()*0.2f, imagePause.getHeight()*0.2f);
+        }
+        else{
+            imagePause = new Texture("new_images/QUIT_BOX.png");
+            buttonPause = ButtonFactory.createButton(imagePause, screenWidth-imagePause.getWidth()*0.24f, screenHeight - imagePause.getHeight()*0.3f, imagePause.getWidth()*0.2f, imagePause.getHeight()*0.2f);
+        }
 
         Texture imageResume = new Texture("new_images/RESUME.png");
         buttonResume = ButtonFactory.createButton(imageResume,0.5f*screenWidth - 0.6f*screenWidth/2, screenHeight *0.6f,0.6f*screenWidth,0.12f*screenHeight);
 
         Texture imageQuit = new Texture("new_images/QUIT.png");
         buttonQuit = ButtonFactory.createButton(imageQuit,0.5f*screenWidth - 0.6f*screenWidth/2, screenHeight *0.4f,0.6f*screenWidth,0.12f*screenHeight);
-
         background = new Texture("new_images/BG.png");
 
         stage = new Stage(new ScreenViewport()); //Set up a stage for the
         stage.addActor(buttonPause);
         Gdx.input.setInputProcessor(stage); //Start taking input from the ui
-
         pausedStage = new Stage(new ScreenViewport());
         pausedStage.addActor(buttonResume);
         pausedStage.addActor(buttonQuit);
         Gdx.input.setInputProcessor(pausedStage);
+
     }
 
     private float generateRandomNumber(int from, int to){
@@ -124,7 +132,8 @@ public class GameScreen implements Screen{
         if (Gdx.input.isTouched()) {
             if((Gdx.input.getX() >= buttonPause.getX() && Gdx.input.getX() <= buttonPause.getX() + buttonPause.getWidth() ) &&
                     ( screenHeight- Gdx.input.getY() >= buttonPause.getY() && screenHeight - Gdx.input.getY() <= buttonPause.getY() + buttonPause.getHeight()) ) {
-                state = GameState.PAUSED;
+                if(state == GameState.RUNNING_SINGLEPLAYER) state = GameState.PAUSED;
+                else if(state == GameState.RUNNING_MULTIPLAYER) game.setScreen(new MainMenuScreen(game));
             }
             if(Gdx.input.getX() >= screenWidth/2)
                 if (player.getX() < screenWidth -player.getWidth()) player.changePos(10);
@@ -231,17 +240,11 @@ public class GameScreen implements Screen{
     private void showMyScore(){
         font.draw(batch, "Score: " + player.getScore(), screenWidth*0.45f, screenHeight*0.97f);
     }
-
-
     private void showRivalScore(){
         batch.draw(player2.getTexture(), screenWidth*0.8f, screenHeight*0.95f, player2.getWidth(), player2.getHeight());
         font.draw(batch, "Player 1: " + player.getScore() + " - Player2: " + player2.getScore(), screenWidth/3, screenHeight*0.97f);
         game.api.getInfoRival(player2);
     }
-
-    /**
-     * CheckCollisions Method
-     */
     public void checkCollisions() {
         //Checks if any obstacle is at the same position that the player
         for(int i = 0; i < OBSTACLES_PER_SCREEN; i++) {
@@ -293,16 +296,22 @@ public class GameScreen implements Screen{
         // start the playback of the background music
         // when the screen is shown
         startTime = TimeUtils.millis();
-            buttonQuit.addListener(new ClickListener() {
-                public void clicked(InputEvent event, float x, float y) {
-                    if(state == GameState.PAUSED) game.setScreen(new MainMenuScreen(game));
-                }
-            });
-            buttonResume.addListener(new ClickListener() {
-                public void clicked(InputEvent event, float x, float y) {
-                    if(state == GameState.PAUSED) state = GameState.RUNNING_SINGLEPLAYER;
-                }
-            });
+        buttonPause.addListener(new ClickListener() {
+            public void clicked(InputEvent event, float x, float y) {
+                if(state == GameState.RUNNING_SINGLEPLAYER) state = GameState.PAUSED;
+                else game.setScreen(new MainMenuScreen(game));
+            }
+        });
+        buttonQuit.addListener(new ClickListener() {
+            public void clicked(InputEvent event, float x, float y) {
+                if(state == GameState.PAUSED) game.setScreen(new MainMenuScreen(game));
+            }
+        });
+        buttonResume.addListener(new ClickListener() {
+            public void clicked(InputEvent event, float x, float y) {
+                if(state == GameState.PAUSED) state = GameState.RUNNING_SINGLEPLAYER;
+            }
+        });
     }
     @Override
     public void hide() {

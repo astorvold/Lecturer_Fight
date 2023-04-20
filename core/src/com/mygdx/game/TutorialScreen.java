@@ -17,7 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 
-
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.prefs.PreferenceChangeEvent;
@@ -32,8 +32,8 @@ public class TutorialScreen implements Screen {
     SpriteBatch batch = new SpriteBatch();
     BitmapFont font = new BitmapFont();
     Preferences prefs = Gdx.app.getPreferences("Lecturer_Fight");
-    private List<String> image_list = Arrays.asList(new String[]{"new_images/LIGHT_BG.png"});
-
+    private ArrayList<Texture> image_list = new ArrayList<>();
+    private int current_image = 0;
     private final int screenHeight = Gdx.graphics.getHeight();
     private final int screenWidth = Gdx.graphics.getWidth();
 
@@ -43,10 +43,12 @@ public class TutorialScreen implements Screen {
         camera.setToOrtho(false,800,400);
 
         //create Textures
-        tutorial1al1 = new Texture(Gdx.files.internal("new_images/1.png"));
+        //tutorial1al1 = new Texture(Gdx.files.internal("new_images/1.png"));
 
         backgroundImage = new Texture(Gdx.files.internal("new_images/LIGHT_BG.png"));
-        tutorialImage = new Texture(Gdx.files.internal(image_list.get(prefs.getInteger("Tutorial_CurrentImage"))));
+        for(int i = 1; i <= 4; i++){
+            image_list.add(new Texture("new_images/"+i+".png"));
+        }
         tutorialTxt = new Texture(Gdx.files.internal("new_images/TutorialTxt.png"));
         initializeButtons();
 
@@ -66,7 +68,6 @@ public class TutorialScreen implements Screen {
 
     }
 
-
     private void initializeButtons() {
         Texture backup, left, right;
 
@@ -82,14 +83,22 @@ public class TutorialScreen implements Screen {
 
         @Override
     public void show() {
+        buttonBackMenu.addListener(new ClickListener(){
+            public void clicked(InputEvent event, float x, float y){
+                game.setScreen(new MainMenuScreen(game));
+            }
+        });
 
-            buttonBackMenu.addListener(new ClickListener(){
-                public void clicked(InputEvent event, float x, float y){
-                    game.setScreen(new MainMenuScreen(game));
-                    System.out.println("Back Button from avatarScreen");
-                }
-            });
-
+        buttonLeft.addListener(new ClickListener(){
+            public void clicked(InputEvent event, float x, float y){
+                if(current_image>0) current_image--;
+            }
+        });
+        buttonRight.addListener(new ClickListener(){
+            public void clicked(InputEvent event, float x, float y){
+                if(current_image<3) current_image++;
+            }
+        });
     }
 
     @Override
@@ -101,10 +110,8 @@ public class TutorialScreen implements Screen {
         //font.draw(batch,"Tutorial",screenWidth*1/3+20, screenHeight-50);
         batch.draw(tutorialTxt,screenWidth/3, screenHeight*0.85f, screenWidth/2, screenHeight/12);
         //tutorial-image showing, currently a placeholder
-        batch.draw(tutorialImage,screenWidth/6,screenHeight/4,screenWidth*2/3,screenHeight*7/12);
-
+        batch.draw(image_list.get(current_image),screenWidth/6,screenHeight/4,screenWidth*2/3,screenHeight*7/12);
         //forward and backward arrows
-
 
         batch.end();
         stage.act(Gdx.graphics.getDeltaTime()); //Perform ui logic
