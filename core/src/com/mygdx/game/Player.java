@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 public class Player extends Entity {
     private int score;
     private boolean ready;
+    private boolean isAlive = true;
     public Player(Texture texture, float x, float y, float width, float height){
         super(texture);
         score = 0;
@@ -31,5 +32,11 @@ public class Player extends Entity {
     public void setReady(boolean ready){ this.ready = ready;}
 
     public boolean isReady(){ return this.ready; }
+
+    public void setTexture(Texture texture){this.texture = texture;}
+
+    public boolean isAlive(){ return this.isAlive;}
+
+    public void isDead(){ this.isAlive = false;}
 
 }

@@ -2,7 +2,6 @@ package com.mygdx.game;
 
 import java.util.ArrayList;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
@@ -11,7 +10,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -25,6 +23,7 @@ public class GameScreen implements Screen{
     public GameState state;
     private int backgroundPos = 0;
     private Texture background;
+    private Texture player2Texture;
     private final int speed = 3;
     private final Lecturer_fight game;
     private final float screenHeight = Gdx.graphics.getHeight();
@@ -44,6 +43,9 @@ public class GameScreen implements Screen{
     private boolean multiplayer;
     private Stage stage;
     private Stage pausedStage;
+    private int player2Score = 0;
+    private int player2Score2 = -1;
+
 
 
 
@@ -60,6 +62,7 @@ public class GameScreen implements Screen{
         highestObstacle = 7;
         this.multiplayer = multiplayer;
         player = new Player(Configuration.getInstance().getPlayerTexture(), screenWidth/2, screenHeight/2, 96,96);
+        player2Texture = new Texture("opponent_avatar.png");
 
         //play music
         if (Configuration.getInstance().isMusic_on()){
@@ -70,7 +73,7 @@ public class GameScreen implements Screen{
         }
         else {
             player.setReady(true);
-            player2 = new Player(Configuration.getInstance().getPlayerTexture(), 500, screenHeight/3, 96,96);
+            player2 = new Player(player2Texture, 500, screenHeight/3, 96,96);
             if(!player2.isReady()) {
                 state = GameState.WAITING;
             }
@@ -83,11 +86,11 @@ public class GameScreen implements Screen{
         Texture imagePause;
         if(multiplayer == false) {
             imagePause  = new Texture("new_images/PAUSE.png");
-            buttonPause = ButtonFactory.createButton(imagePause, screenWidth-imagePause.getWidth()*0.17f, screenHeight - imagePause.getHeight()*0.3f, imagePause.getWidth()*0.2f, imagePause.getHeight()*0.2f);
+            buttonPause = ButtonFactory.createButton(imagePause, screenWidth-imagePause.getWidth()*0.24f, screenHeight - imagePause.getHeight()*0.5f, imagePause.getWidth()*0.2f, imagePause.getHeight()*0.2f);
         }
         else{
             imagePause = new Texture("new_images/QUIT_BOX.png");
-            buttonPause = ButtonFactory.createButton(imagePause, screenWidth-imagePause.getWidth()*0.24f, screenHeight - imagePause.getHeight()*0.3f, imagePause.getWidth()*0.2f, imagePause.getHeight()*0.2f);
+            buttonPause = ButtonFactory.createButton(imagePause, screenWidth-imagePause.getWidth()*0.24f, screenHeight - imagePause.getHeight()*0.5f, imagePause.getWidth()*0.2f, imagePause.getHeight()*0.2f);
         }
 
         Texture imageResume = new Texture("new_images/RESUME.png");
@@ -200,7 +203,6 @@ public class GameScreen implements Screen{
             case WAITING:
                 game.api.setInfoPlayer(player);
                 game.api.getInfoRival(player2);
-                System.out.println(player2.isReady());
                 waiting();
                 break;
             case PAUSED:
@@ -209,6 +211,7 @@ public class GameScreen implements Screen{
         }
     }
     private void createEntities(){
+
         // begin a new batch and draw the bucket and all drops
         batch.begin();
         batch.draw(player.getTexture(), player.getX(), player.getY(), player.getWidth(), player.getHeight());
@@ -221,13 +224,29 @@ public class GameScreen implements Screen{
         font.setColor(Color.BLACK);
         // send position to DB
         game.api.setInfoPlayer(player);
-
         // player gets 1 point every second
         long elapsedTime = TimeUtils.timeSinceMillis(startTime);
-        if (elapsedTime > 1000){
-            startTime = 0;
-            player.increaseScore(1);
+        if(multiplayer == true){
+            player2Score = player2.getScore();
+            if (elapsedTime > 1000){
+                if (player2Score == player2Score2){
+                    player2Texture = new Texture("opponent_avatar_dead.png");
+                    player2.setTexture(player2Texture);
+                    player2.isDead();
+                }
+                player2Score2 = player2.getScore();
+                player2Score = player2.getScore();
+                startTime = TimeUtils.millis();
         }
+
+
+            System.out.println(player2Score + " " + player2Score2);
+
+        }
+
+
+
+        player.increaseScore(10);
         if (multiplayer == true){
             //my game gets ready to multiplayer
             showRivalScore();
@@ -236,12 +255,19 @@ public class GameScreen implements Screen{
             showMyScore();
         }
         batch.end();
+
+
     }
     private void showMyScore(){
         font.draw(batch, "Score: " + player.getScore(), screenWidth*0.45f, screenHeight*0.97f);
     }
     private void showRivalScore(){
-        batch.draw(player2.getTexture(), screenWidth*0.8f, screenHeight*0.95f, player2.getWidth(), player2.getHeight());
+        if ( player2.isAlive()){
+            batch.draw(player2.getTexture(), player.getX(), player.getY()-100, player2.getWidth(), player2.getHeight());
+        }
+        else{
+            batch.draw(player2.getTexture(), screenWidth*0.5f, screenHeight*0.1f, player2.getWidth(), player2.getHeight());
+        }
         font.draw(batch, "Player 1: " + player.getScore() + " - Player2: " + player2.getScore(), screenWidth/3, screenHeight*0.97f);
         game.api.getInfoRival(player2);
     }
@@ -258,7 +284,13 @@ public class GameScreen implements Screen{
                 game.api.setScore(player.getScore());
                 player.setReady(false);
                 game.api.setInfoPlayer(player);
-                game.setScreen(new HighScoreScreen(this.game,true,true,player.getScore()));
+                if(multiplayer == false){
+                    game.setScreen(new HighScoreScreen(this.game,true,true,player.getScore(), 0));
+
+                }else{
+                    game.setScreen(new HighScoreScreen(this.game,true,true,player.getScore(), player2.getScore()));
+
+                }
 
             }
             //If the obstacle is getting out the bounds it will be put again
