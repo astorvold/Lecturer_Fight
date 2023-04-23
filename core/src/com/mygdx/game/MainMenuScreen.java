@@ -122,7 +122,7 @@ public class MainMenuScreen implements Screen {
 
         buttonScore.addListener(new ClickListener(){
             public void clicked(InputEvent event, float x, float y){
-                game.setScreen(new HighScoreScreen(game,true,false, 0, 0));
+                game.setScreen(new HighScoreScreen(game,true,false, 0, 0,null ));
                 System.out.println("Score Button");
             }
         });

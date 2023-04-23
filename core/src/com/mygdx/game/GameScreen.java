@@ -281,14 +281,14 @@ public class GameScreen implements Screen{
                 player.setReady(false);
                 game.api.setInfoPlayer(player);
                 if(multiplayer == false){
-                    game.setScreen(new HighScoreScreen(this.game,true,true,player.getScore(), 0));
+                    game.setScreen(new HighScoreScreen(this.game,true,true,player.getScore(), 0, null));
 
                 }else{
                     if(player2.isAlive()){
-                        game.setScreen(new HighScoreScreen(this.game,true,true,player.getScore(), 999999));
+                        game.setScreen(new HighScoreScreen(this.game,true,true,player.getScore(), 999999, player2));
                     }
                     else{
-                        game.setScreen(new HighScoreScreen(this.game,true,true,player.getScore(), player2.getScore()));
+                        game.setScreen(new HighScoreScreen(this.game,true,true,player.getScore(), player2.getScore(),player2 ));
                     }
 
                 }

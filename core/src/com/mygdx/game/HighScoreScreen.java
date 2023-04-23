@@ -1,7 +1,6 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -48,7 +47,9 @@ public class HighScoreScreen implements Screen {
     private int playerScore;
     private int opponentScore;
 
-    public HighScoreScreen(final Lecturer_fight game, boolean backButton, boolean playAgainButton, int myScore, int opponentScore) {
+    private Player opponent;
+
+    public HighScoreScreen(final Lecturer_fight game, boolean backButton, boolean playAgainButton, int myScore, int opponentScore, Player opponent) {
         this.game = game;
         this.camera = new OrthographicCamera();
         this.camera.setToOrtho(false,800,400);
@@ -89,6 +90,8 @@ public class HighScoreScreen implements Screen {
         if (opponentScore != 0){
             this.opponentScore = opponentScore;
         }
+
+        this.opponent = opponent;
 
     }
 
@@ -150,7 +153,7 @@ public class HighScoreScreen implements Screen {
         int flag = 0;
         font3.draw(batch, "High score", screenWidth *0.24f, screenHeight *0.85f);
         for(Score score: scoreList){
-            font2.draw(batch, score.toString(), screenWidth *0.20f, screenHeight *0.75f);
+            font2.draw(batch, score.toString(), screenWidth *0.13f, screenHeight *0.75f);
 
             screenHeight = screenHeight - 200;
             flag++;
@@ -159,8 +162,12 @@ public class HighScoreScreen implements Screen {
                     font.draw(batch, "Your score was: " + playerScore, screenWidth *0.01f, screenHeight *0.6f);
                 }
                 if (this.opponentScore != 0){
+
+
+
                     if (this.opponentScore == 999999){
-                        font.draw(batch, "Opponent is still playing ", screenWidth *0.01f, screenHeight *0.6f-150);
+                        game.api.getInfoRival(opponent);
+                        font.draw(batch, "Opponent is still playing: " + opponent.getScore(), screenWidth *0.01f, screenHeight *0.6f-150);
                     }
                     else{
                         font.draw(batch, "Opponent's score was: " + opponentScore, screenWidth *0.01f, screenHeight *0.6f-150);
