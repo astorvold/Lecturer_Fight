@@ -18,8 +18,8 @@ public class Player extends Entity {
         this.x = x;
         this.y = y;
         this.ready = false;
-
     }
+
     public int getScore(){
         return score;
     }

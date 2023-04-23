@@ -5,7 +5,7 @@ public class PlayerController {
     private Player model;
 
     public PlayerController(Player model) {
-        model = model;
+        this.model = model;
     }
 
     public void changePos(int newPosition){

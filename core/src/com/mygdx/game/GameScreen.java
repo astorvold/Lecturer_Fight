@@ -34,7 +34,7 @@ public class GameScreen implements Screen{
 
 
     private Image buttonPause, buttonResume, buttonQuit;
-    private Player player;
+
     public Player player2;
     public ArrayList<Entity> obstacles;
     public ArrayList<Coin> coins;
@@ -48,9 +48,8 @@ public class GameScreen implements Screen{
 
 
     //// nuevo
-
-    private PlayerView playerView;
-    private PlayerController playerController;
+    private PlayerCharacter playerCharacter;
+    private OpponentCharacter opponentCharacter;
 
 
     public GameScreen(final Lecturer_fight game,boolean multiplayer) {
@@ -65,8 +64,10 @@ public class GameScreen implements Screen{
         initializeButtons();
         highestObstacle = 7;
         this.multiplayer = multiplayer;
-        player = new Player(Configuration.getInstance().getPlayerTexture(), screenWidth/2, screenHeight/2, 96,96);
+        playerCharacter = new PlayerCharacter(Configuration.getInstance().getPlayerTexture(), screenWidth/2, screenHeight/2, 96,96);
+
         player2Texture = new Texture("opponent_avatar.png");
+
 
         //play music
         if (Configuration.getInstance().isMusic_on()){
@@ -76,7 +77,9 @@ public class GameScreen implements Screen{
             state = GameState.RUNNING_SINGLEPLAYER;
         }
         else {
-            playerController.setReady(true);
+            playerCharacter.getPlayerController().setReady(true);
+            opponentCharacter = new OpponentCharacter(player2Texture, 500, screenHeight/3, 96,96);
+
             player2 = new Player(player2Texture, 500, screenHeight/3, 96,96);
             if(!player2.isReady()) {
                 state = GameState.WAITING;
@@ -143,11 +146,12 @@ public class GameScreen implements Screen{
                 else if(state == GameState.RUNNING_MULTIPLAYER) game.setScreen(new MainMenuScreen(game));
             }
             if(Gdx.input.getX() >= screenWidth/2)
-                if (player.getX() < screenWidth - player.getWidth()) playerController.changePos(10);
-                else playerController.changePos(-10);
+
+                if (playerCharacter.getPlayerModel().getX() < screenWidth - playerCharacter.getPlayerModel().getWidth()) playerCharacter.getPlayerController().changePos(10);
+                else playerCharacter.getPlayerController().changePos(-10);
             else
-                if (player.getX() > 0) playerController.changePos(-10);
-                else playerController.changePos(10);
+                if (playerCharacter.getPlayerModel().getX() > 0) playerCharacter.getPlayerController().changePos(-10);
+                else playerCharacter.getPlayerController().changePos(10);
         }
     }
     private void running(){
@@ -201,11 +205,11 @@ public class GameScreen implements Screen{
                 break;
             case RUNNING_MULTIPLAYER:
                 game.api.getInfoRival(player2);
-                game.api.setInfoPlayer(player);
+                game.api.setInfoPlayer(playerCharacter.getPlayerModel());
                 running();
                 break;
             case WAITING:
-                game.api.setInfoPlayer(player);
+                game.api.setInfoPlayer(playerCharacter.getPlayerModel());
                 game.api.getInfoRival(player2);
                 waiting();
                 break;
@@ -215,15 +219,12 @@ public class GameScreen implements Screen{
         }
     }
     private void createEntities(){
-        //playerModel = new Player(Configuration.getInstance().getPlayerTexture(), screenWidth/2, screenHeight/2, 96,96);
-        playerController = new PlayerController(player);
-        playerView = new PlayerView(player);
 
 
         // begin a new batch and draw the bucket and all drops
         batch.begin();
 
-        playerView.draw(batch);
+        playerCharacter.getPlayerView().draw(batch);
 
         for(int i = 0; i < OBSTACLES_PER_SCREEN; i++)
             batch.draw(obstacles.get(i).getTexture(), obstacles.get(i).getX(), obstacles.get(i).getY(), obstacles.get(i).getWidth(), obstacles.get(i).getHeight());
@@ -233,7 +234,7 @@ public class GameScreen implements Screen{
         font.getData().setScale(3);
         font.setColor(Color.BLACK);
         // send position to DB
-        game.api.setInfoPlayer(player);
+        game.api.setInfoPlayer(playerCharacter.getPlayerModel());
         // player gets 1 point every second
         long elapsedTime = TimeUtils.timeSinceMillis(startTime);
         if(multiplayer == true){
@@ -250,7 +251,7 @@ public class GameScreen implements Screen{
         }
         }
 
-        playerController.increaseScore(10);
+        playerCharacter.getPlayerController().increaseScore(10);
         if (multiplayer == true){
             //my game gets ready to multiplayer
             showRivalScore();
@@ -263,40 +264,40 @@ public class GameScreen implements Screen{
 
     }
     private void showMyScore(){
-        font.draw(batch, "Score: " + player.getScore(), screenWidth*0.45f, screenHeight*0.97f);
+        font.draw(batch, "Score: " + playerCharacter.getPlayerModel().getScore(), screenWidth*0.45f, screenHeight*0.97f);
     }
     private void showRivalScore(){
         if ( player2.isAlive()){
-            batch.draw(player2.getTexture(), player.getX(), player.getY()-100, player2.getWidth(), player2.getHeight());
+            batch.draw(player2.getTexture(), playerCharacter.getPlayerModel().getX(), playerCharacter.getPlayerModel().getY()-100, player2.getWidth(), player2.getHeight());
         }
         else{
             batch.draw(player2.getTexture(), screenWidth*0.5f, screenHeight*0.1f, player2.getWidth(), player2.getHeight());
         }
-        font.draw(batch, "Player 1: " + player.getScore() + " - Player2: " + player2.getScore(), screenWidth/3, screenHeight*0.97f);
+        font.draw(batch, "Player 1: " + playerCharacter.getPlayerModel().getScore() + " - Player2: " + player2.getScore(), screenWidth/3, screenHeight*0.97f);
         game.api.getInfoRival(player2);
     }
     public void checkCollisions() {
         //Checks if any obstacle is at the same position that the player
         for(int i = 0; i < OBSTACLES_PER_SCREEN; i++) {
             obstacles.get(i).changePos(-speed);
-            if (player.checkColisions(obstacles.get(i))) {
+            if (playerCharacter.getPlayerModel().checkColisions(obstacles.get(i))) {
 
                 //plays die sound if turned on in settings
                 Configuration.getInstance().dieMusic();
 
                 // send score to DB and set player as non-ready
-                game.api.setScore(player.getScore());
-                playerController.setReady(false);
-                game.api.setInfoPlayer(player);
+                game.api.setScore(playerCharacter.getPlayerModel().getScore());
+                playerCharacter.getPlayerController().setReady(false);
+                game.api.setInfoPlayer(playerCharacter.getPlayerModel());
                 if(multiplayer == false){
-                    game.setScreen(new HighScoreScreen(this.game,true,true,player.getScore(), 0, null));
+                    game.setScreen(new HighScoreScreen(this.game,true,true,playerCharacter.getPlayerModel().getScore(), 0, null));
 
                 }else{
                     if(player2.isAlive()){
-                        game.setScreen(new HighScoreScreen(this.game,true,true,player.getScore(), 999999, player2));
+                        game.setScreen(new HighScoreScreen(this.game,true,true,playerCharacter.getPlayerModel().getScore(), 999999, player2));
                     }
                     else{
-                        game.setScreen(new HighScoreScreen(this.game,true,true,player.getScore(), player2.getScore(),player2 ));
+                        game.setScreen(new HighScoreScreen(this.game,true,true,playerCharacter.getPlayerModel().getScore(), player2.getScore(),player2 ));
                     }
 
                 }
@@ -311,8 +312,8 @@ public class GameScreen implements Screen{
         //Checks if any coin is at the same position that the player
         for(int i = 0; i < COINS_PER_SCREEN; i++){
             coins.get(i).changePos(-speed);
-            if (player.checkColisions(coins.get(i))) {
-                playerController.increaseScore(100);
+            if (playerCharacter.getPlayerModel().checkColisions(coins.get(i))) {
+                playerCharacter.getPlayerController().increaseScore(100);
                 Configuration.getInstance().pointMusic(); //play point sound if it is turned on in settings
                 coins.get(i).disappear();
             }
@@ -356,8 +357,8 @@ public class GameScreen implements Screen{
     }
     @Override
     public void hide() {
-        playerController.setReady(false);
-        game.api.removePlayer(player);
+        playerCharacter.getPlayerController().setReady(false);
+        game.api.removePlayer(playerCharacter.getPlayerModel());
 
     }
     @Override
@@ -365,7 +366,7 @@ public class GameScreen implements Screen{
     }
     @Override
     public void dispose() {
-        player.getTexture().dispose();
+        playerCharacter.getPlayerModel().getTexture().dispose();
         stage.dispose();
         pausedStage.dispose();
         batch.dispose();
