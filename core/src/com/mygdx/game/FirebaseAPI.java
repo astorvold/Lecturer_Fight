@@ -24,4 +24,9 @@ public class FirebaseAPI implements API{
     public void getInfoRival(Player player) {
 
     }
+
+    @Override
+    public void removePlayer(Player player) {
+
+    }
 }

@@ -1,6 +1,7 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -33,10 +34,11 @@ public class HighScoreScreen implements Screen {
     private Stage stage;
 
     private Texture imageStart;
+    private Texture imageName;
     private Texture imagePlayAgain;
     private Texture backgroundImage;
     private Texture textBoxImage;
-    private Image buttonPlayAgain, buttonStart;
+    private Image buttonPlayAgain, buttonStart, buttonName;
 
     private SettingsScreen settings;
 
@@ -66,8 +68,10 @@ public class HighScoreScreen implements Screen {
         backgroundImage = new Texture(Gdx.files.internal("new_images/LIGHT_BG.png"));
         textBoxImage = new Texture(Gdx.files.internal("new_images/box.png"));
         buttonStart = ButtonFactory.createButton(imageStart,-0.1f*imageStart.getWidth(), screenHeight *0.87f,imageStart.getWidth()/2,imageStart.getHeight()/2);
+        imageName= new Texture(Gdx.files.internal("new_images/name3.png"));
+        buttonName = ButtonFactory.createButton(imageName,screenWidth*0.35f, screenHeight *0.89f,imageStart.getWidth()/3,imageStart.getHeight()/3);
+        stage.addActor(buttonName);
         stage.addActor(buttonStart);
-
         if (playAgainButton){
             imagePlayAgain= new Texture(Gdx.files.internal("new_images/PLAY_AGAIN.png"));
             buttonPlayAgain = ButtonFactory.createButton(imagePlayAgain,screenWidth*0.45f - 1f*imagePlayAgain.getWidth()/5, screenHeight *0.05f,imagePlayAgain.getWidth()/2,imagePlayAgain.getHeight()/2);
@@ -98,6 +102,13 @@ public class HighScoreScreen implements Screen {
             public void clicked(InputEvent event, float x, float y){
                 game.setScreen(new MainMenuScreen(game));
                 System.out.println("Back Button");
+            }
+        });
+        buttonName.addListener(new ClickListener(){
+            public void clicked(InputEvent event, float x, float y){
+                AddNameListener listener = new AddNameListener();
+                Gdx.input.getTextInput(listener, "Enter your name", "", "");
+
             }
         });
         if (playAgainButton){
@@ -139,7 +150,7 @@ public class HighScoreScreen implements Screen {
         int flag = 0;
         font3.draw(batch, "High score", screenWidth *0.24f, screenHeight *0.85f);
         for(Score score: scoreList){
-            font2.draw(batch, score.toString(), screenWidth *0.33f, screenHeight *0.75f);
+            font2.draw(batch, score.toString(), screenWidth *0.20f, screenHeight *0.75f);
 
             screenHeight = screenHeight - 200;
             flag++;
@@ -148,12 +159,18 @@ public class HighScoreScreen implements Screen {
                     font.draw(batch, "Your score was: " + playerScore, screenWidth *0.01f, screenHeight *0.6f);
                 }
                 if (this.opponentScore != 0){
-                    font.draw(batch, "Opponent's score was: " + opponentScore, screenWidth *0.01f, screenHeight *0.6f-150);
+                    if (this.opponentScore == 999999){
+                        font.draw(batch, "Opponent is still playing ", screenWidth *0.01f, screenHeight *0.6f-150);
+                    }
+                    else{
+                        font.draw(batch, "Opponent's score was: " + opponentScore, screenWidth *0.01f, screenHeight *0.6f-150);
+
+                    }
                     if (playerScore > opponentScore){
-                        font4.draw(batch, "Win!", screenWidth *0.57f, screenHeight *0.67f);
+                        font4.draw(batch, "Win!", screenWidth *0.57f, screenHeight *0.65f);
                     }else{
                         font4.setColor(Color.RED);
-                        font4.draw(batch, "Lose!", screenWidth *0.57f, screenHeight *0.67f);
+                        font4.draw(batch, "Lose!", screenWidth *0.57f, screenHeight *0.65f);
 
                     }
 

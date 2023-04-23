@@ -1,12 +1,15 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 
 public class Player extends Entity {
     private int score;
     private boolean ready;
     private boolean isAlive = true;
+    private String name;
+
     public Player(Texture texture, float x, float y, float width, float height){
         super(texture);
         score = 0;
@@ -29,14 +32,30 @@ public class Player extends Entity {
         this.score = score;
     }
 
-    public void setReady(boolean ready){ this.ready = ready;}
+    public void setReady(boolean ready){
+        this.ready = ready;
+    }
 
-    public boolean isReady(){ return this.ready; }
+    public boolean isReady(){
+        return this.ready;
+    }
 
-    public void setTexture(Texture texture){this.texture = texture;}
+    public void setTexture(Texture texture){
+        this.texture = texture;
+    }
 
-    public boolean isAlive(){ return this.isAlive;}
+    public boolean isAlive(){
+        return this.isAlive;
+    }
 
-    public void isDead(){ this.isAlive = false;}
+    public void isDead(){
+        this.isAlive = false;
+    }
+
+    public void setName(){
+        this.name = name;
+    }
+
+
 
 }

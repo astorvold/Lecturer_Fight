@@ -238,10 +238,6 @@ public class GameScreen implements Screen{
                 player2Score = player2.getScore();
                 startTime = TimeUtils.millis();
         }
-
-
-            System.out.println(player2Score + " " + player2Score2);
-
         }
 
 
@@ -288,7 +284,12 @@ public class GameScreen implements Screen{
                     game.setScreen(new HighScoreScreen(this.game,true,true,player.getScore(), 0));
 
                 }else{
-                    game.setScreen(new HighScoreScreen(this.game,true,true,player.getScore(), player2.getScore()));
+                    if(player2.isAlive()){
+                        game.setScreen(new HighScoreScreen(this.game,true,true,player.getScore(), 999999));
+                    }
+                    else{
+                        game.setScreen(new HighScoreScreen(this.game,true,true,player.getScore(), player2.getScore()));
+                    }
 
                 }
 
@@ -348,6 +349,7 @@ public class GameScreen implements Screen{
     @Override
     public void hide() {
         player.setReady(false);
+        game.api.removePlayer(player);
 
     }
     @Override

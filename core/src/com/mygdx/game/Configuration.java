@@ -13,6 +13,7 @@ public class Configuration {
     private static boolean music_on = true, sound_on = true;
     private static String textureString;
     private static Texture playerTexture;
+    private static String playerName = "anonymous" + (int)Math.ceil(Math.random()*1000000);
     private static Configuration configuration = new Configuration();
     private Configuration(){}
     public static Configuration getInstance(){
@@ -75,6 +76,12 @@ public class Configuration {
         if(sound_on){
             die.play();
         }
+    }
+    public void setName(String name){
+        this.playerName = name;
+    }
+    public String getName(){
+        return this.playerName;
     }
 
 }

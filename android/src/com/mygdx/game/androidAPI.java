@@ -54,28 +54,51 @@ public class androidAPI implements API{
         scoresRef = database.getReference("scores");
 
         if(this.scoresRef != null){
-            scoresRef.child(Integer.toString(score)).setValue("pepe");
+            scoresRef.child(Integer.toString(score)).setValue(Configuration.getInstance().getName());
         }
     }
 
     @Override
     public void setInfoPlayer(Player player) {
+        coorRef = database.getReference("Players");
+        coorRef.child(Configuration.getInstance().getName()).child("score").setValue(player.getScore());
+        coorRef.child(Configuration.getInstance().getName()).child("ready").setValue(player.isReady());
 
-        coorRef = database.getReference("Player2");
-        coorRef.child("score").setValue(player.getScore());
-
-        coorRef = database.getReference("Player2");
-        coorRef.child("ready").setValue(player.isReady());
+    }
+    public void removePlayer(Player player){
+        coorRef = database.getReference("Players");
+        coorRef.child(Configuration.getInstance().getName()).removeValue();
     }
 
     @Override
     public void getInfoRival(Player player) {
-        coorRef = database.getReference("Player1");
+        coorRef = database.getReference("Players");
         coorRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                player.setScore(Integer.parseInt(snapshot.child("score").getValue().toString()));
-                player.setReady(Boolean.parseBoolean(snapshot.child("ready").getValue().toString()));
+                //System.out.println(snapshot.getValue());
+                Object value = snapshot.getValue();
+                try {
+                    Map<String, Object> mapValue = (Map<String, Object>) value;
+                    for (Map.Entry<String, Object> entry : mapValue.entrySet()) {
+                        if (!entry.getKey().equals(Configuration.getInstance().getName())) {
+
+                            Map<String, Object> innerMap = (Map<String, Object>) entry.getValue();
+                            boolean readyValue = (boolean) innerMap.get("ready");
+                            int scoreValue = (int) ((long) innerMap.get("score"));
+                            if (readyValue) {
+                                player.setScore(scoreValue);
+                                player.setReady(true);
+                            }
+
+
+                        }
+
+                    }
+                }catch(Exception e){
+                System.out.print(e);
+            }
+
             }
 
             @Override
