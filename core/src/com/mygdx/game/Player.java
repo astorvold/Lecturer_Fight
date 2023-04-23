@@ -20,7 +20,9 @@ public class Player extends Entity {
         this.ready = false;
 
     }
-    public int getScore(){ return score;}
+    public int getScore(){
+        return score;
+    }
     public void increaseScore(int add){
         score+=add;
     }
@@ -52,9 +54,6 @@ public class Player extends Entity {
         this.isAlive = false;
     }
 
-    public void setName(){
-        this.name = name;
-    }
 
 
 

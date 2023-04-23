@@ -32,9 +32,9 @@ public class GameScreen implements Screen{
     private SpriteBatch batch = new SpriteBatch();
     private BitmapFont font = new BitmapFont();
 
-    private SettingsScreen settings;
+
     private Image buttonPause, buttonResume, buttonQuit;
-    public Player player;
+    private Player player;
     public Player player2;
     public ArrayList<Entity> obstacles;
     public ArrayList<Coin> coins;
@@ -47,6 +47,10 @@ public class GameScreen implements Screen{
     private int player2Score2 = -1;
 
 
+    //// nuevo
+
+    private PlayerView playerView;
+    private PlayerController playerController;
 
 
     public GameScreen(final Lecturer_fight game,boolean multiplayer) {
@@ -72,7 +76,7 @@ public class GameScreen implements Screen{
             state = GameState.RUNNING_SINGLEPLAYER;
         }
         else {
-            player.setReady(true);
+            playerController.setReady(true);
             player2 = new Player(player2Texture, 500, screenHeight/3, 96,96);
             if(!player2.isReady()) {
                 state = GameState.WAITING;
@@ -139,11 +143,11 @@ public class GameScreen implements Screen{
                 else if(state == GameState.RUNNING_MULTIPLAYER) game.setScreen(new MainMenuScreen(game));
             }
             if(Gdx.input.getX() >= screenWidth/2)
-                if (player.getX() < screenWidth -player.getWidth()) player.changePos(10);
-                else player.changePos(-10);
+                if (player.getX() < screenWidth - player.getWidth()) playerController.changePos(10);
+                else playerController.changePos(-10);
             else
-                if (player.getX() > 0) player.changePos(-10);
-                else player.changePos(10);
+                if (player.getX() > 0) playerController.changePos(-10);
+                else playerController.changePos(10);
         }
     }
     private void running(){
@@ -211,10 +215,16 @@ public class GameScreen implements Screen{
         }
     }
     private void createEntities(){
+        //playerModel = new Player(Configuration.getInstance().getPlayerTexture(), screenWidth/2, screenHeight/2, 96,96);
+        playerController = new PlayerController(player);
+        playerView = new PlayerView(player);
+
 
         // begin a new batch and draw the bucket and all drops
         batch.begin();
-        batch.draw(player.getTexture(), player.getX(), player.getY(), player.getWidth(), player.getHeight());
+
+        playerView.draw(batch);
+
         for(int i = 0; i < OBSTACLES_PER_SCREEN; i++)
             batch.draw(obstacles.get(i).getTexture(), obstacles.get(i).getX(), obstacles.get(i).getY(), obstacles.get(i).getWidth(), obstacles.get(i).getHeight());
         for(int i = 0; i < COINS_PER_SCREEN; i++)
@@ -240,9 +250,7 @@ public class GameScreen implements Screen{
         }
         }
 
-
-
-        player.increaseScore(10);
+        playerController.increaseScore(10);
         if (multiplayer == true){
             //my game gets ready to multiplayer
             showRivalScore();
@@ -278,7 +286,7 @@ public class GameScreen implements Screen{
 
                 // send score to DB and set player as non-ready
                 game.api.setScore(player.getScore());
-                player.setReady(false);
+                playerController.setReady(false);
                 game.api.setInfoPlayer(player);
                 if(multiplayer == false){
                     game.setScreen(new HighScoreScreen(this.game,true,true,player.getScore(), 0, null));
@@ -304,7 +312,7 @@ public class GameScreen implements Screen{
         for(int i = 0; i < COINS_PER_SCREEN; i++){
             coins.get(i).changePos(-speed);
             if (player.checkColisions(coins.get(i))) {
-                player.increaseScore(100);
+                playerController.increaseScore(100);
                 Configuration.getInstance().pointMusic(); //play point sound if it is turned on in settings
                 coins.get(i).disappear();
             }
@@ -348,7 +356,7 @@ public class GameScreen implements Screen{
     }
     @Override
     public void hide() {
-        player.setReady(false);
+        playerController.setReady(false);
         game.api.removePlayer(player);
 
     }

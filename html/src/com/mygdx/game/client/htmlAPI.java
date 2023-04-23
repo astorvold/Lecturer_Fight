@@ -29,4 +29,9 @@ public class htmlAPI implements API {
     public void getInfoRival(Player player) {
 
     }
+
+    @Override
+    public void removePlayer(Player player) {
+
+    }
 }
