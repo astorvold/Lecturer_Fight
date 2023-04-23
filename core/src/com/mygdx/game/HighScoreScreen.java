@@ -28,14 +28,16 @@ public class HighScoreScreen implements Screen {
     private BitmapFont font;
     private BitmapFont font2;
     private BitmapFont font3;
+    private BitmapFont font4;
 
     private Stage stage;
 
     private Texture imageStart;
+    private Texture imageName;
     private Texture imagePlayAgain;
     private Texture backgroundImage;
     private Texture textBoxImage;
-    private Image buttonPlayAgain, buttonStart;
+    private Image buttonPlayAgain, buttonStart, buttonName;
 
     private SettingsScreen settings;
 
@@ -43,8 +45,11 @@ public class HighScoreScreen implements Screen {
     private int screenWidth = Gdx.graphics.getWidth();
 
     private int playerScore;
+    private int opponentScore;
 
-    public HighScoreScreen(final Lecturer_fight game, boolean backButton, boolean playAgainButton, int score) {
+    private Player opponent;
+
+    public HighScoreScreen(final Lecturer_fight game, boolean backButton, boolean playAgainButton, int myScore, int opponentScore, Player opponent) {
         this.game = game;
         this.camera = new OrthographicCamera();
         this.camera.setToOrtho(false,800,400);
@@ -52,6 +57,7 @@ public class HighScoreScreen implements Screen {
         this.font = new BitmapFont();
         this.font2 = new BitmapFont();
         this.font3 = new BitmapFont();
+        this.font4 = new BitmapFont();
         this.backButton = backButton;
         this.playAgainButton = playAgainButton;
         //this.settings = new SettingsScreen(game);
@@ -63,8 +69,10 @@ public class HighScoreScreen implements Screen {
         backgroundImage = new Texture(Gdx.files.internal("new_images/LIGHT_BG.png"));
         textBoxImage = new Texture(Gdx.files.internal("new_images/box.png"));
         buttonStart = ButtonFactory.createButton(imageStart,-0.1f*imageStart.getWidth(), screenHeight *0.87f,imageStart.getWidth()/2,imageStart.getHeight()/2);
+        imageName= new Texture(Gdx.files.internal("new_images/name3.png"));
+        buttonName = ButtonFactory.createButton(imageName,screenWidth*0.35f, screenHeight *0.89f,imageStart.getWidth()/3,imageStart.getHeight()/3);
+        stage.addActor(buttonName);
         stage.addActor(buttonStart);
-
         if (playAgainButton){
             imagePlayAgain= new Texture(Gdx.files.internal("new_images/PLAY_AGAIN.png"));
             buttonPlayAgain = ButtonFactory.createButton(imagePlayAgain,screenWidth*0.45f - 1f*imagePlayAgain.getWidth()/5, screenHeight *0.05f,imagePlayAgain.getWidth()/2,imagePlayAgain.getHeight()/2);
@@ -76,9 +84,14 @@ public class HighScoreScreen implements Screen {
         if (Configuration.getInstance().isMusic_on()){
             Configuration.getInstance().playMusic();
         }
-        if (score != 0){
-            this.playerScore = score;
+        if (myScore != 0){
+            this.playerScore = myScore;
         }
+        if (opponentScore != 0){
+            this.opponentScore = opponentScore;
+        }
+
+        this.opponent = opponent;
 
     }
 
@@ -92,6 +105,13 @@ public class HighScoreScreen implements Screen {
             public void clicked(InputEvent event, float x, float y){
                 game.setScreen(new MainMenuScreen(game));
                 System.out.println("Back Button");
+            }
+        });
+        buttonName.addListener(new ClickListener(){
+            public void clicked(InputEvent event, float x, float y){
+                AddNameListener listener = new AddNameListener();
+                Gdx.input.getTextInput(listener, "Enter your name", "", "");
+
             }
         });
         if (playAgainButton){
@@ -116,12 +136,14 @@ public class HighScoreScreen implements Screen {
         // coordinate system specified by the camera.
         camera.update();
         game.batch.setProjectionMatrix(camera.combined);
-        font.getData().setScale(5);
+        font.getData().setScale(4);
         font.setColor(Color.BLACK);
-        font2.getData().setScale(7);
+        font2.getData().setScale(5);
         font2.setColor(Color.BLACK);
-        font3.getData().setScale(11);
+        font3.getData().setScale(8);
         font3.setColor(Color.BLACK);
+        font4.getData().setScale(10);
+        font4.setColor(Color.GREEN);
 
         Collections.sort(scoreList,new SortScore());
 
@@ -129,15 +151,36 @@ public class HighScoreScreen implements Screen {
         batch.draw(backgroundImage,0,0,screenWidth,backgroundImage.getHeight()*screenWidth/backgroundImage.getWidth());
 
         int flag = 0;
-        font3.draw(batch, "High score", screenWidth *0.17f, screenHeight *0.8f);
+        font3.draw(batch, "High score", screenWidth *0.24f, screenHeight *0.85f);
         for(Score score: scoreList){
-            font2.draw(batch, score.toString(), screenWidth *0.22f, screenHeight *0.7f);
+            font2.draw(batch, score.toString(), screenWidth *0.13f, screenHeight *0.75f);
 
-            screenHeight = screenHeight - 250;
+            screenHeight = screenHeight - 200;
             flag++;
             if (flag == 5 ){
                 if (playerScore != 0){
-                    font2.draw(batch, "Your score was: " + playerScore, screenWidth *0.01f, screenHeight *0.6f);
+                    font.draw(batch, "Your score was: " + playerScore, screenWidth *0.01f, screenHeight *0.6f);
+                }
+                if (this.opponentScore != 0){
+
+
+
+                    if (this.opponentScore == 999999){
+                        game.api.getInfoRival(opponent);
+                        font.draw(batch, "Opponent is still playing: " + opponent.getScore(), screenWidth *0.01f, screenHeight *0.6f-150);
+                    }
+                    else{
+                        font.draw(batch, "Opponent's score was: " + opponentScore, screenWidth *0.01f, screenHeight *0.6f-150);
+
+                    }
+                    if (playerScore > opponentScore){
+                        font4.draw(batch, "Win!", screenWidth *0.57f, screenHeight *0.65f);
+                    }else{
+                        font4.setColor(Color.RED);
+                        font4.draw(batch, "Lose!", screenWidth *0.57f, screenHeight *0.65f);
+
+                    }
+
                 }
                 break;
             }

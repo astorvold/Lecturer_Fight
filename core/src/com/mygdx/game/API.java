@@ -11,6 +11,8 @@ public interface API {
 
     void getInfoRival(Player player);
 
+    void removePlayer(Player player);
+
 
 
 
