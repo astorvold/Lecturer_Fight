@@ -12,4 +12,15 @@ public class OpponentCharacter {
         view = new PlayerView(model);
         controller = new PlayerController(model);
     }
+    public PlayerController getPlayerController(){
+        return controller;
+    }
+    public PlayerView getPlayerView(){
+        return view;
+    }
+    public Player getPlayerModel(){
+        return model;
+    }
 }
+
+

@@ -35,7 +35,6 @@ public class GameScreen implements Screen{
 
     private Image buttonPause, buttonResume, buttonQuit;
 
-    public Player player2;
     public ArrayList<Entity> obstacles;
     public ArrayList<Coin> coins;
     private int highestObstacle;
@@ -80,8 +79,7 @@ public class GameScreen implements Screen{
             playerCharacter.getPlayerController().setReady(true);
             opponentCharacter = new OpponentCharacter(player2Texture, 500, screenHeight/3, 96,96);
 
-            player2 = new Player(player2Texture, 500, screenHeight/3, 96,96);
-            if(!player2.isReady()) {
+            if(!opponentCharacter.getPlayerModel().isReady()) {
                 state = GameState.WAITING;
             }
             else {
@@ -91,14 +89,13 @@ public class GameScreen implements Screen{
     }
     private void initializeButtons(){
         Texture imagePause;
-        if(multiplayer == false) {
+        if(!multiplayer) {
             imagePause  = new Texture("new_images/PAUSE.png");
-            buttonPause = ButtonFactory.createButton(imagePause, screenWidth-imagePause.getWidth()*0.24f, screenHeight - imagePause.getHeight()*0.5f, imagePause.getWidth()*0.2f, imagePause.getHeight()*0.2f);
         }
         else{
             imagePause = new Texture("new_images/QUIT_BOX.png");
-            buttonPause = ButtonFactory.createButton(imagePause, screenWidth-imagePause.getWidth()*0.24f, screenHeight - imagePause.getHeight()*0.5f, imagePause.getWidth()*0.2f, imagePause.getHeight()*0.2f);
         }
+        buttonPause = ButtonFactory.createButton(imagePause, screenWidth-imagePause.getWidth()*0.24f, screenHeight - imagePause.getHeight()*0.5f, imagePause.getWidth()*0.2f, imagePause.getHeight()*0.2f);
 
         Texture imageResume = new Texture("new_images/RESUME.png");
         buttonResume = ButtonFactory.createButton(imageResume,0.5f*screenWidth - 0.6f*screenWidth/2, screenHeight *0.6f,0.6f*screenWidth,0.12f*screenHeight);
@@ -173,7 +170,7 @@ public class GameScreen implements Screen{
         font.setColor(Color.BLACK);
         font.draw(batch, "Waiting for your opponent!!", Gdx.graphics.getWidth()*0.02f, Gdx.graphics.getHeight()/2);
         batch.end();
-        if(player2.isReady()){
+        if(opponentCharacter.getPlayerModel().isReady()){
             state = GameState.RUNNING_MULTIPLAYER;
         }
     }
@@ -204,13 +201,13 @@ public class GameScreen implements Screen{
                 running();
                 break;
             case RUNNING_MULTIPLAYER:
-                game.api.getInfoRival(player2);
+                game.api.getInfoRival(opponentCharacter.getPlayerModel());
                 game.api.setInfoPlayer(playerCharacter.getPlayerModel());
                 running();
                 break;
             case WAITING:
                 game.api.setInfoPlayer(playerCharacter.getPlayerModel());
-                game.api.getInfoRival(player2);
+                game.api.getInfoRival(opponentCharacter.getPlayerModel());
                 waiting();
                 break;
             case PAUSED:
@@ -238,15 +235,15 @@ public class GameScreen implements Screen{
         // player gets 1 point every second
         long elapsedTime = TimeUtils.timeSinceMillis(startTime);
         if(multiplayer == true){
-            player2Score = player2.getScore();
+            player2Score = opponentCharacter.getPlayerModel().getScore();
             if (elapsedTime > 1000){
                 if (player2Score == player2Score2){
                     player2Texture = new Texture("opponent_avatar_dead.png");
-                    player2.setTexture(player2Texture);
-                    player2.isDead();
+                    opponentCharacter.getPlayerModel().setTexture(player2Texture);
+                    opponentCharacter.getPlayerModel().isDead();
                 }
-                player2Score2 = player2.getScore();
-                player2Score = player2.getScore();
+                player2Score2 = opponentCharacter.getPlayerModel().getScore();
+                player2Score = opponentCharacter.getPlayerModel().getScore();
                 startTime = TimeUtils.millis();
         }
         }
@@ -267,14 +264,14 @@ public class GameScreen implements Screen{
         font.draw(batch, "Score: " + playerCharacter.getPlayerModel().getScore(), screenWidth*0.45f, screenHeight*0.97f);
     }
     private void showRivalScore(){
-        if ( player2.isAlive()){
-            batch.draw(player2.getTexture(), playerCharacter.getPlayerModel().getX(), playerCharacter.getPlayerModel().getY()-100, player2.getWidth(), player2.getHeight());
+        if ( opponentCharacter.getPlayerModel().isAlive()){
+            batch.draw(opponentCharacter.getPlayerModel().getTexture(), playerCharacter.getPlayerModel().getX(), playerCharacter.getPlayerModel().getY()-100, opponentCharacter.getPlayerModel().getWidth(), opponentCharacter.getPlayerModel().getHeight());
         }
         else{
-            batch.draw(player2.getTexture(), screenWidth*0.5f, screenHeight*0.1f, player2.getWidth(), player2.getHeight());
+            batch.draw(opponentCharacter.getPlayerModel().getTexture(), screenWidth*0.5f, screenHeight*0.1f, opponentCharacter.getPlayerModel().getWidth(), opponentCharacter.getPlayerModel().getHeight());
         }
-        font.draw(batch, "Player 1: " + playerCharacter.getPlayerModel().getScore() + " - Player2: " + player2.getScore(), screenWidth/3, screenHeight*0.97f);
-        game.api.getInfoRival(player2);
+        font.draw(batch, "Player 1: " + playerCharacter.getPlayerModel().getScore() + " - Player2: " + opponentCharacter.getPlayerModel().getScore(), screenWidth/3, screenHeight*0.97f);
+        game.api.getInfoRival(opponentCharacter.getPlayerModel());
     }
     public void checkCollisions() {
         //Checks if any obstacle is at the same position that the player
@@ -293,11 +290,11 @@ public class GameScreen implements Screen{
                     game.setScreen(new HighScoreScreen(this.game,true,true,playerCharacter.getPlayerModel().getScore(), 0, null));
 
                 }else{
-                    if(player2.isAlive()){
-                        game.setScreen(new HighScoreScreen(this.game,true,true,playerCharacter.getPlayerModel().getScore(), 999999, player2));
+                    if(opponentCharacter.getPlayerModel().isAlive()){
+                        game.setScreen(new HighScoreScreen(this.game,true,true,playerCharacter.getPlayerModel().getScore(), 999999, opponentCharacter.getPlayerModel()));
                     }
                     else{
-                        game.setScreen(new HighScoreScreen(this.game,true,true,playerCharacter.getPlayerModel().getScore(), player2.getScore(),player2 ));
+                        game.setScreen(new HighScoreScreen(this.game,true,true,playerCharacter.getPlayerModel().getScore(), opponentCharacter.getPlayerModel().getScore(),opponentCharacter.getPlayerModel()));
                     }
 
                 }
