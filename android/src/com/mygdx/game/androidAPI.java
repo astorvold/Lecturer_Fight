@@ -27,19 +27,21 @@ public class androidAPI implements API{
 
     @Override
     public void getScores(ArrayList<Score> dataHolder) {
+        try{
+
         scoresRef = database.getReference("scores");
         scoresRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
                 Object value = snapshot.getValue();
-                if (value instanceof Map){ // gets the scores and save them in dataholder
+                if (value instanceof Map) { // gets the scores and save them in dataholder
                     Map<String, Object> mapValue = (Map<String, Object>) value;
                     for (Map.Entry<String, Object> entry : mapValue.entrySet()) {
-                        dataHolder.add(new Score(Integer.parseInt(entry.getKey()),entry.getValue().toString()));
-                        }
+                        dataHolder.add(new Score(Integer.parseInt(entry.getKey()), entry.getValue().toString()));
                     }
                 }
+            }
 
 
             @Override
@@ -47,6 +49,9 @@ public class androidAPI implements API{
                 System.out.println("problem");
             }
         });
+        }catch(Exception e){
+            System.out.print(e);
+        }
     }
 
     @Override

@@ -23,7 +23,7 @@ public class GameScreen implements Screen{
     public GameState state;
     private int backgroundPos = 0;
     private Texture background;
-    private Texture player2Texture;
+    private Texture opponentTexture;
     private final int speed = 3;
     private final Lecturer_fight game;
     private final float screenHeight = Gdx.graphics.getHeight();
@@ -65,7 +65,7 @@ public class GameScreen implements Screen{
         this.multiplayer = multiplayer;
         playerCharacter = new PlayerCharacter(Configuration.getInstance().getPlayerTexture(), screenWidth/2, screenHeight/2, 96,96);
 
-        player2Texture = new Texture("opponent_avatar.png");
+        opponentTexture = new Texture("opponent_avatar.png");
 
 
         //play music
@@ -77,7 +77,7 @@ public class GameScreen implements Screen{
         }
         else {
             playerCharacter.getPlayerController().setReady(true);
-            opponentCharacter = new OpponentCharacter(player2Texture, 500, screenHeight/3, 96,96);
+            opponentCharacter = new OpponentCharacter(opponentTexture, 500, screenHeight/3, 96,96);
 
             if(!opponentCharacter.getPlayerModel().isReady()) {
                 state = GameState.WAITING;
@@ -238,8 +238,8 @@ public class GameScreen implements Screen{
             player2Score = opponentCharacter.getPlayerModel().getScore();
             if (elapsedTime > 1000){
                 if (player2Score == player2Score2){
-                    player2Texture = new Texture("opponent_avatar_dead.png");
-                    opponentCharacter.getPlayerModel().setTexture(player2Texture);
+                    opponentTexture = new Texture("opponent_avatar_dead.png");
+                    opponentCharacter.getPlayerModel().setTexture(opponentTexture);
                     opponentCharacter.getPlayerModel().isDead();
                 }
                 player2Score2 = opponentCharacter.getPlayerModel().getScore();
