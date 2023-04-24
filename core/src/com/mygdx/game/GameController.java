@@ -81,7 +81,7 @@ public class GameController {
                 game.api.setScore(player.getScore());
                 player.setReady(false);
                 game.api.setInfoPlayer(player);
-                if(multiplayer == false){
+                if(!multiplayer){
                     game.setScreen(new HighScoreScreen(this.game,true,true,player.getScore(), 0, null));
                 }else{
                     if(player2.isAlive()){
@@ -109,7 +109,7 @@ public class GameController {
             //If the coin is getting out the bounds it will be put again.
             //It will be put on top of the highest obstacle
             if(coins.get(i).getY()<0){
-                float x = generateRandomNumber(100, (int) Gdx.graphics.getWidth()-100);
+                float x = generateRandomNumber(100, Gdx.graphics.getWidth()-100);
                 float y = obstacles.get(highestObstacle).getY() + obstacles.get(highestObstacle).getHeight() +70;
                 if(coins.get(i).getTexture() == null){
                     coins.get(i).setTexture(new Texture("new_images/COIN.png"));
