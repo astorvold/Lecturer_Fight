@@ -134,7 +134,7 @@ public class MainMenuScreen implements Screen {
         });
         checkBox.addListener(new ClickListener(){
             public void clicked(InputEvent event, float x, float y){
-                    System.out.println(("clickeo multiplayer"));
+                    System.out.println(("click multiplayer"));
                     boolean isChecked = checkBox.isChecked();
                     multiplayer = isChecked;
                     System.out.println(multiplayer);
@@ -152,8 +152,6 @@ public class MainMenuScreen implements Screen {
         batch.draw(backgroundImage,0,0,screenWidth,backgroundImage.getHeight()*screenWidth/backgroundImage.getWidth());
         batch.draw(titleImage,screenWidth/2 - 0.9f*screenWidth/2, 0.67f*screenHeight, 0.9f*screenWidth, 0.25f*screenHeight);
         batch.draw(multiplayerImage,checkBox.getX() + screenWidth*0.6f/3, screenHeight *0.5f, screenWidth*0.6f,screenHeight*0.06f);
-        //text
-        //font.draw(batch, "Made by Group 16", 0.3f*screenWidth/2, 0.1f*screenHeight);
         batch.draw(madeByTxt,0,-50,screenWidth,madeByTxt.getHeight()*screenWidth/madeByTxt.getWidth());
         batch.end();
         stage.act(Gdx.graphics.getDeltaTime()); //Perform ui logic

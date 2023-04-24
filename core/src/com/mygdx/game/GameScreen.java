@@ -32,7 +32,6 @@ public class GameScreen implements Screen{
     private SpriteBatch batch = new SpriteBatch();
     private BitmapFont font = new BitmapFont();
 
-
     private Image buttonPause, buttonResume, buttonQuit;
 
     public ArrayList<Entity> obstacles;
@@ -42,11 +41,11 @@ public class GameScreen implements Screen{
     private boolean multiplayer;
     private Stage stage;
     private Stage pausedStage;
-    private int player2Score = 0;
-    private int player2Score2 = -1;
+    private int opponentScore = 0;
+    private int lastOpponentScore = -1;
 
 
-    //// nuevo
+    //// characters
     private PlayerCharacter playerCharacter;
     private OpponentCharacter opponentCharacter;
 
@@ -61,30 +60,28 @@ public class GameScreen implements Screen{
         initializeObstacles();
         initializeCoins();
         initializeButtons();
-        highestObstacle = 7;
+        this.highestObstacle = 7;
         this.multiplayer = multiplayer;
-        playerCharacter = new PlayerCharacter(Configuration.getInstance().getPlayerTexture(), screenWidth/2, screenHeight/2, 96,96);
+        this.playerCharacter = new PlayerCharacter(Configuration.getInstance().getPlayerTexture(), screenWidth/2, screenHeight/2, 96,96);
 
-        opponentTexture = new Texture("opponent_avatar.png");
-
-
-        //play music
-        if (Configuration.getInstance().isMusic_on()){
-            Configuration.getInstance().playMusic();
-        }
         if(multiplayer == false){
             state = GameState.RUNNING_SINGLEPLAYER;
         }
         else {
             playerCharacter.getPlayerController().setReady(true);
-            opponentCharacter = new OpponentCharacter(opponentTexture, 500, screenHeight/3, 96,96);
 
+            opponentTexture = new Texture("opponent_avatar.png");
+            opponentCharacter = new OpponentCharacter(opponentTexture, 500, screenHeight/3, 96,96);
             if(!opponentCharacter.getPlayerModel().isReady()) {
                 state = GameState.WAITING;
             }
             else {
                 state = GameState.RUNNING_MULTIPLAYER;
             }
+        }
+        //play music
+        if (Configuration.getInstance().isMusic_on()){
+            Configuration.getInstance().playMusic();
         }
     }
     private void initializeButtons(){
@@ -230,20 +227,22 @@ public class GameScreen implements Screen{
                 batch.draw(coins.get(i).getTexture(), coins.get(i).getX(), coins.get(i).getY(), coins.get(i).getWidth(), coins.get(i).getHeight());
         font.getData().setScale(3);
         font.setColor(Color.BLACK);
+
         // send position to DB
         game.api.setInfoPlayer(playerCharacter.getPlayerModel());
+
         // player gets 1 point every second
         long elapsedTime = TimeUtils.timeSinceMillis(startTime);
         if(multiplayer == true){
-            player2Score = opponentCharacter.getPlayerModel().getScore();
+            opponentScore = opponentCharacter.getPlayerModel().getScore();
             if (elapsedTime > 1000){
-                if (player2Score == player2Score2){
+                if (opponentScore == lastOpponentScore){ // checks if opponent is dead by comparing if its score increases
                     opponentTexture = new Texture("opponent_avatar_dead.png");
                     opponentCharacter.getPlayerModel().setTexture(opponentTexture);
                     opponentCharacter.getPlayerModel().isDead();
                 }
-                player2Score2 = opponentCharacter.getPlayerModel().getScore();
-                player2Score = opponentCharacter.getPlayerModel().getScore();
+                lastOpponentScore = opponentCharacter.getPlayerModel().getScore();
+                opponentScore = opponentCharacter.getPlayerModel().getScore();
                 startTime = TimeUtils.millis();
         }
         }

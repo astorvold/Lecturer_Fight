@@ -10,6 +10,7 @@ public class PlayerView {
     //private Sprite sprite;
     private Player model;
 
+
     public PlayerView(Player model) {
         this.model = model;
         //texture = new Texture("character.png"); // Load texture from file
@@ -20,5 +21,7 @@ public class PlayerView {
     public void draw(SpriteBatch batch) {
         batch.draw(model.getTexture(), model.getX(), model.getY(), model.getWidth(), model.getHeight());
     }
+
+
 
 }
