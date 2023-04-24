@@ -1,8 +1,9 @@
-package com.mygdx.game.Controller;
+package com.mygdx.game;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.mygdx.game.API;
 import com.mygdx.game.View.MainMenuScreen;
 
 public class Lecturer_fight extends Game {

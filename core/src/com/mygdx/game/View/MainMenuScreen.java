@@ -19,7 +19,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.mygdx.game.Controller.ButtonFactory;
 import com.mygdx.game.Controller.Configuration;
-import com.mygdx.game.Controller.Lecturer_fight;
+import com.mygdx.game.Lecturer_fight;
 
 public class MainMenuScreen implements Screen {
     private final float screenHeight = Gdx.graphics.getHeight();

@@ -1,6 +1,5 @@
 package com.mygdx.game;
 
-import com.mygdx.game.Controller.API;
 import com.mygdx.game.Model.Player;
 import com.mygdx.game.Model.Score;
 

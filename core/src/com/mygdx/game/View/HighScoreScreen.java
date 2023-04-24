@@ -16,7 +16,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.mygdx.game.Controller.AddNameListener;
 import com.mygdx.game.Controller.ButtonFactory;
 import com.mygdx.game.Controller.Configuration;
-import com.mygdx.game.Controller.Lecturer_fight;
+import com.mygdx.game.Lecturer_fight;
 import com.mygdx.game.Model.Player;
 import com.mygdx.game.Model.Score;
 import com.mygdx.game.Utils.SortScore;

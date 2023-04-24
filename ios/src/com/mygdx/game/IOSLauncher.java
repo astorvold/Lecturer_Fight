@@ -5,7 +5,6 @@ import org.robovm.apple.uikit.UIApplication;
 
 import com.badlogic.gdx.backends.iosrobovm.IOSApplication;
 import com.badlogic.gdx.backends.iosrobovm.IOSApplicationConfiguration;
-import com.mygdx.game.Controller.Lecturer_fight;
 import com.mygdx.game.client.htmlAPI;
 
 public class IOSLauncher extends IOSApplication.Delegate {

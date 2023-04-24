@@ -35,15 +35,9 @@ public class Player extends Entity {
     public void setReady(boolean ready){
         this.ready = ready;
     }
-
     public boolean isReady(){
         return this.ready;
     }
-
-    public void setTexture(Texture texture){
-        this.texture = texture;
-    }
-
     public boolean isAlive(){
         return this.isAlive;
     }

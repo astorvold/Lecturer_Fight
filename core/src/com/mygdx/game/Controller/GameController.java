@@ -2,10 +2,12 @@ package com.mygdx.game.Controller;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.mygdx.game.Lecturer_fight;
 import com.mygdx.game.Model.Coin;
 import com.mygdx.game.Model.Entity;
 import com.mygdx.game.Model.Obstacle;
-import com.mygdx.game.Model.Player;
+import com.mygdx.game.Utils.OpponentCharacter;
+import com.mygdx.game.Utils.PlayerCharacter;
 import com.mygdx.game.View.HighScoreScreen;
 
 import java.util.ArrayList;
@@ -15,8 +17,6 @@ public class GameController {
     public static final int OBSTACLES_PER_SCREEN = 8;
     public static final int COINS_PER_SCREEN = 3;
     private final int speed = 3;
-    public Player player;
-    public Player player2;
     public ArrayList<Entity> obstacles;
     public ArrayList<Entity> coins;
     private int highestObstacle;
@@ -26,6 +26,9 @@ public class GameController {
     private final float screenHeight = Gdx.graphics.getHeight();
     private final float screenWidth = Gdx.graphics.getWidth();
     private final PlayerController playerController;
+    private final PlayerCharacter playerCharacter;
+    private OpponentCharacter opponentCharacter;
+
 
     public GameController(final Lecturer_fight game, final boolean multiplayer){
         this.game = game;
@@ -33,8 +36,8 @@ public class GameController {
         initializeCoins();
         highestObstacle = 7;
         this.multiplayer = multiplayer;
-        player = new Player(Configuration.getInstance().getPlayerTexture(), screenWidth/2, screenHeight/2, 96,96);
-        playerController = new PlayerController(player);
+        playerCharacter = new PlayerCharacter(Configuration.getInstance().getPlayerTexture(), screenWidth/2, screenHeight/2, 96,96);
+        playerController = playerCharacter.getPlayerController();
         if (Configuration.getInstance().isMusic_on()){
             Configuration.getInstance().playMusic();
         }
@@ -44,8 +47,8 @@ public class GameController {
         else {
             playerController.setReady(true);
             Texture player2Texture = new Texture("opponent_avatar.png");
-            player2 = new Player(player2Texture, 500, screenHeight/3, 96,96);
-            if(!player2.isReady()) {
+            opponentCharacter = new OpponentCharacter(player2Texture, 500, screenHeight/3, 96,96);
+            if(!opponentCharacter.getPlayerModel().isReady()) {
                 state = GameState.WAITING;
             }
             else {
@@ -85,17 +88,17 @@ public class GameController {
                 //plays die sound if turned on in settings
                 Configuration.getInstance().dieMusic();
                 // send score to DB and set player as non-ready
-                game.api.setScore(player.getScore());
+                game.api.setScore(playerCharacter.getPlayerModel().getScore());
                 playerController.setReady(false);
-                game.api.setInfoPlayer(player);
+                game.api.setInfoPlayer(playerCharacter.getPlayerModel());
                 if(!multiplayer){
-                    game.setScreen(new HighScoreScreen(this.game,true,true,player.getScore(), 0, null));
+                    game.setScreen(new HighScoreScreen(this.game,true,true,playerCharacter.getPlayerModel().getScore(), 0, null));
                 }else{
-                    if(player2.isAlive()){
-                        game.setScreen(new HighScoreScreen(this.game,true,true,player.getScore(), 999999, player2));
+                    if(opponentCharacter.getPlayerModel().isAlive()){
+                        game.setScreen(new HighScoreScreen(this.game,true,true,playerCharacter.getPlayerModel().getScore(), 999999, opponentCharacter.getPlayerModel()));
                     }
                     else{
-                        game.setScreen(new HighScoreScreen(this.game,true,true,player.getScore(), player2.getScore(),player2 ));
+                        game.setScreen(new HighScoreScreen(this.game,true,true,playerCharacter.getPlayerModel().getScore(), opponentCharacter.getPlayerModel().getScore(),opponentCharacter.getPlayerModel()));
                     }
                 }
             }
@@ -130,8 +133,8 @@ public class GameController {
     public boolean getMultiplayer(){return multiplayer;}
     public GameState getState(){return state;}
     public int getSpeed(){return speed;}
-    public Player getPlayer1(){return player;}
-    public Player getPlayer2(){return player2;}
+    public PlayerCharacter getPlayer1(){return playerCharacter;}
+    public OpponentCharacter getPlayer2(){return opponentCharacter;}
     public ArrayList<Entity> getObstacles(){return obstacles;}
     public ArrayList<Entity> getCoins(){return coins;}
     public void setGameState(GameState state){this.state = state;}

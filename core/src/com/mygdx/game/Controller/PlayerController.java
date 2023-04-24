@@ -1,6 +1,7 @@
 package com.mygdx.game.Controller;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.mygdx.game.Model.Entity;
 import com.mygdx.game.Model.Player;
 
@@ -49,5 +50,11 @@ public class PlayerController {
                 || ((x1 >= x3 && x1 <= x4) && (y2 >= y3 && y2 <= y4))
                 || ((x1 <= x3 && x3 <= x2) && (y1 <= y3 && y3 <= y2));
     }
+    public void setX(float x){
+        model.setX(x);
+    }
+    public void setY(float y){model.setY(y);}
+    public void setTexture(Texture texture){model.setTexture(texture);}
+
 
 }

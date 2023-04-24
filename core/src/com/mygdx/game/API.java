@@ -1,4 +1,4 @@
-package com.mygdx.game.Controller;
+package com.mygdx.game;
 
 import com.mygdx.game.Model.Player;
 import com.mygdx.game.Model.Score;

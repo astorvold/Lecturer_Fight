@@ -19,7 +19,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.mygdx.game.Controller.ButtonFactory;
 import com.mygdx.game.Model.Entity;
 import com.mygdx.game.Controller.GameState;
-import com.mygdx.game.Controller.Lecturer_fight;
+import com.mygdx.game.Lecturer_fight;
 import com.mygdx.game.Controller.GameController;
 
 public class GameScreen implements Screen{
@@ -106,7 +106,7 @@ public class GameScreen implements Screen{
         font.setColor(Color.BLACK);
         font.draw(batch, "Waiting for your opponent!!", Gdx.graphics.getWidth()*0.02f, Gdx.graphics.getHeight()/2f);
         batch.end();
-        if(gameController.getPlayer2().isReady()){
+        if(gameController.getPlayer2().getPlayerModel().isReady()){
             gameController.setGameState(GameState.RUNNING_MULTIPLAYER);
         }
     }
@@ -136,13 +136,13 @@ public class GameScreen implements Screen{
                 running();
                 break;
             case RUNNING_MULTIPLAYER:
-                game.api.getInfoRival(gameController.getPlayer2());
-                game.api.setInfoPlayer(gameController.getPlayer1());
+                game.api.getInfoRival(gameController.getPlayer2().getPlayerModel());
+                game.api.setInfoPlayer(gameController.getPlayer1().getPlayerModel());
                 running();
                 break;
             case WAITING:
-                game.api.setInfoPlayer(gameController.getPlayer1());
-                game.api.getInfoRival(gameController.getPlayer2());
+                game.api.setInfoPlayer(gameController.getPlayer1().getPlayerModel());
+                game.api.getInfoRival(gameController.getPlayer2().getPlayerModel());
                 waiting();
                 break;
             case PAUSED:
@@ -153,7 +153,7 @@ public class GameScreen implements Screen{
     private void showMap(){
         // begin a new batch and draw the bucket and all drops
         batch.begin();
-        batch.draw(gameController.getPlayer1().getTexture(), gameController.getPlayer1().getX(), gameController.getPlayer1().getY(), gameController.getPlayer1().getWidth(), gameController.getPlayer1().getHeight());
+        gameController.getPlayer1().getPlayerView().draw(batch);
         ArrayList<Entity> obstacles = gameController.getObstacles();
         for(int i = 0; i < obstacles.size(); i++)
             batch.draw(obstacles.get(i).getTexture(), obstacles.get(i).getX(), obstacles.get(i).getY(), obstacles.get(i).getWidth(), obstacles.get(i).getHeight());
@@ -164,23 +164,23 @@ public class GameScreen implements Screen{
         font.getData().setScale(3);
         font.setColor(Color.BLACK);
         // send position to DB
-        game.api.setInfoPlayer(gameController.getPlayer1());
+        game.api.setInfoPlayer(gameController.getPlayer1().getPlayerModel());
         // player gets 1 point every second
         long elapsedTime = TimeUtils.timeSinceMillis(startTime);
         if(gameController.getMultiplayer()){
-            int player2Score = gameController.getPlayer2().getScore();
+            int player2Score = gameController.getPlayer2().getPlayerModel().getScore();
             if (elapsedTime > 1000){
                 if (player2Score == player2Score2){
                     Texture player2Texture = new Texture("opponent_avatar_dead.png");
-                    gameController.getPlayer2().setTexture(player2Texture);
-                    gameController.getPlayer2().isDead();
+                    gameController.getPlayer2().getPlayerController().setTexture(player2Texture);
+                    gameController.getPlayer2().getPlayerModel().isDead();
                 }
-                player2Score2 = gameController.getPlayer2().getScore();
+                player2Score2 = gameController.getPlayer2().getPlayerModel().getScore();
                 //player2Score = gameController.getPlayer2().getScore();
                 startTime = TimeUtils.millis();
             }
         }
-        gameController.getPlayer1().increaseScore(10);
+        gameController.getPlayer1().getPlayerModel().increaseScore(10);
         if (gameController.getMultiplayer()){
             //my game gets ready to multiplayer
             showRivalScore();
@@ -191,17 +191,22 @@ public class GameScreen implements Screen{
         batch.end();
     }
     private void showMyScore(){
-        font.draw(batch, "Score: " + gameController.getPlayer1().getScore(), screenWidth*0.45f, screenHeight*0.97f);
+        font.draw(batch, "Score: " + gameController.getPlayer1().getPlayerModel().getScore(), screenWidth*0.45f, screenHeight*0.97f);
     }
     private void showRivalScore(){
-        if ( gameController.getPlayer2().isAlive()){
-            batch.draw(gameController.getPlayer2().getTexture(), gameController.getPlayer1().getX(), gameController.getPlayer1().getY()-100, gameController.getPlayer2().getWidth(), gameController.getPlayer2().getHeight());
+        if ( gameController.getPlayer2().getPlayerModel().isAlive()){
+            gameController.getPlayer2().getPlayerController().setY(gameController.getPlayer1().getPlayerModel().getY()-100);
+            gameController.getPlayer2().getPlayerView().draw(batch);
+            //batch.draw(gameController.getPlayer2().getTexture(), gameController.getPlayer1().getX(), gameController.getPlayer1().getY()-100, gameController.getPlayer2().getWidth(), gameController.getPlayer2().getHeight());
         }
         else{
-            batch.draw(gameController.getPlayer2().getTexture(), screenWidth*0.5f, screenHeight*0.1f, gameController.getPlayer2().getWidth(), gameController.getPlayer2().getHeight());
+            gameController.getPlayer2().getPlayerController().setX(screenWidth*0.5f);
+            gameController.getPlayer2().getPlayerController().setY(screenHeight*0.1f);
+            gameController.getPlayer2().getPlayerView().draw(batch);
+            //batch.draw(gameController.getPlayer2().getTexture(), screenWidth*0.5f, screenHeight*0.1f, gameController.getPlayer2().getWidth(), gameController.getPlayer2().getHeight());
         }
-        font.draw(batch, "Player 1: " + gameController.getPlayer1().getScore() + " - Player2: " + gameController.getPlayer2().getScore(), screenWidth/3, screenHeight*0.97f);
-        game.api.getInfoRival(gameController.getPlayer2());
+        font.draw(batch, "Player 1: " + gameController.getPlayer1().getPlayerModel().getScore() + " - Player2: " + gameController.getPlayer2().getPlayerModel().getScore(), screenWidth/3, screenHeight*0.97f);
+        game.api.getInfoRival(gameController.getPlayer2().getPlayerModel());
     }
 
     @Override
@@ -231,8 +236,8 @@ public class GameScreen implements Screen{
     }
     @Override
     public void hide() {
-        gameController.getPlayer1().setReady(false);
-        game.api.removePlayer(gameController.getPlayer1());
+        gameController.getPlayer1().getPlayerController().setReady(false);
+        game.api.removePlayer(gameController.getPlayer1().getPlayerModel());
 
     }
     @Override
@@ -240,7 +245,7 @@ public class GameScreen implements Screen{
     }
     @Override
     public void dispose() {
-        gameController.getPlayer1().getTexture().dispose();
+        gameController.getPlayer1().getPlayerModel().getTexture().dispose();
         stage.dispose();
         pausedStage.dispose();
         batch.dispose();
