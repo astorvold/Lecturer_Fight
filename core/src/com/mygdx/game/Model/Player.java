@@ -1,7 +1,5 @@
-package com.mygdx.game;
+package com.mygdx.game.Model;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 
 public class Player extends Entity {

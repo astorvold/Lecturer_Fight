@@ -1,9 +1,7 @@
-package com.mygdx.game;
+package com.mygdx.game.View;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -12,32 +10,27 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-
-import org.graalvm.compiler.nodes.TypeCheckHints;
+import com.mygdx.game.Controller.ButtonFactory;
+import com.mygdx.game.Controller.Configuration;
+import com.mygdx.game.Controller.Lecturer_fight;
 
 public class SettingsScreen implements Screen {
     final Lecturer_fight game;
-    private static SettingsScreen instance;
     OrthographicCamera camera;
     Texture imageBack, backgroundImage, imageToggleON, imageToggleOFF, settingsTxt;
     private Image buttonBack;
     private CheckBox musicCheckBox, soundCheckBox;
-    private Stage stage;
+    private final Stage stage;
     private final float screenHeight = Gdx.graphics.getHeight();
 
     private final float screenWidth = Gdx.graphics.getWidth();
     SpriteBatch batch = new SpriteBatch();
     BitmapFont font = new BitmapFont();
-    Preferences prefs = Gdx.app.getPreferences("Lecturer_Fight");
 
 
     SettingsScreen(final Lecturer_fight game) {
@@ -53,26 +46,13 @@ public class SettingsScreen implements Screen {
         backgroundImage = new Texture(Gdx.files.internal("new_images/LIGHT_BG.png"));
         settingsTxt = new Texture(Gdx.files.internal("new_images/SettingsTxt.png"));
 
-        //handle on/off logic and be able to use it elsewhere
-        /*
-        prefs.putInteger("Music",1);
-        prefs.putInteger("Sound",1);
-        prefs.flush();*/
-
-
         //edit font
         font.setColor(new Color(0x023D8Bff));
         font.getData().setScale(6,6);
 
-        //changing the sound settings on the android device
-        //AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-        //audioManager.setStreamVolume(AudioManager.STREAM_MUSIC);
-
-        //music_on = true;
         Configuration.getInstance().getMusic().setVolume(0.5f);
         Configuration.getInstance().getPoint().setVolume(0.5f);
         Configuration.getInstance().getDie().setVolume(0.5f);
-        System.out.println("musikk er på: "+Configuration.getInstance().isMusic_on() + Configuration.getInstance().isMusic_on());
         if (Configuration.getInstance().isMusic_on()){
             Configuration.getInstance().playMusic();
         }
@@ -101,15 +81,8 @@ public class SettingsScreen implements Screen {
         checkboxStyle.checkboxOff = new TextureRegionDrawable(new TextureRegion(imageToggleOFF));
         musicCheckBox = new CheckBox("", checkboxStyle);
         soundCheckBox = new CheckBox("", checkboxStyle);
-        musicCheckBox.setBounds(screenWidth*2/3,screenHeight*3/4-110,350,imageToggleON.getHeight()*350/imageToggleON.getWidth());
-        soundCheckBox.setBounds(screenWidth*2/3,screenHeight*2/3-110,350,imageToggleON.getHeight()*350/imageToggleON.getWidth());
-    }
-
-    public static synchronized SettingsScreen getInstance(Lecturer_fight game) {
-        if (instance == null) {
-            instance = new SettingsScreen(game);
-        }
-        return instance;
+        musicCheckBox.setBounds(screenWidth*2/3,screenHeight*3/4-110,350,imageToggleON.getHeight()*350f/imageToggleON.getWidth());
+        soundCheckBox.setBounds(screenWidth*2/3,screenHeight*2/3-110,350,imageToggleON.getHeight()*350f/imageToggleON.getWidth());
     }
 
     @Override
@@ -117,12 +90,10 @@ public class SettingsScreen implements Screen {
         buttonBack.addListener(new ClickListener(){
             public void clicked(InputEvent event, float x, float y){
                 game.setScreen(new MainMenuScreen(game));
-                System.out.println("Back Button from avatarScreen");
             }
         });
         musicCheckBox.addListener(new ClickListener(){
             public void clicked(InputEvent event, float x, float y){
-                System.out.println(("clickeo stopMusic"));
                 if(Configuration.getInstance().isMusic_on()) {
                     Configuration.getInstance().changeMusic();
                 }
@@ -133,7 +104,6 @@ public class SettingsScreen implements Screen {
         });
         soundCheckBox.addListener(new ClickListener(){
             public void clicked(InputEvent event, float x, float y){
-                System.out.println(("clickeo stopSound"));
                 Configuration.getInstance().changeSound();
             }
         });

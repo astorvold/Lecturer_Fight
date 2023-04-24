@@ -1,4 +1,4 @@
-package com.mygdx.game;
+package com.mygdx.game.View;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -13,6 +13,14 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.mygdx.game.Controller.AddNameListener;
+import com.mygdx.game.Controller.ButtonFactory;
+import com.mygdx.game.Controller.Configuration;
+import com.mygdx.game.Controller.Lecturer_fight;
+import com.mygdx.game.Model.Player;
+import com.mygdx.game.Model.Score;
+import com.mygdx.game.Utils.SortScore;
+
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -24,30 +32,17 @@ public class HighScoreScreen implements Screen {
     ArrayList<Score> scoreList;
     boolean backButton;
     boolean playAgainButton;
-    private SpriteBatch batch;
-    private BitmapFont font;
-    private BitmapFont font2;
-    private BitmapFont font3;
-    private BitmapFont font4;
+    private final SpriteBatch batch;
+    private final BitmapFont font, font2, font3, font4;
 
-    private Stage stage;
-
-    private Texture imageStart;
-    private Texture imageName;
-    private Texture imagePlayAgain;
-    private Texture backgroundImage;
-    private Texture textBoxImage;
-    private Image buttonPlayAgain, buttonStart, buttonName;
-
-    private SettingsScreen settings;
-
+    private final Stage stage;
+    private Image buttonPlayAgain;
+    private final Image buttonStart, buttonName;
+    Texture imageStart, imageName, imagePlayAgain, backgroundImage, textBoxImage;
     private int screenHeight = Gdx.graphics.getHeight();
-    private int screenWidth = Gdx.graphics.getWidth();
-
-    private int playerScore;
-    private int opponentScore;
-
-    private Player opponent;
+    private final int screenWidth = Gdx.graphics.getWidth();
+    private int playerScore, opponentScore;
+    private final Player opponent;
 
     public HighScoreScreen(final Lecturer_fight game, boolean backButton, boolean playAgainButton, int myScore, int opponentScore, Player opponent) {
         this.game = game;
@@ -61,21 +56,20 @@ public class HighScoreScreen implements Screen {
         this.backButton = backButton;
         this.playAgainButton = playAgainButton;
         //this.settings = new SettingsScreen(game);
-        this.settings = SettingsScreen.getInstance(game);
 
         stage = new Stage(new ScreenViewport()); //Set up a stage for the ui
 
         imageStart = new Texture(Gdx.files.internal("new_images/ARROW_LEFT.png"));
         backgroundImage = new Texture(Gdx.files.internal("new_images/LIGHT_BG.png"));
         textBoxImage = new Texture(Gdx.files.internal("new_images/box.png"));
-        buttonStart = ButtonFactory.createButton(imageStart,-0.1f*imageStart.getWidth(), screenHeight *0.87f,imageStart.getWidth()/2,imageStart.getHeight()/2);
+        buttonStart = ButtonFactory.createButton(imageStart,-0.1f*imageStart.getWidth(), screenHeight *0.87f,imageStart.getWidth()/2f,imageStart.getHeight()/2f);
         imageName= new Texture(Gdx.files.internal("new_images/name3.png"));
-        buttonName = ButtonFactory.createButton(imageName,screenWidth*0.35f, screenHeight *0.89f,imageStart.getWidth()/3,imageStart.getHeight()/3);
+        buttonName = ButtonFactory.createButton(imageName,screenWidth*0.35f, screenHeight *0.89f,imageStart.getWidth()/3f,imageStart.getHeight()/3f);
         stage.addActor(buttonName);
         stage.addActor(buttonStart);
         if (playAgainButton){
             imagePlayAgain= new Texture(Gdx.files.internal("new_images/PLAY_AGAIN.png"));
-            buttonPlayAgain = ButtonFactory.createButton(imagePlayAgain,screenWidth*0.45f - 1f*imagePlayAgain.getWidth()/5, screenHeight *0.05f,imagePlayAgain.getWidth()/2,imagePlayAgain.getHeight()/2);
+            buttonPlayAgain = ButtonFactory.createButton(imagePlayAgain,screenWidth*0.45f - 1f*imagePlayAgain.getWidth()/5, screenHeight *0.05f,imagePlayAgain.getWidth()/2f,imagePlayAgain.getHeight()/2f);
             stage.addActor(buttonPlayAgain);
         }
         Gdx.input.setInputProcessor(stage);
@@ -104,7 +98,6 @@ public class HighScoreScreen implements Screen {
         buttonStart.addListener(new ClickListener(){
             public void clicked(InputEvent event, float x, float y){
                 game.setScreen(new MainMenuScreen(game));
-                System.out.println("Back Button");
             }
         });
         buttonName.addListener(new ClickListener(){
@@ -118,7 +111,6 @@ public class HighScoreScreen implements Screen {
             buttonPlayAgain.addListener(new ClickListener(){
                 public void clicked(InputEvent event, float x, float y){
                     game.setScreen(new GameScreen(game,false));
-                    System.out.println("Play again");
                 }
             });
         }
@@ -148,7 +140,7 @@ public class HighScoreScreen implements Screen {
         Collections.sort(scoreList,new SortScore());
 
         batch.begin();
-        batch.draw(backgroundImage,0,0,screenWidth,backgroundImage.getHeight()*screenWidth/backgroundImage.getWidth());
+        batch.draw(backgroundImage,0,0,screenWidth,(float)backgroundImage.getHeight()*screenWidth/backgroundImage.getWidth());
 
         int flag = 0;
         font3.draw(batch, "High score", screenWidth *0.24f, screenHeight *0.85f);

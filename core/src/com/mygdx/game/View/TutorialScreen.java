@@ -1,4 +1,4 @@
-package com.mygdx.game;
+package com.mygdx.game.View;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
@@ -11,28 +11,24 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.mygdx.game.Controller.ButtonFactory;
+import com.mygdx.game.Controller.Lecturer_fight;
 
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.prefs.PreferenceChangeEvent;
 
 public class TutorialScreen implements Screen {
     final Lecturer_fight game;
     OrthographicCamera camera;
-    Texture backButton, forwardButton, backgroundImage, tutorialImage,tutorialTxt;
-    Texture tutorial1, tutorial2, tutorial3, tutorial4;
+    Texture backgroundImage, tutorialTxt;
     private Image buttonBackMenu, buttonLeft, buttonRight;
-    private Stage stage;
+    private final Stage stage;
     SpriteBatch batch = new SpriteBatch();
     BitmapFont font = new BitmapFont();
     Preferences prefs = Gdx.app.getPreferences("Lecturer_Fight");
-    private ArrayList<Texture> image_list = new ArrayList<>();
+    private final ArrayList<Texture> image_list = new ArrayList<>();
     private int current_image = 0;
     private final int screenHeight = Gdx.graphics.getHeight();
     private final int screenWidth = Gdx.graphics.getWidth();
@@ -105,12 +101,12 @@ public class TutorialScreen implements Screen {
     public void render(float delta) {
         batch.begin();
         //page items
-        batch.draw(backgroundImage,0,0,screenWidth,backgroundImage.getHeight()*screenWidth/backgroundImage.getWidth());
+        batch.draw(backgroundImage,0,0,screenWidth,(float)backgroundImage.getHeight()*screenWidth/backgroundImage.getWidth());
         //text
         //font.draw(batch,"Tutorial",screenWidth*1/3+20, screenHeight-50);
-        batch.draw(tutorialTxt,screenWidth/3, screenHeight*0.85f, screenWidth/2, screenHeight/12);
+        batch.draw(tutorialTxt,screenWidth/3f, screenHeight*0.85f, screenWidth/2f, screenHeight/12f);
         //tutorial-image showing, currently a placeholder
-        batch.draw(image_list.get(current_image),screenWidth/6,screenHeight/4,screenWidth*2/3,screenHeight*7/12);
+        batch.draw(image_list.get(current_image),screenWidth/6f,screenHeight/4f,screenWidth*2/3f,screenHeight*7/12f);
         //forward and backward arrows
 
         batch.end();

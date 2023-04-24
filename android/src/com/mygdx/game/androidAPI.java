@@ -7,11 +7,15 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.mygdx.game.Controller.API;
+import com.mygdx.game.Controller.Configuration;
+import com.mygdx.game.Model.Player;
+import com.mygdx.game.Model.Score;
 
 import java.util.ArrayList;
 import java.util.Map;
 
-public class androidAPI implements API{
+public class androidAPI implements API {
 
     FirebaseDatabase database;
 

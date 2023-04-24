@@ -1,7 +1,12 @@
-package com.mygdx.game;
+package com.mygdx.game.Controller;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.mygdx.game.Model.Coin;
+import com.mygdx.game.Model.Entity;
+import com.mygdx.game.Model.Obstacle;
+import com.mygdx.game.Model.Player;
+import com.mygdx.game.View.HighScoreScreen;
 
 import java.util.ArrayList;
 
@@ -20,6 +25,7 @@ public class GameController {
     private final Lecturer_fight game;
     private final float screenHeight = Gdx.graphics.getHeight();
     private final float screenWidth = Gdx.graphics.getWidth();
+    private final PlayerController playerController;
 
     public GameController(final Lecturer_fight game, final boolean multiplayer){
         this.game = game;
@@ -28,6 +34,7 @@ public class GameController {
         highestObstacle = 7;
         this.multiplayer = multiplayer;
         player = new Player(Configuration.getInstance().getPlayerTexture(), screenWidth/2, screenHeight/2, 96,96);
+        playerController = new PlayerController(player);
         if (Configuration.getInstance().isMusic_on()){
             Configuration.getInstance().playMusic();
         }
@@ -35,7 +42,7 @@ public class GameController {
             state = GameState.RUNNING_SINGLEPLAYER;
         }
         else {
-            player.setReady(true);
+            playerController.setReady(true);
             Texture player2Texture = new Texture("opponent_avatar.png");
             player2 = new Player(player2Texture, 500, screenHeight/3, 96,96);
             if(!player2.isReady()) {
@@ -74,12 +81,12 @@ public class GameController {
         //Checks if any obstacle is at the same position that the player
         for(int i = 0; i < OBSTACLES_PER_SCREEN; i++) {
             obstacles.get(i).changePos(-speed);
-            if (player.checkColisions(obstacles.get(i))) {
+            if (playerController.checkColisions(obstacles.get(i))) {
                 //plays die sound if turned on in settings
                 Configuration.getInstance().dieMusic();
                 // send score to DB and set player as non-ready
                 game.api.setScore(player.getScore());
-                player.setReady(false);
+                playerController.setReady(false);
                 game.api.setInfoPlayer(player);
                 if(!multiplayer){
                     game.setScreen(new HighScoreScreen(this.game,true,true,player.getScore(), 0, null));
@@ -101,8 +108,8 @@ public class GameController {
         //Checks if any coin is at the same position that the player
         for(int i = 0; i < COINS_PER_SCREEN; i++){
             coins.get(i).changePos(-speed);
-            if (player.checkColisions(coins.get(i))) {
-                player.increaseScore(100);
+            if (playerController.checkColisions(coins.get(i))) {
+                playerController.increaseScore(100);
                 Configuration.getInstance().pointMusic(); //play point sound if it is turned on in settings
                 coins.get(i).disappear();
             }
@@ -128,16 +135,7 @@ public class GameController {
     public ArrayList<Entity> getObstacles(){return obstacles;}
     public ArrayList<Entity> getCoins(){return coins;}
     public void setGameState(GameState state){this.state = state;}
-
-    public void playerController(){
-        if(Gdx.input.getX() >= screenWidth/2) {
-            if (getPlayer1().getX() < screenWidth - getPlayer1().getWidth())
-                getPlayer1().changePos(10);
-            else getPlayer1().changePos(-10);
-        }
-        else {
-            if (getPlayer1().getX() > 0) getPlayer1().changePos(-10);
-            else getPlayer1().changePos(10);
-        }
+    public PlayerController getPlayerController(){
+        return playerController;
     }
 }

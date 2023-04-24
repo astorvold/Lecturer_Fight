@@ -1,14 +1,13 @@
-package com.mygdx.game;
+package com.mygdx.game.View;
 
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.mygdx.game.Model.Player;
 
 public class PlayerView {
 
     //private Texture texture;
     //private Sprite sprite;
-    private Player model;
+    private final Player model;
 
 
     public PlayerView(Player model) {

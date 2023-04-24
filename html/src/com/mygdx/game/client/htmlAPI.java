@@ -1,8 +1,8 @@
 package com.mygdx.game.client;
 
-import com.mygdx.game.API;
-import com.mygdx.game.Player;
-import com.mygdx.game.Score;
+import com.mygdx.game.Controller.API;
+import com.mygdx.game.Model.Player;
+import com.mygdx.game.Model.Score;
 
 import java.util.ArrayList;
 

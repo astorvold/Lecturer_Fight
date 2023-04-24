@@ -1,4 +1,4 @@
-package com.mygdx.game;
+package com.mygdx.game.View;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
@@ -8,18 +8,14 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-
-import java.util.Objects;
-
-import jdk.tools.jmod.Main;
+import com.mygdx.game.Controller.ButtonFactory;
+import com.mygdx.game.Controller.Configuration;
+import com.mygdx.game.Controller.Lecturer_fight;
 
 public class AvatarScreen implements Screen {
     //game saving content
@@ -28,7 +24,7 @@ public class AvatarScreen implements Screen {
     OrthographicCamera camera;
     private final int screenHeight = Gdx.graphics.getHeight();
     private final int screenWidth = Gdx.graphics.getWidth();
-    private Stage stage;
+    private final Stage stage;
     private Image buttonBack, buttonAlfinge, buttonSchau;
     //avatar logic and textures
     Texture backgroundImage, avatarSelectionTxt;
@@ -86,7 +82,6 @@ public class AvatarScreen implements Screen {
         buttonBack.addListener(new ClickListener(){
             public void clicked(InputEvent event, float x, float y){
                 game.setScreen(new MainMenuScreen(game));
-                System.out.println("Back Button from avatarScreen");
             }
         });
         buttonAlfinge.addListener(new ClickListener(){
@@ -111,18 +106,18 @@ public class AvatarScreen implements Screen {
         batch.begin();
 
         //page items
-        batch.draw(backgroundImage,0,0,screenWidth,backgroundImage.getHeight()*screenWidth/backgroundImage.getWidth());
+        batch.draw(backgroundImage,0,0,screenWidth,(float)backgroundImage.getHeight()*screenWidth/backgroundImage.getWidth());
         //font.draw(batch,"Avatar Selection",screenWidth*1/4-20, screenHeight-50);
-        batch.draw(avatarSelectionTxt,screenWidth/3, screenHeight*0.9f, screenWidth/2, screenHeight/15);
+        batch.draw(avatarSelectionTxt,screenWidth/3f, screenHeight*0.9f, screenWidth/2f, screenHeight/15f);
 
         //text
         BitmapFont font = new BitmapFont(); // initialize your font
         font.getData().setScale(5); // set the font scale factor to 2
-        font.draw(batch, "Alf-Inge", screenWidth/8,screenHeight*7/8);
-        font.draw(batch, "Christian\n  Schau", screenWidth*7/12,screenHeight*7/8);
+        font.draw(batch, "Alf-Inge", screenWidth/8f,screenHeight*7/8f);
+        font.draw(batch, "Christian\n  Schau", screenWidth*7/12f,screenHeight*7/8f);
         //the !updated thing is because when you first click the page it says neither avatar is chosen which is wrong
-        font.draw(batch, ((alfinge_chosen) ? "Chosen" : "Not chosen"),((alfinge_chosen) ? (screenWidth/8) : (screenWidth/8)),screenHeight/2);
-        font.draw(batch, ((schau_chosen) ? "Chosen" : "Not chosen"), ((schau_chosen) ? (screenWidth*4/7) : (screenWidth/2)), screenHeight/2-20);
+        font.draw(batch, ((alfinge_chosen) ? "Chosen" : "Not chosen"),((screenWidth / 8f)),screenHeight/2f);
+        font.draw(batch, ((schau_chosen) ? "Chosen" : "Not chosen"), ((schau_chosen) ? (screenWidth*4/7f) : (screenWidth/2f)), screenHeight/2f-20);
         batch.end();
         stage.act(Gdx.graphics.getDeltaTime()); //Perform ui logic
         stage.draw(); //Draw the ui

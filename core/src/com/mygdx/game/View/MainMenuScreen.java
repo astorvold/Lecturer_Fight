@@ -1,4 +1,4 @@
-package com.mygdx.game;
+package com.mygdx.game.View;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
@@ -17,20 +17,20 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.mygdx.game.Controller.ButtonFactory;
+import com.mygdx.game.Controller.Configuration;
+import com.mygdx.game.Controller.Lecturer_fight;
 
 public class MainMenuScreen implements Screen {
-    private Preferences prefs = Gdx.app.getPreferences("Lecturer-Fight");
     private final float screenHeight = Gdx.graphics.getHeight();
     private final float screenWidth = Gdx.graphics.getWidth();
-    private SpriteBatch batch = new SpriteBatch();
-    private BitmapFont font = new BitmapFont();
-    private SettingsScreen settings;
+    private final SpriteBatch batch = new SpriteBatch();
+    private final BitmapFont font = new BitmapFont();
     private final Lecturer_fight game;
     private OrthographicCamera camera;
     private final Stage stage;
     Texture titleImage, backgroundImage, madeByTxt, multiplayerImage;
     private Image buttonStart, buttonSettings, buttonScore, buttonTutorial, buttonAvatar;
-    private TextureRegion regionCheckboxOn, regionCheckboxOff;
     private CheckBox checkBox;
     private boolean multiplayer;
 
@@ -38,7 +38,6 @@ public class MainMenuScreen implements Screen {
     public MainMenuScreen(final Lecturer_fight game) {
         this.game = game;
         this.camera = new OrthographicCamera();
-        this.settings = new SettingsScreen(game);
         camera.setToOrtho(false,800,400);
         multiplayerImage = new Texture("new_images/MultiplayerTxt.png");
         titleImage = new Texture(Gdx.files.internal("new_images/TITLE.png"));
@@ -49,10 +48,10 @@ public class MainMenuScreen implements Screen {
         font.getData().setScale(5,5);
         font.setColor(new Color(0x023D8Bff));
 
+        Preferences prefs = Gdx.app.getPreferences("Lecturer-Fight");
         prefs.putBoolean("Multiplayer", true);
         prefs.flush();
         //play music
-        System.out.println("musikk er på: " + Configuration.getInstance().isMusic_on());
         if (Configuration.getInstance().isMusic_on()){
             Configuration.getInstance().playMusic();
         }
@@ -85,6 +84,7 @@ public class MainMenuScreen implements Screen {
         imageTutorial = new Texture(Gdx.files.internal("new_images/TUTORIAL.png"));
         buttonTutorial = ButtonFactory.createButton(imageTutorial,0.5f*screenWidth - 0.6f*screenWidth/2, screenHeight *0.15f,0.6f*screenWidth,0.12f*screenHeight);
 
+        TextureRegion regionCheckboxOn, regionCheckboxOff;
         imageCheckboxOn = new Texture(Gdx.files.internal("new_images/TOGGLE_ON.png"));
         imageCheckboxOff = new Texture(Gdx.files.internal("new_images/TOGGLE_OFF.png"));
         regionCheckboxOff = new TextureRegion(imageCheckboxOff);
@@ -103,41 +103,34 @@ public class MainMenuScreen implements Screen {
        buttonStart.addListener(new ClickListener(){
             public void clicked(InputEvent event, float x, float y){
                 game.setScreen(new GameScreen(game, multiplayer));
-                System.out.println("Start Button");
             }
         });
         buttonSettings.addListener(new ClickListener(){
             public void clicked(InputEvent event, float x, float y){
                 game.setScreen(new SettingsScreen(game));
-                System.out.println("Settings Button");
             }
         });
 
         buttonAvatar.addListener(new ClickListener(){
             public void clicked(InputEvent event, float x, float y){
                 game.setScreen(new AvatarScreen(game));
-                System.out.println("Avatar Button");
             }
         });
 
         buttonScore.addListener(new ClickListener(){
             public void clicked(InputEvent event, float x, float y){
                 game.setScreen(new HighScoreScreen(game,true,false, 0, 0,null ));
-                System.out.println("Score Button");
             }
         });
         buttonTutorial.addListener(new ClickListener(){
             public void clicked(InputEvent event, float x, float y){
                 game.setScreen(new TutorialScreen(game));
-                System.out.println("Tutorial Button");
             }
         });
         checkBox.addListener(new ClickListener(){
             public void clicked(InputEvent event, float x, float y){
-                    System.out.println(("click multiplayer"));
-                    boolean isChecked = checkBox.isChecked();
-                    multiplayer = isChecked;
-                    System.out.println(multiplayer);
+
+                    multiplayer = checkBox.isChecked();
                 }
         });
     }

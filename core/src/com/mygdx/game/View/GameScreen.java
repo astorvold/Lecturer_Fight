@@ -1,4 +1,4 @@
-package com.mygdx.game;
+package com.mygdx.game.View;
 
 import java.util.ArrayList;
 
@@ -16,28 +16,29 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.mygdx.game.Controller.ButtonFactory;
+import com.mygdx.game.Model.Entity;
+import com.mygdx.game.Controller.GameState;
+import com.mygdx.game.Controller.Lecturer_fight;
+import com.mygdx.game.Controller.GameController;
 
 public class GameScreen implements Screen{
 
     private int backgroundPos = 0;
     private Texture background;
-    private Texture player2Texture;
     private final Lecturer_fight game;
     private final float screenHeight = Gdx.graphics.getHeight();
     private final float screenWidth = Gdx.graphics.getWidth();
 
-    private OrthographicCamera camera;
-    private SpriteBatch batch = new SpriteBatch();
-    private BitmapFont font = new BitmapFont();
-
-    private SettingsScreen settings;
+    private final OrthographicCamera camera;
+    private final SpriteBatch batch = new SpriteBatch();
+    private final BitmapFont font = new BitmapFont();
     private Image buttonPause, buttonResume, buttonQuit;
-    private int player2Score = 0;
     private int player2Score2 = -1;
     long startTime;
     private Stage stage;
     private Stage pausedStage;
-    private GameController gameController;
+    private final GameController gameController;
 
 
     public GameScreen(final Lecturer_fight game, boolean multiplayer) {
@@ -83,7 +84,7 @@ public class GameScreen implements Screen{
                 if(gameController.getState() == GameState.RUNNING_SINGLEPLAYER) gameController.setGameState(GameState.PAUSED);
                 else if(gameController.getState() == GameState.RUNNING_MULTIPLAYER) game.setScreen(new MainMenuScreen(game));
             }
-            gameController.playerController();
+            gameController.getPlayerController().move();
         }
     }
     private void running(){
@@ -103,7 +104,7 @@ public class GameScreen implements Screen{
         batch.begin();
         font.getData().setScale(6);
         font.setColor(Color.BLACK);
-        font.draw(batch, "Waiting for your opponent!!", Gdx.graphics.getWidth()*0.02f, Gdx.graphics.getHeight()/2);
+        font.draw(batch, "Waiting for your opponent!!", Gdx.graphics.getWidth()*0.02f, Gdx.graphics.getHeight()/2f);
         batch.end();
         if(gameController.getPlayer2().isReady()){
             gameController.setGameState(GameState.RUNNING_MULTIPLAYER);
@@ -167,15 +168,15 @@ public class GameScreen implements Screen{
         // player gets 1 point every second
         long elapsedTime = TimeUtils.timeSinceMillis(startTime);
         if(gameController.getMultiplayer()){
-            player2Score = gameController.getPlayer2().getScore();
+            int player2Score = gameController.getPlayer2().getScore();
             if (elapsedTime > 1000){
                 if (player2Score == player2Score2){
-                    player2Texture = new Texture("opponent_avatar_dead.png");
+                    Texture player2Texture = new Texture("opponent_avatar_dead.png");
                     gameController.getPlayer2().setTexture(player2Texture);
                     gameController.getPlayer2().isDead();
                 }
                 player2Score2 = gameController.getPlayer2().getScore();
-                player2Score = gameController.getPlayer2().getScore();
+                //player2Score = gameController.getPlayer2().getScore();
                 startTime = TimeUtils.millis();
             }
         }

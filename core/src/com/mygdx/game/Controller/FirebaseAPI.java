@@ -1,8 +1,11 @@
-package com.mygdx.game;
+package com.mygdx.game.Controller;
+
+import com.mygdx.game.Model.Player;
+import com.mygdx.game.Model.Score;
 
 import java.util.ArrayList;
 
-public class FirebaseAPI implements API{
+public class FirebaseAPI implements API {
 
 
     @Override

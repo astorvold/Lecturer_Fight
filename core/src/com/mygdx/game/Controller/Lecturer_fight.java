@@ -1,25 +1,15 @@
-package com.mygdx.game;
+package com.mygdx.game.Controller;
 
-import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.utils.ScreenUtils;
-
-
-import java.util.ArrayList;
-
-import sun.font.TextLabel;
+import com.mygdx.game.View.MainMenuScreen;
 
 public class Lecturer_fight extends Game {
 
 	public BitmapFont font;
-	SpriteBatch batch;
-	API api;
+	public SpriteBatch batch;
+	public API api;
 
 	public Lecturer_fight(API api){
 		this.api = api;

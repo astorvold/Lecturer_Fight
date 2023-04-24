@@ -1,8 +1,8 @@
-package com.mygdx.game;
+package com.mygdx.game.Model;
 
 import com.badlogic.gdx.graphics.Texture;
 
-public class Coin extends Entity{
+public class Coin extends Entity {
 
     public Coin(Texture texture, float x, float y, float width, float height) {
         super(texture);

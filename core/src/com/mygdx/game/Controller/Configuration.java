@@ -1,20 +1,18 @@
-package com.mygdx.game;
+package com.mygdx.game.Controller;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
 
-import jdk.nashorn.internal.runtime.regexp.joni.Config;
-
 public class Configuration {
-    private static Music music = Gdx.audio.newMusic(Gdx.files.internal("Dumb Ways To Die.mp3"));
-    private static Music point = Gdx.audio.newMusic(Gdx.files.internal("point.mp3"));
-    private static Music die = Gdx.audio.newMusic(Gdx.files.internal("die.mp3"));
+    private final static Music music = Gdx.audio.newMusic(Gdx.files.internal("Dumb Ways To Die.mp3"));
+    private final static Music point = Gdx.audio.newMusic(Gdx.files.internal("point.mp3"));
+    private final static Music die = Gdx.audio.newMusic(Gdx.files.internal("die.mp3"));
     private static boolean music_on = true, sound_on = true;
     private static String textureString;
     private static Texture playerTexture;
     private static String playerName = "anonymous" + (int)Math.ceil(Math.random()*1000000);
-    private static Configuration configuration = new Configuration();
+    private final static Configuration configuration = new Configuration();
     private Configuration(){}
     public static Configuration getInstance(){
         return configuration;
@@ -78,10 +76,10 @@ public class Configuration {
         }
     }
     public void setName(String name){
-        this.playerName = name;
+        playerName = name;
     }
     public String getName(){
-        return this.playerName;
+        return playerName;
     }
 
 }

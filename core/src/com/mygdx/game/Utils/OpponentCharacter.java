@@ -1,13 +1,16 @@
-package com.mygdx.game;
+package com.mygdx.game.Utils;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.mygdx.game.Controller.PlayerController;
+import com.mygdx.game.Model.Player;
+import com.mygdx.game.View.PlayerView;
 
-public class PlayerCharacter {
-    private Player model;
-    private PlayerView view;
-    private PlayerController controller;
+public class OpponentCharacter {
+    private final Player model;
+    private final PlayerView view;
+    private final PlayerController controller;
 
-    public PlayerCharacter(Texture texture, float x, float y, float width, float height) {
+    public OpponentCharacter(Texture texture, float x, float y, float width, float height) {
         model = new Player(texture, x, y, width, height);
         view = new PlayerView(model);
         controller = new PlayerController(model);
@@ -22,3 +25,5 @@ public class PlayerCharacter {
         return model;
     }
 }
+
+
