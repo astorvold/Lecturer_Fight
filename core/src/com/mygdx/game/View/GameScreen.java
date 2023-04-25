@@ -36,6 +36,7 @@ public class GameScreen implements Screen{
     private Image buttonPause, buttonResume, buttonQuit;
     private int player2Score2 = -1;
     long startTime;
+    long speedTime;
     private Stage stage;
     private Stage pausedStage;
     private final GameController gameController;
@@ -92,6 +93,7 @@ public class GameScreen implements Screen{
         batch.draw(background,0, backgroundPos, screenWidth,background.getHeight()*screenWidth/background.getWidth());
         batch.end();
         showMap();
+        increaseSpeed();
         movementControl();
         gameController.checkCollisions();
         stage.act(Gdx.graphics.getDeltaTime()); //Perform ui logic
@@ -154,6 +156,14 @@ public class GameScreen implements Screen{
                 break;
         }
     }
+
+    private void increaseSpeed(){
+        long elapsedTime = TimeUtils.timeSinceMillis(speedTime);
+        if (elapsedTime > 10000){
+            gameController.increaseSpeed();
+            speedTime = TimeUtils.millis();
+        }
+    }
     private void showMap(){
         // begin a new batch and draw the bucket and all drops
         batch.begin();
@@ -169,6 +179,7 @@ public class GameScreen implements Screen{
         font.setColor(Color.BLACK);
         // send position to DB
         game.api.setInfoPlayer(gameController.getPlayer1().getPlayerModel());
+
         // player gets 1 point every second
         long elapsedTime = TimeUtils.timeSinceMillis(startTime);
         if(gameController.getMultiplayer()){

@@ -16,7 +16,7 @@ public class GameController {
 
     public static final int OBSTACLES_PER_SCREEN = 8;
     public static final int COINS_PER_SCREEN = 3;
-    private final int speed = 3;
+    private int speed = 3;
     public ArrayList<Entity> obstacles;
     public ArrayList<Entity> coins;
     private int highestObstacle;
@@ -142,4 +142,5 @@ public class GameController {
     public PlayerController getPlayerController(){
         return playerController;
     }
+    public void increaseSpeed(){this.speed += 1;}
 }
