@@ -19,9 +19,6 @@ For the backend, we decided to use Firebase Realtime Database to reduce the amou
 
 The "scores" node is updated every time a player finishes a match. In the "players" node, a child with a random name is created, but players are able to change their names. If a player is playing a solo match, a child is created in the "players" node with only the "score" field updated. The other fields, "busy" and "ready", are only used in multiplayer mode. When a player wants to play a multiplayer match, a child is created with the value "ready = true" and "busy = false". When another child is created with the same states, both players will go into the "busy = true" state.
 
-How to:
-To run the code, you'll need access to our Firebase Realtime Database. Insert the "google-service.json" file, including the API key, into the Android package.
-
 Here are the steps to run the project:
 
 1. Install Git and LibGDX.
