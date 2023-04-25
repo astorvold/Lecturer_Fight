@@ -7,6 +7,7 @@ public class Player extends Entity {
     private boolean ready;
     private boolean isAlive = true;
     private boolean busy;
+    private String Name;
 
     public Player(Texture texture, float x, float y, float width, float height){
         super(texture);
@@ -17,6 +18,7 @@ public class Player extends Entity {
         this.y = y;
         this.ready = false;
         this.busy = false;
+        this.Name = " ";
     }
 
     public int getScore(){
@@ -48,7 +50,8 @@ public class Player extends Entity {
     }
     public boolean getBusy() { return this.busy; }
     public void setBusy() {this.busy = true;}
-
+    public String getName(){return this.Name;}
+    public void setName(String name){this.Name = name;}
 
 
 

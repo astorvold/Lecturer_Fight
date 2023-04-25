@@ -71,10 +71,10 @@ public class androidAPI implements API {
         coorRef = database.getReference("Players");
         coorRef.child(Configuration.getInstance().getName()).child("score").setValue(player.getScore());
         coorRef.child(Configuration.getInstance().getName()).child("ready").setValue(player.isReady());
+
         if(!player.getBusy()){
             coorRef.child(Configuration.getInstance().getName()).child("busy").setValue(false);
         }
-
     }
     public void removePlayer(Player player){
         coorRef = database.getReference("Players");
@@ -103,8 +103,9 @@ public class androidAPI implements API {
                             boolean readyValue = (boolean) innerMap.get("ready");
                             int scoreValue = (int) ((long) innerMap.get("score"));
                             boolean busyValue = (boolean) innerMap.get("busy");
-                            if (readyValue && !busyValue) {
+                            if (readyValue && !busyValue && !player.isReady()) {
                                 player.setReady(true);
+                                player.setName(entry.getValue().toString());
                             }
                             if(!readyValue && busyValue){
                                 player.setScore(scoreValue);

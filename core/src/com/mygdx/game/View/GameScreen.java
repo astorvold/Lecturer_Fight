@@ -33,12 +33,13 @@ public class GameScreen implements Screen{
     private final OrthographicCamera camera;
     private final SpriteBatch batch = new SpriteBatch();
     private final BitmapFont font = new BitmapFont();
-    private Image buttonPause, buttonResume, buttonQuit;
+    private Image buttonPause, buttonResume, buttonQuit, buttonQuit2;
     private int player2Score2 = -1;
     long startTime;
     long speedTime;
     private Stage stage;
     private Stage pausedStage;
+    private Stage waitingStage;
     private final GameController gameController;
 
 
@@ -66,7 +67,8 @@ public class GameScreen implements Screen{
         buttonResume = ButtonFactory.createButton(imageResume,0.5f*screenWidth - 0.6f*screenWidth/2, screenHeight *0.6f,0.6f*screenWidth,0.12f*screenHeight);
 
         Texture imageQuit = new Texture("new_images/QUIT.png");
-        buttonQuit = ButtonFactory.createButton(imageQuit,0.5f*screenWidth - 0.6f*screenWidth/2, screenHeight *0.4f,0.6f*screenWidth,0.12f*screenHeight);
+        buttonQuit = ButtonFactory.createButton(imageQuit,0.5f*screenWidth - 0.6f*screenWidth/2, screenHeight *0.1f,0.6f*screenWidth,0.12f*screenHeight);
+        buttonQuit2 = ButtonFactory.createButton(imageQuit,0.2f*screenWidth , screenHeight *0.2f,0.6f*screenWidth,0.12f*screenHeight);
         background = new Texture("new_images/BG.png");
 
         stage = new Stage(new ScreenViewport()); //Set up a stage for the
@@ -75,7 +77,10 @@ public class GameScreen implements Screen{
         pausedStage = new Stage(new ScreenViewport());
         pausedStage.addActor(buttonResume);
         pausedStage.addActor(buttonQuit);
+        waitingStage = new Stage(new ScreenViewport());
+        waitingStage.addActor(buttonQuit2);
         Gdx.input.setInputProcessor(pausedStage);
+
 
     }
     public void movementControl(){
@@ -103,11 +108,18 @@ public class GameScreen implements Screen{
 
     }
     private void waiting(){
+        Gdx.input.setInputProcessor(waitingStage);
         batch.begin();
         font.getData().setScale(6);
         font.setColor(Color.BLACK);
         font.draw(batch, "Waiting for your opponent!!", Gdx.graphics.getWidth()*0.02f, Gdx.graphics.getHeight()/2f);
         batch.end();
+
+
+        waitingStage.act(Gdx.graphics.getDeltaTime()); //Perform ui logic
+        waitingStage.draw(); //Draw the ui
+
+
         if(gameController.getPlayer2().getPlayerModel().isReady()){
             gameController.setGameState(GameState.RUNNING_MULTIPLAYER);
         }
@@ -243,6 +255,11 @@ public class GameScreen implements Screen{
         buttonQuit.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                 if(gameController.getState() == GameState.PAUSED) game.setScreen(new MainMenuScreen(game));
+            }
+        });
+        buttonQuit2.addListener(new ClickListener() {
+            public void clicked(InputEvent event, float x, float y) {
+                if(gameController.getState() == GameState.WAITING) game.setScreen(new MainMenuScreen(game));
             }
         });
         buttonResume.addListener(new ClickListener() {
