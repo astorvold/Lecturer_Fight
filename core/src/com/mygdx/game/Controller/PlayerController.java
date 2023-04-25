@@ -55,6 +55,7 @@ public class PlayerController {
     }
     public void setY(float y){model.setY(y);}
     public void setTexture(Texture texture){model.setTexture(texture);}
+    public void setBusy(){model.setBusy();}
 
 
 }

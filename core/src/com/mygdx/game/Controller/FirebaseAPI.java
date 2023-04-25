@@ -33,4 +33,9 @@ public class FirebaseAPI implements API {
     public void removePlayer(Player player) {
 
     }
+
+    @Override
+    public void isBusy(Player player) {
+
+    }
 }

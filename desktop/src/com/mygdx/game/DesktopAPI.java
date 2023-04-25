@@ -32,4 +32,9 @@ public class DesktopAPI implements API {
     public void removePlayer(Player player) {
 
     }
+
+    @Override
+    public void isBusy(Player player) {
+
+    }
 }

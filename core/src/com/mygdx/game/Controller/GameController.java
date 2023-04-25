@@ -53,6 +53,7 @@ public class GameController {
             }
             else {
                 state = GameState.RUNNING_MULTIPLAYER;
+                game.api.isBusy(playerCharacter.getPlayerModel());
             }
         }
     }

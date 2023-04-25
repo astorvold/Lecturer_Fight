@@ -16,6 +16,8 @@ public interface API {
 
     void removePlayer(Player player);
 
+    void isBusy(Player player);
+
 
 
 
