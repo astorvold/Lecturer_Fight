@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "912612911827",
+    "firebase_url": "https://lecturerfight-default-rtdb.firebaseio.com",
+    "project_id": "lecturerfight",
+    "storage_bucket": "lecturerfight.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:912612911827:android:41296d10e7e833ae4cc226",
+        "android_client_info": {
+          "package_name": "com.mygdx.game"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "912612911827-lo2cialgbgvpji0ajepsd1opt4fdmhue.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDStb8a32Uoh_F9RjPIqvhXcrYoab98hkM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "912612911827-lo2cialgbgvpji0ajepsd1opt4fdmhue.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
