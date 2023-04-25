@@ -104,8 +104,10 @@ public class androidAPI implements API {
                             int scoreValue = (int) ((long) innerMap.get("score"));
                             boolean busyValue = (boolean) innerMap.get("busy");
                             if (readyValue && !busyValue) {
-                                player.setScore(scoreValue);
                                 player.setReady(true);
+                            }
+                            if(!readyValue && busyValue){
+                                player.setScore(scoreValue);
                             }
 
 

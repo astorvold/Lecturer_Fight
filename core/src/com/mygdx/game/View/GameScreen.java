@@ -139,6 +139,7 @@ public class GameScreen implements Screen{
                 game.api.getInfoRival(gameController.getPlayer2().getPlayerModel());
                 game.api.setInfoPlayer(gameController.getPlayer1().getPlayerModel());
                 gameController.getPlayerController().setBusy();
+                gameController.getPlayerController().setReady(false);
                 game.api.isBusy(gameController.getPlayer1().getPlayerModel());
 
                 running();
