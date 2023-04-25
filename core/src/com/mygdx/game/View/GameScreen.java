@@ -196,6 +196,8 @@ public class GameScreen implements Screen{
     private void showRivalScore(){
         if ( gameController.getPlayer2().getPlayerModel().isAlive()){
             gameController.getPlayer2().getPlayerController().setY(gameController.getPlayer1().getPlayerModel().getY()-100);
+            gameController.getPlayer2().getPlayerController().setX(gameController.getPlayer1().getPlayerModel().getX());
+
             gameController.getPlayer2().getPlayerView().draw(batch);
             //batch.draw(gameController.getPlayer2().getTexture(), gameController.getPlayer1().getX(), gameController.getPlayer1().getY()-100, gameController.getPlayer2().getWidth(), gameController.getPlayer2().getHeight());
         }
